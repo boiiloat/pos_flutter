@@ -62,19 +62,47 @@ class LoginScreen extends StatelessWidget {
                             child: Text(" 3"),
                           ),
                         ),
+                        
                       ],
                     ),
                     SizedBox(height: 10),
-                    Container(
-                      height: 70,
-                      width: 70,
-                      color: Colors.white,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 70,
+                          width: 70,
+                          color: Colors.white,
+                          child: Center(
+                            child: Text(" 1"),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          height: 70,
+                          width: 70,
+                          color: Colors.white,
+                          child: Center(
+                            child: Text(" 2"),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          height: 70,
+                          width: 70,
+                          color: Colors.white,
+                          child: Center(
+                            child: Text(" 3"),
+                          ),
+                        ),
+                        
+                      ],
                     ),
-                    TextButton(
-                        onPressed: () {
-                          print("click me ");
-                        },
-                        child: Text(" hdslfhalsdfjas"))
+                  
                   ],
                 ),
               )),
