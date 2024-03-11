@@ -7,7 +7,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(LoginController());
+    final controller = Get.put(LoginController());
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -220,9 +220,7 @@ class LoginScreen extends StatelessWidget {
                                   Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: () {
-                                        controller.onLoginpressed();
-                                      },
+                                      onTap: controller.onLoginpressed,
                                       child: Container(
                                         height: 50,
                                         width: 210,

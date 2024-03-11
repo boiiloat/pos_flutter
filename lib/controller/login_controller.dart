@@ -8,6 +8,7 @@ class LoginController extends GetxController {
   }
 
   void onLoginpressed() {
+    Get.snackbar("title", "message");
     Get.to(const HomeScreen());
   }
 }
