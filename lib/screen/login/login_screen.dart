@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_system/controller/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key});
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -218,9 +218,8 @@ class LoginScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Material(
-                                    color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: controller.onLoginpressed,
+                                      onTap: controller.onLoginPressed,
                                       child: Container(
                                         height: 50,
                                         width: 210,
