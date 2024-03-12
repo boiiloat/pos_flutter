@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../controller/main_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.put(MainController());
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -206,12 +210,35 @@ class HomeScreen extends StatelessWidget {
                                       border: Border.all(color: Colors.grey)),
                                 ),
                                 const SizedBox(width: 20),
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
+                                Material(
+                                  child: InkWell(
+                                    onTap: controller.onLogoutPressed,
+                                    child: Container(
+                                      height: 110,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.red,
+                                      ),
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.logout,
+                                            color: Colors.white,
+                                            size: 25,
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "Logout",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
