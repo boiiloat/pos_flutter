@@ -37,6 +37,31 @@ class HomeScreen extends StatelessWidget {
         drawer: const Drawer(
             // child: HomeScreenDrawerWidget(),
             ),
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Container(),
+                  ),
+                  Expanded(
+                    flex: 7,
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                      color: Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
