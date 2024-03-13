@@ -32,220 +32,224 @@ class LoginScreen extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 9,
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            height: 50,
-                            color: Colors.white,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(100.0),
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              height: 50,
+                              color: Colors.white,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 4,
+                                    child: Container(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                  child: VerticalDivider(
-                                    thickness: 1.0,
-                                    color: Colors.grey,
+                                  const SizedBox(
+                                    width: 10,
+                                    child: VerticalDivider(
+                                      thickness: 1.0,
+                                      color: Colors.grey,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                      border: Border(
-                                        left: BorderSide(
-                                          width: 0.25,
-                                          color: Colors.grey[400]!,
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[100],
+                                        border: Border(
+                                          left: BorderSide(
+                                            width: 0.25,
+                                            color: Colors.grey[400]!,
+                                          ),
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          bottomRight: Radius.circular(5),
+                                          topRight: Radius.circular(5),
                                         ),
                                       ),
-                                      borderRadius: const BorderRadius.only(
-                                        bottomRight: Radius.circular(5),
-                                        topRight: Radius.circular(5),
+                                      child: const Icon(
+                                        Icons.close,
                                       ),
                                     ),
-                                    child: const Icon(
-                                      Icons.close,
-                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "1",
-                                        style: TextStyle(fontSize: 20),
+                            const SizedBox(height: 8),
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "1",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "2",
-                                        style: TextStyle(fontSize: 20),
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "2",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "3",
-                                        style: TextStyle(fontSize: 20),
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "3",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "4",
-                                        style: TextStyle(fontSize: 20),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "4",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "5",
-                                        style: TextStyle(fontSize: 20),
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "5",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "6",
-                                        style: TextStyle(fontSize: 20),
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "6",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "7",
-                                        style: TextStyle(fontSize: 20),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "7",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "8",
-                                        style: TextStyle(fontSize: 20),
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "8",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "9",
-                                        style: TextStyle(fontSize: 20),
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "9",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    height: 50,
-                                    width: 105,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        "0",
-                                        style: TextStyle(fontSize: 20),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: 105,
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: Text(
+                                          "0",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Material(
-                                    child: InkWell(
-                                      onTap: controller.onLoginPressed,
-                                      child: Container(
-                                        height: 50,
-                                        width: 210,
-                                        color: Colors.white,
-                                        child: Center(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.login),
-                                              SizedBox(width: 10),
-                                              Text(
-                                                "LogIn",
-                                                style: TextStyle(fontSize: 18),
-                                              ),
-                                            ],
+                                    Material(
+                                      child: InkWell(
+                                        onTap: controller.onLoginPressed,
+                                        child: Container(
+                                          height: 50,
+                                          width: 210,
+                                          color: Colors.white,
+                                          child: const Center(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(Icons.login),
+                                                SizedBox(width: 10),
+                                                Text(
+                                                  "LogIn",
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

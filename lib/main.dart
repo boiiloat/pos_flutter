@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'screen/login/login_screen.dart'; // Import your LoginScreen widget here
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
