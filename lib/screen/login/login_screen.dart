@@ -2,261 +2,187 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/login_controller.dart';
 
+import '../login/widgets/login_pin_code_box_widget.dart';
+import '../login/widgets/login_key_number_widget.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(LoginController());
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/bg_image.jpg"),
-          fit: BoxFit.fill,
-        ),
-      ),
-      child: Container(
-        color: Colors.black26,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Column(
+    var controller = Get.put(LoginController());
+    return Obx(
+      () => SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.red.shade600,
+            automaticallyImplyLeading: false,
+            title: const Text(
+              'POS App',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/bg_image.jpg"),
+                fit: BoxFit.fill,
+              ),
+            ),
+            child: Container(
+              color: Colors.black26,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    flex: 1,
-                    child: Container(),
-                  ),
-                  Expanded(
-                    flex: 9,
-                    child: Padding(
-                      padding: const EdgeInsets.all(100.0),
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              height: 50,
-                              color: Colors.white,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: Container(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                    child: VerticalDivider(
-                                      thickness: 1.0,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[100],
-                                        border: Border(
-                                          left: BorderSide(
-                                            width: 0.25,
-                                            color: Colors.grey[400]!,
-                                          ),
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          bottomRight: Radius.circular(5),
-                                          topRight: Radius.circular(5),
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.close,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "1",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "2",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "3",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "4",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "5",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "6",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "7",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "8",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "9",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 105,
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: Text(
-                                          "0",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
-                                    Material(
-                                      child: InkWell(
-                                        onTap: controller.onLoginPressed,
-                                        child: Container(
-                                          height: 50,
-                                          width: 210,
-                                          color: Colors.white,
-                                          child: const Center(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(Icons.login),
-                                                SizedBox(width: 10),
-                                                Text(
-                                                  "LogIn",
-                                                  style:
-                                                      TextStyle(fontSize: 18),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Container(),
                         ),
-                      ),
+                        Expanded(
+                          flex: 9,
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                LoginPinCodeBoxWidget(
+                                  pinCode: controller.pinCode.value,
+                                  onBackspacePressed: controller.onBackspace,
+                                ),
+                                Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        LoginKeyNumberWidget(
+                                          name: "1",
+                                          title: "1",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                        LoginKeyNumberWidget(
+                                          name: "2",
+                                          title: "2",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                        LoginKeyNumberWidget(
+                                          name: "3",
+                                          title: "3",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        LoginKeyNumberWidget(
+                                          name: "4",
+                                          title: "4",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                        LoginKeyNumberWidget(
+                                          name: "5",
+                                          title: "5",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                        LoginKeyNumberWidget(
+                                          name: "6",
+                                          title: "6",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        LoginKeyNumberWidget(
+                                          name: "7",
+                                          title: "7",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                        LoginKeyNumberWidget(
+                                          name: "8",
+                                          title: "8",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                        LoginKeyNumberWidget(
+                                          name: "9",
+                                          title: "9",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        LoginKeyNumberWidget(
+                                          flex: 2,
+                                          name: "0",
+                                          title: "0",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          onPressed:
+                                              controller.onKeyNumberPressed,
+                                        ),
+                                        LoginKeyNumberWidget(
+                                          flex: 4,
+                                          name: "Login",
+                                          disabled:
+                                              controller.isLoginProcess.value,
+                                          title: "Login",
+                                          onPressed: controller.onLoginPressed,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

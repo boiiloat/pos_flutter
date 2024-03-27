@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_system/controller/main_controller.dart';
 
-import '../../controller/main_controller.dart';
+import 'widgets/home_button_widget.dart';
+import 'widgets/home_drawer_profile_widget.dart';
+import 'widgets/home_profile_action_menu_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,247 +13,171 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.put(MainController());
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "POS",
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.blue,
-          leading: Builder(
-            builder: (context) => IconButton(
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.white,
+      child: Container(
+        color: Colors.white,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "POS",
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+            leading: Builder(
+              builder: (context) => IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                ),
               ),
             ),
+            actions: const [
+              HomeProfileActionMenuWidget(),
+            ],
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
-            )
-          ],
-        ),
-        drawer: const Drawer(
-            // child: HomeScreenDrawerWidget(),
-            ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                "https://www.ncausa.org/portals/56/Images/AboutCoffee/NCA_Web_Large_coffee-beans-history.png?ver=2018-02-28-115401-897"),
-                            fit: BoxFit.fill),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: const DecorationImage(
-                                image:
-                                    AssetImage('assets/images/logo_image.jpg'),
-                                fit: BoxFit.cover,
-                              ),
+          backgroundColor: Colors.transparent,
+          drawer: const Drawer(
+            child: HomeScreenDrawerWidget(),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/bg_image.jpg"),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  height: 180,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: const DecorationImage(
+                              image: AssetImage("assets/images/logo_image.jpg"),
                             ),
                           ),
-                          const SizedBox(height: 30),
-                          const Column(
-                            children: [
-                              Text(
-                                "Snack And Relax Coffee",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18),
-                              ),
-                              Text(
-                                "Type : Restruant / location: Siem Reap ",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          )
+                        ),
+                        const SizedBox(height: 7),
+                        const Text(
+                          "XXXXX XXX XXX XXXXXX",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: 350,
+                      child: Wrap(
+                        children: [
+                          HomeButtonWidget(
+                            title: "Start Working Day".tr,
+                            iconData: Icons.calendar_today,
+                            onPressed: () {},
+                          ),
+                          HomeButtonWidget(
+                            title: "Close Working Day".tr,
+                            background: Colors.red,
+                            foreground: Colors.white,
+                            iconData: Icons.calendar_today,
+                            foregroundIconColor: Colors.white,
+                            onPressed: () {},
+                          ),
+                          HomeButtonWidget(
+                            title: "Start Shift".tr,
+                            iconData: Icons.access_time,
+                            onPressed: () {},
+                          ),
+                          HomeButtonWidget(
+                              title: "Close Shift".tr,
+                              iconData: Icons.access_time,
+                              background: Colors.red,
+                              foreground: Colors.white,
+                              foregroundIconColor: Colors.white,
+                              onPressed: () {}),
+                          HomeButtonWidget(
+                            title: "POS".tr,
+                            iconData: Icons.shopping_cart_outlined,
+                            onPressed: () {},
+                            background: Colors.green,
+                            foreground: Colors.white,
+                            foregroundIconColor: Colors.white,
+                          ),
+                          HomeButtonWidget(
+                              title: "Receipt".tr,
+                              iconData: Icons.receipt_outlined,
+                              onPressed: () {}),
+                          HomeButtonWidget(
+                            title: "Customer".tr,
+                            iconData: Icons.group,
+                            onPressed: () {},
+                          ),
+                          HomeButtonWidget(
+                            title: "Report".tr,
+                            iconData: Icons.assessment_outlined,
+                            onPressed: () {},
+                          ),
+                          HomeButtonWidget(
+                            title: "Backup".tr,
+                            iconData: Icons.save,
+                            onPressed: () {},
+                            background: Colors.yellow,
+                            foreground: Colors.white,
+                            foregroundIconColor: Colors.white,
+                          ),
+                          HomeButtonWidget(
+                            title: "Cash Drawer".tr,
+                            iconData: Icons.monetization_on_outlined,
+                            onPressed: () {},
+                          ),
+                          HomeButtonWidget(
+                            title: "WiFi".tr,
+                            iconData: Icons.wifi_outlined,
+                            onPressed: controller.onWIFIPressed,
+                          ),
+                          HomeButtonWidget(
+                              title: "Reset Transaction".tr,
+                              iconData: Icons.restart_alt_outlined,
+                              onPressed: () {}),
+                          HomeButtonWidget(
+                            title: "Logout".tr,
+                            background: Colors.red,
+                            foreground: Colors.white,
+                            iconData: Icons.logout_outlined,
+                            onPressed: controller.onLogoutPressed,
+                            foregroundIconColor: Colors.white,
+                          ),
                         ],
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 7,
-                    child: SingleChildScrollView(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                                SizedBox(width: 20),
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                                SizedBox(width: 20),
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                                const SizedBox(width: 20),
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                                const SizedBox(width: 20),
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                                const SizedBox(width: 20),
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                                const SizedBox(width: 20),
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                                const SizedBox(width: 20),
-                                Container(
-                                  height: 110,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      border: Border.all(color: Colors.grey)),
-                                ),
-                                const SizedBox(width: 20),
-                                Material(
-                                  child: InkWell(
-                                    onTap: controller.onLogoutPressed,
-                                    child: Container(
-                                      height: 110,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.red,
-                                      ),
-                                      child: const Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.logout,
-                                            color: Colors.white,
-                                            size: 25,
-                                          ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            "Logout",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                    )
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

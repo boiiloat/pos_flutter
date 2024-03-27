@@ -37,7 +37,7 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
                               fontSize: 16,
                               color: pinCode.isEmpty || disabled
                                   ? Colors.grey[400]
-                                  : Colors.orange,
+                                  : Colors.red,
                             ),
                           )
                         : SingleChildScrollView(
@@ -52,7 +52,7 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
                                         size: 14,
                                         color: disabled
                                             ? Colors.grey[400]
-                                            : Colors.orange,
+                                            : Colors.red,
                                       ),
                                     )
                               ],
@@ -85,15 +85,15 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
                     topRight: Radius.circular(5),
                   ),
                 ),
-                // child: IconButton(
-                //   onPressed: disabled
-                //       ? null
-                //       : (pinCode.isEmpty ? null : onBackspacePressed),
-                //   icon: const Icon(
-                //     Icons.backspace,
-                //     color: Colors.red,
-                //   ),
-                // ),
+                child: IconButton(
+                  onPressed: disabled
+                      ? null
+                      : (pinCode.isEmpty ? null : onBackspacePressed),
+                  icon: const Icon(
+                    Icons.backspace,
+                    color: Colors.red,
+                  ),
+                ),
               ),
             ),
           ],

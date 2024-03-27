@@ -1,13 +1,19 @@
 import 'package:get/get.dart';
-
-import '../screen/home/home_screen.dart';
+import 'package:pos_system/screen/home/home_screen.dart';
 
 class LoginController extends GetxController {
-  // void onInit() {
-  //   super.onInit();
-  // }
+  var pinCode = ''.obs;
+  var isLoginProcess = false.obs;
 
-  void onLoginPressed() {
-    Get.to(const HomeScreen());
+  void onBackspace() {
+    pinCode("");
+  }
+
+  void onKeyNumberPressed(String value) async {
+    pinCode("${pinCode.value}$value");
+  }
+
+  void onLoginPressed(String value) async {
+    Get.to(() => const  HomeScreen());
   }
 }
