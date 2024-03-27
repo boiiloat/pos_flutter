@@ -28,12 +28,12 @@ class HomeDrawerMenuItemWidget extends StatelessWidget {
                   const SizedBox(width: 20),
                   Icon(
                     icon,
-                    color: color ?? Colors.red,
+                    color: color ?? Colors.black,
                   ),
                   const SizedBox(width: 20),
                   Text(
                     text,
-                    style: TextStyle(color: color ?? Colors.red),
+                    style: TextStyle(color: color ?? Colors.black),
                   ),
                 ],
               ),

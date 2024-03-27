@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../controller/main_controller.dart';
 import 'home_drawer_menu_item_widget.dart';
 import 'home_drawer_profile_widget copy.dart';
 import 'home_logout_button_widget.dart';
@@ -7,6 +9,7 @@ class HomeScreenDrawerWidget extends StatelessWidget {
   const HomeScreenDrawerWidget({super.key});
   @override
   Widget build(BuildContext context) {
+    var controller = Get.find<MainController>();
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -27,22 +30,22 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                         HomeDrawerMenuItemWidget(
                           icon: Icons.calendar_month,
                           text: 'Start Working Day',
-                          onPressed: () {},
+                          onPressed: controller.onWorkingdayPressed,
                         ),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.calendar_month,
                           text: 'Close Working Day',
-                          onPressed: () {},
+                          onPressed: controller.onCloseWorkingdayPressed,
                         ),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.schedule,
                           text: 'Start Cashier Shift',
-                          onPressed: () {},
+                          onPressed: controller.onStartShiftPressed,
                         ),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.schedule,
                           text: 'Close Cashier Shift',
-                          onPressed: () {},
+                          onPressed: controller.onCloseShiftPressed,
                         ),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.shopping_cart,

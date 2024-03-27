@@ -15,13 +15,13 @@ class HomeLogoutButtonWidget extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: controller.onLogoutPressed,
-          child: Center(
+          child: const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(width: 20),
+                 SizedBox(width: 20),
                 Icon(Icons.logout, color: Colors.red),
-                const SizedBox(width: 20),
+                 SizedBox(width: 20),
                 Text(
                   "Logout",
                   style: TextStyle(color: Colors.red),

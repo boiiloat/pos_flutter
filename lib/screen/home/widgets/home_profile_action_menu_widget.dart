@@ -24,14 +24,14 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
               value: 'loadMenu',
               child: Row(
                 children: [
-                  Icon(
+                 const Icon(
                     Icons.inventory_sharp,
-                    color: Colors.red,
+                    color: Colors.black,
                   ),
                   const SizedBox(width: 5),
                   Text(
                     'Load Menu'.tr,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   )
                 ],
               ),
@@ -40,14 +40,14 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
               value: 'loadUsers',
               child: Row(
                 children: [
-                  Icon(
+                 const Icon(
                     Icons.account_box,
-                    color: Colors.red,
+                    color: Colors.black,
                   ),
                   const SizedBox(width: 5),
                   Text(
                     'Reload User'.tr,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   )
                 ],
               ),
@@ -56,14 +56,14 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
               value: 'loadConfig',
               child: Row(
                 children: [
-                  Icon(
+                 const Icon(
                     Icons.settings_suggest_outlined,
-                    color: Colors.red,
+                    color: Colors.black,
                   ),
                   const SizedBox(width: 5),
                   Text(
                     'Load Config'.tr,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   )
                 ],
               ),

@@ -8,7 +8,6 @@ class HomeButtonWidget extends StatelessWidget {
   final Color? foregroundIconColor;
   final VoidCallback? onPressed;
 
-
   const HomeButtonWidget({
     super.key,
     required this.title,
@@ -17,7 +16,6 @@ class HomeButtonWidget extends StatelessWidget {
     this.foreground,
     this.foregroundIconColor,
     this.onPressed,
-
   });
 
   @override
