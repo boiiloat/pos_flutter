@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/main_controller.dart';
 
-
 class HomeLogoutButtonWidget extends StatelessWidget {
   const HomeLogoutButtonWidget({super.key});
 
@@ -19,9 +18,9 @@ class HomeLogoutButtonWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                 SizedBox(width: 20),
+                SizedBox(width: 20),
                 Icon(Icons.logout, color: Colors.red),
-                 SizedBox(width: 20),
+                SizedBox(width: 20),
                 Text(
                   "Logout",
                   style: TextStyle(color: Colors.red),

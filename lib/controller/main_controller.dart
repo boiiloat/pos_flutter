@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
 import 'package:pos_system/screen/working_day/wokingday_start_screen.dart';
 
@@ -19,21 +20,12 @@ class MainController extends GetxController {
   }
 
   void onBackupPressed() {
-    Get.snackbar(
-      'Back Up',
-      'Back up Successfully!',
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-      icon: const Icon(
-        Icons.check_circle,
-        color: Colors.white,
-        size: 30,
-      ),
-    );
+    print("object");
+    Program.alert("title", "description");
   }
 
   void onWorkingdayPressed() {
-    Get.to(() => const WorkingdayStartScreen());
+    Get.to(() => const WorkingdayStartScreen());``
   }
 
   void onCloseWorkingdayPressed() {
@@ -53,4 +45,10 @@ class MainController extends GetxController {
   }
 
   void onProfileActionPressed(String value) async {}
+
+  void onTesting() {
+    // Program.alert("Testing ", "Testing Successfully");
+    // Program.warning("title", "description");
+    Program.error("title", "description");
+  }
 }
