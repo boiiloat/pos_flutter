@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
@@ -25,7 +24,7 @@ class MainController extends GetxController {
   }
 
   void onWorkingdayPressed() {
-    Get.to(() => const WorkingdayStartScreen());``
+    Get.to(() => const WorkingdayStartScreen());
   }
 
   void onCloseWorkingdayPressed() {
