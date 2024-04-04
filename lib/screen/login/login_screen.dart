@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
             backgroundColor: Colors.red.shade600,
             automaticallyImplyLeading: false,
             title: const Text(
-              'POS App',
+              'xxxx ',
               style: TextStyle(color: Colors.white),
             ),
           ),
