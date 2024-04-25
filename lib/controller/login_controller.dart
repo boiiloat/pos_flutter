@@ -15,12 +15,13 @@ class LoginController extends GetxController {
   }
 
   void onLoginPressed(String value) async {
-    if (pinCode.value == "12345") {
-      await Program.alert("Login", "Login Success");
+    Get.to(HomeScreen());
+    // if (pinCode.value == "12345") {
+    //   await Program.alert("Login", "Login Success");
 
-      Get.to(() => const HomeScreen());
-    } else {
-      Program.error("Login", "Please Input correct pssword");
-    }
+    //   Get.to(() => const HomeScreen());
+    // } else {
+    //   Program.error("Login", "Please Input correct pssword");
+    // }
   }
 }

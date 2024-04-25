@@ -149,11 +149,7 @@ class HomeScreen extends StatelessWidget {
                             foreground: Colors.white,
                             foregroundIconColor: Colors.white,
                           ),
-                          HomeButtonWidget(
-                            title: "Cash Drawer".tr,
-                            iconData: Icons.monetization_on_outlined,
-                            onPressed: () {},
-                          ),
+                   
                           HomeButtonWidget(
                             title: "WiFi".tr,
                             iconData: Icons.wifi_outlined,
