@@ -18,6 +18,7 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
       padding: const EdgeInsets.all(3),
       child: Container(
         decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
         ),
@@ -36,7 +37,7 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16,
                               color: pinCode.isEmpty || disabled
-                                  ? Colors.grey[400]
+                                  ? Colors.grey
                                   : Colors.red,
                             ),
                           )
@@ -50,9 +51,8 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
                                       (e) => Icon(
                                         Icons.fiber_manual_record,
                                         size: 14,
-                                        color: disabled
-                                            ? Colors.grey[400]
-                                            : Colors.red,
+                                        color:
+                                            disabled ? Colors.grey : Colors.red,
                                       ),
                                     )
                               ],
