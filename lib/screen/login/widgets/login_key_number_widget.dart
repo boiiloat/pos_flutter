@@ -38,7 +38,7 @@ class LoginKeyNumberWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: (onPressed == null || disabled
                     ? Colors.grey[100]
-                    : Colors.grey.shade500),
+                    : Colors.white),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: customTitle ??
@@ -46,10 +46,7 @@ class LoginKeyNumberWidget extends StatelessWidget {
                     child: Text(
                       title_,
                       style: TextStyle(
-                        color: onPressed == null || disabled
-                            ? Colors.grey[500]!
-                            : Colors.white,
-                        fontSize: 16,
+                        color: Colors.grey,
                         // fontWeight: FontWeight.bold,
                       ),
                     ),

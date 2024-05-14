@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/login_controller.dart';
+import 'package:pos_system/screen/login/widgets/clear_key.dart';
 
 import '../login/widgets/login_pin_code_box_widget.dart';
 import '../login/widgets/login_key_number_widget.dart';
@@ -43,33 +44,33 @@ class LoginScreen extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.green.shade700,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(23.0),
+                            padding: const EdgeInsets.all(22.0),
                             child: Column(
                               children: [
                                 Container(
-                                  height: 140,
-                                  width: 140,
+                                  height: 125,
+                                  width: 125,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
-                                    image: DecorationImage(
+                                    image: const DecorationImage(
                                       image: AssetImage(
                                           'assets/images/logo_image.jpg'),
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 20),
-                                Text(
+                                const SizedBox(height: 20),
+                                const Text(
                                   "SNACK & RELAX",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 30),
-                                Text(
+                                const SizedBox(height: 30),
+                                const Text(
                                   "xxxxxxxxxxxxxx",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
@@ -80,8 +81,8 @@ class LoginScreen extends StatelessWidget {
                                       color: Colors.grey.shade300,
                                       fontSize: 17),
                                 ),
-                                SizedBox(height: 30),
-                                Text(
+                                const SizedBox(height: 30),
+                                const Text(
                                   "xxxxxxxxxxxxxx",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
@@ -92,9 +93,9 @@ class LoginScreen extends StatelessWidget {
                                       color: Colors.grey.shade300,
                                       fontSize: 17),
                                 ),
-                                SizedBox(height: 30),
-                                Text(
-                                  "xxxxx xxxxx xxxxxxxxxxxxxxxxxxxxx",
+                                const SizedBox(height: 30),
+                                const Text(
+                                  "xxxxx xxxxx xxxxxxxxxxxxxxxxx",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 ),
@@ -119,7 +120,7 @@ class LoginScreen extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Container(
-                color: Colors.black26,
+                color: Colors.grey.shade300,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
@@ -137,13 +138,12 @@ class LoginScreen extends StatelessWidget {
                             flex: 9,
                             child: Container(
                               padding:
-                                  const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                                  const EdgeInsets.fromLTRB(100, 100, 100, 100),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   LoginPinCodeBoxWidget(
                                     pinCode: controller.pinCode.value,
-                                    onBackspacePressed: controller.onBackspace,
                                   ),
                                   Column(
                                     children: [
@@ -250,14 +250,34 @@ class LoginScreen extends StatelessWidget {
                                             onPressed:
                                                 controller.onKeyNumberPressed,
                                           ),
-                                          LoginKeyNumberWidget(
+                                          ClearKeyWidget(
+                                            title: 'CLEAR',
                                             flex: 4,
-                                            name: "Login",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            title: "Login",
-                                            onPressed:
-                                                controller.onLoginPressed,
+                                            onBackspacePressed:
+                                                controller.onBackspace,
+                                            btnColor: Colors.red.shade800,
+                                          ),
+                                        ],
+                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     LoginKeyNumberWidget(
+                                      //       name: "zz",
+                                      //       disabled:
+                                      //           controller.isLoginProcess.value,
+                                      //       title: "zz",
+                                      //       onPressed:
+                                      //           controller.onLoginPressed,
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                      Row(
+                                        children: [
+                                          ClearKeyWidget(
+                                            title: 'Login',
+                                            onBackspacePressed:
+                                                controller.isLoginProcess,
+                                            btnColor: Colors.blue.shade800,
                                           ),
                                         ],
                                       ),

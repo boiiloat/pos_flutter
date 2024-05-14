@@ -8,6 +8,7 @@ class LoginController extends GetxController {
 
   void onBackspace() {
     pinCode("");
+    Program.alert("title", "description");
   }
 
   void onKeyNumberPressed(String value) async {
@@ -16,12 +17,5 @@ class LoginController extends GetxController {
 
   void onLoginPressed(String value) async {
     Get.to(HomeScreen());
-    // if (pinCode.value == "12345") {
-    //   await Program.alert("Login", "Login Success");
-
-    //   Get.to(() => const HomeScreen());
-    // } else {
-    //   Program.error("Login", "Please Input correct pssword");
-    // }
   }
 }
