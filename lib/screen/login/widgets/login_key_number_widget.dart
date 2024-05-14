@@ -46,7 +46,7 @@ class LoginKeyNumberWidget extends StatelessWidget {
                     child: Text(
                       title_,
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Colors.grey.shade700,
                         // fontWeight: FontWeight.bold,
                       ),
                     ),

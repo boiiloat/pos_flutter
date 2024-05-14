@@ -14,14 +14,6 @@ class LoginScreen extends StatelessWidget {
     var controller = Get.put(LoginController());
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.red.shade600,
-          automaticallyImplyLeading: false,
-          title: const Text(
-            'ePOS ',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
         body: Row(
           children: [
             Expanded(
@@ -40,19 +32,19 @@ class LoginScreen extends StatelessWidget {
                         child: Container(),
                       ),
                       Expanded(
-                        flex: 5,
+                        flex: 6,
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.green.shade700,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(22.0),
+                            padding: const EdgeInsets.all(15.0),
                             child: Column(
                               children: [
                                 Container(
-                                  height: 125,
-                                  width: 125,
+                                  height: 100,
+                                  width: 100,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
                                     image: const DecorationImage(
@@ -61,7 +53,7 @@ class LoginScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 15),
                                 const Text(
                                   "SNACK & RELAX",
                                   style: TextStyle(
@@ -69,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                const SizedBox(height: 30),
+                                const SizedBox(height: 15),
                                 const Text(
                                   "xxxxxxxxxxxxxx",
                                   style: TextStyle(
@@ -81,21 +73,16 @@ class LoginScreen extends StatelessWidget {
                                       color: Colors.grey.shade300,
                                       fontSize: 17),
                                 ),
-                                const SizedBox(height: 30),
-                                const Text(
-                                  "xxxxxxxxxxxxxx",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
+                                SizedBox(height: 10),
                                 Text(
                                   "Phone Number",
                                   style: TextStyle(
                                       color: Colors.grey.shade300,
                                       fontSize: 17),
                                 ),
-                                const SizedBox(height: 30),
+                                SizedBox(height: 10),
                                 const Text(
-                                  "xxxxx xxxxx xxxxxxxxxxxxxxxxx",
+                                  "xxxxx xxxxx xxxxxxxxxxxx",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 ),
@@ -111,7 +98,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        flex: 3,
+                        flex: 2,
                         child: Container(),
                       )
                     ],
@@ -120,7 +107,7 @@ class LoginScreen extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Container(
-                color: Colors.grey.shade300,
+                color: Colors.grey.shade400,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
@@ -138,7 +125,7 @@ class LoginScreen extends StatelessWidget {
                             flex: 9,
                             child: Container(
                               padding:
-                                  const EdgeInsets.fromLTRB(100, 100, 100, 100),
+                                  const EdgeInsets.fromLTRB(70, 20, 70, 20),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
