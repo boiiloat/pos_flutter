@@ -19,90 +19,88 @@ class LoginScreen extends StatelessWidget {
             Expanded(
               flex: 7,
               child: Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/bg_image.jpg"),
-                      fit: BoxFit.fill,
-                    ),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/bg_image.jpg"),
+                    fit: BoxFit.fill,
                   ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Container(),
-                      ),
-                      Expanded(
-                        flex: 6,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.green.shade700,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    image: const DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/logo_image.jpg'),
-                                    ),
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Container(),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade700,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 100,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  image: const DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/logo_image.jpg'),
                                   ),
                                 ),
-                                const SizedBox(height: 15),
-                                const Text(
-                                  "SNACK & RELAX",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 15),
-                                const Text(
-                                  "xxxxxxxxxxxxxx",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                Text(
-                                  "Phone Number",
-                                  style: TextStyle(
-                                      color: Colors.grey.shade300,
-                                      fontSize: 17),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "Phone Number",
-                                  style: TextStyle(
-                                      color: Colors.grey.shade300,
-                                      fontSize: 17),
-                                ),
-                                SizedBox(height: 10),
-                                const Text(
-                                  "xxxxx xxxxx xxxxxxxxxxxx",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                Text(
-                                  "Location",
-                                  style: TextStyle(
-                                      color: Colors.grey.shade300,
-                                      fontSize: 17),
-                                )
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: 15),
+                              const Text(
+                                "SNACK & RELAXXXX",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 15),
+                              const Text(
+                                "xxxxxxxxxxxxxx",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              Text(
+                                "Phone Number",
+                                style: TextStyle(
+                                    color: Colors.grey.shade300, fontSize: 17),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Phone Number",
+                                style: TextStyle(
+                                    color: Colors.grey.shade300, fontSize: 17),
+                              ),
+                              SizedBox(height: 10),
+                              const Text(
+                                "xxxxx xxxxx xxxxxxxxxxxx",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              Text(
+                                "Location",
+                                style: TextStyle(
+                                    color: Colors.grey.shade300, fontSize: 17),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Container(),
-                      )
-                    ],
-                  )),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(),
+                    )
+                  ],
+                ),
+              ),
             ),
             Expanded(
               flex: 3,
