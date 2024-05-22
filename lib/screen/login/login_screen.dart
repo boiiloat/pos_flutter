@@ -12,276 +12,295 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(LoginController());
-    return SafeArea(
-      child: Scaffold(
-        body: Row(
-          children: [
-            Expanded(
-              flex: 7,
-              child: Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/bg_image.jpg"),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Container(),
+    return Obx(() => SafeArea(
+          child: Scaffold(
+            body: Row(
+              children: [
+                Expanded(
+                  flex: 7,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/bg_image.jpg"),
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                    Expanded(
-                      flex: 6,
+                    child: Center(
                       child: Container(
+                        height: 420,
+                        width: 310,
                         decoration: BoxDecoration(
                           color: Colors.green.shade700,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30),
+                            Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                image: const DecorationImage(
+                                  image: AssetImage(
+                                      "assets/images/logo_image.jpg"),
+                                ),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            const Text(
+                              " SNACK & RELAX COFFEE",
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 15.0, right: 15),
+                              child: Divider(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              " SNACK & RELAX COFFEE",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "Bussiness",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            const Text(
+                              " Main POS Profle",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "POS Profile",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            const Text(
+                              "+855 90 93 48 72",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "POS Profile",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            const Text(
+                              "Salakomrerk comminue, Siem Reap City ",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "Address",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    color: Colors.grey.shade400,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
                           child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Container(
-                                height: 100,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  image: const DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/logo_image.jpg'),
+                              Expanded(
+                                flex: 1,
+                                child: Container(),
+                              ),
+                              Expanded(
+                                flex: 9,
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(70, 20, 70, 20),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      LoginPinCodeBoxWidget(
+                                        pinCode: controller.pinCode.value,
+                                        onBackspacePressed:
+                                            controller.onBackspace,
+                                        disabled:
+                                            controller.isLoginProcess.value,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              LoginKeyNumberWidget(
+                                                name: "1",
+                                                title: "1",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                              LoginKeyNumberWidget(
+                                                name: "2",
+                                                title: "2",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                              LoginKeyNumberWidget(
+                                                name: "3",
+                                                title: "3",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              LoginKeyNumberWidget(
+                                                name: "4",
+                                                title: "4",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                              LoginKeyNumberWidget(
+                                                name: "5",
+                                                title: "5",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                              LoginKeyNumberWidget(
+                                                name: "6",
+                                                title: "6",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              LoginKeyNumberWidget(
+                                                name: "7",
+                                                title: "7",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                              LoginKeyNumberWidget(
+                                                name: "8",
+                                                title: "8",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                              LoginKeyNumberWidget(
+                                                name: "9",
+                                                title: "9",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              LoginKeyNumberWidget(
+                                                flex: 2,
+                                                name: "0",
+                                                title: "0",
+                                                disabled: controller
+                                                    .isLoginProcess.value,
+                                                onPressed: controller
+                                                    .onKeyNumberPressed,
+                                              ),
+                                              ClearKeyWidget(
+                                                title: 'CLEAR',
+                                                flex: 4,
+                                                onBackspacePressed:
+                                                    controller.onBackspace,
+                                                btnColor: Colors.red.shade800,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              ClearKeyWidget(
+                                                title: 'Login',
+                                                onBackspacePressed:
+                                                    controller.isLoginProcess,
+                                                btnColor: Colors.blue.shade800,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 15),
-                              const Text(
-                                "SNACK & RELAXXXX",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 15),
-                              const Text(
-                                "xxxxxxxxxxxxxx",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                              Text(
-                                "Phone Number",
-                                style: TextStyle(
-                                    color: Colors.grey.shade300, fontSize: 17),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                "Phone Number",
-                                style: TextStyle(
-                                    color: Colors.grey.shade300, fontSize: 17),
-                              ),
-                              SizedBox(height: 10),
-                              const Text(
-                                "xxxxx xxxxx xxxxxxxxxxxx",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                              Text(
-                                "Location",
-                                style: TextStyle(
-                                    color: Colors.grey.shade300, fontSize: 17),
-                              )
                             ],
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Container(),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-            Expanded(
-              flex: 3,
-              child: Container(
-                color: Colors.grey.shade400,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(),
-                          ),
-                          Expanded(
-                            flex: 9,
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.fromLTRB(70, 20, 70, 20),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  LoginPinCodeBoxWidget(
-                                    pinCode: controller.pinCode.value,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          LoginKeyNumberWidget(
-                                            name: "1",
-                                            title: "1",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                          LoginKeyNumberWidget(
-                                            name: "2",
-                                            title: "2",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                          LoginKeyNumberWidget(
-                                            name: "3",
-                                            title: "3",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          LoginKeyNumberWidget(
-                                            name: "4",
-                                            title: "4",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                          LoginKeyNumberWidget(
-                                            name: "5",
-                                            title: "5",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                          LoginKeyNumberWidget(
-                                            name: "6",
-                                            title: "6",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          LoginKeyNumberWidget(
-                                            name: "7",
-                                            title: "7",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                          LoginKeyNumberWidget(
-                                            name: "8",
-                                            title: "8",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                          LoginKeyNumberWidget(
-                                            name: "9",
-                                            title: "9",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          LoginKeyNumberWidget(
-                                            flex: 2,
-                                            name: "0",
-                                            title: "0",
-                                            disabled:
-                                                controller.isLoginProcess.value,
-                                            onPressed:
-                                                controller.onKeyNumberPressed,
-                                          ),
-                                          ClearKeyWidget(
-                                            title: 'CLEAR',
-                                            flex: 4,
-                                            onBackspacePressed:
-                                                controller.onBackspace,
-                                            btnColor: Colors.red.shade800,
-                                          ),
-                                        ],
-                                      ),
-                                      // Row(
-                                      //   children: [
-                                      //     LoginKeyNumberWidget(
-                                      //       name: "zz",
-                                      //       disabled:
-                                      //           controller.isLoginProcess.value,
-                                      //       title: "zz",
-                                      //       onPressed:
-                                      //           controller.onLoginPressed,
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                      Row(
-                                        children: [
-                                          ClearKeyWidget(
-                                            title: 'Login',
-                                            onBackspacePressed:
-                                                controller.isLoginProcess,
-                                            btnColor: Colors.blue.shade800,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
