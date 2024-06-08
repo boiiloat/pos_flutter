@@ -36,8 +36,7 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
                         ? Text(
                             "Pin code".tr,
                             style: TextStyle(
-                              fontSize: 15,
-                              
+                              fontSize: 14,
                               color: pinCode.isEmpty || disabled
                                   ? Colors.grey[400]
                                   : appColor,
@@ -52,7 +51,7 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
                                 ...pinCode.split('').map(
                                       (e) => Icon(
                                         Icons.fiber_manual_record,
-                                        size: 14,
+                                        size: 11,
                                         color: disabled
                                             ? Colors.grey[400]
                                             : appColor,

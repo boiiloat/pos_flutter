@@ -46,13 +46,13 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
+                  height: 220,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/images/bg_image.jpg"),
                       fit: BoxFit.fill,
                     ),
                   ),
-                  height: 180,
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.5),
@@ -60,9 +60,10 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        SizedBox(height: 30),
                         Container(
-                          height: 60,
-                          width: 60,
+                          height: 85,
+                          width: 85,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             image: const DecorationImage(
@@ -70,13 +71,17 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 7),
+                        SizedBox(height: 10),
                         const Text(
-                          "XXXXX XXX XXX XXXXXX",
+                          "SNACK AND RELAX",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 15),
+                        ),
+                        const Text(
+                          "POS Profile : Cashier / Address: Sieam Reap, Cambodia",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
                         ),
                       ],
                     ),
@@ -149,7 +154,6 @@ class HomeScreen extends StatelessWidget {
                             foreground: Colors.white,
                             foregroundIconColor: Colors.white,
                           ),
-                   
                           HomeButtonWidget(
                             title: "WiFi".tr,
                             iconData: Icons.wifi_outlined,

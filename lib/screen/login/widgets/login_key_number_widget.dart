@@ -26,7 +26,7 @@ class LoginKeyNumberWidget extends StatelessWidget {
     return Expanded(
       flex: flex,
       child: Container(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(3),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -36,11 +36,11 @@ class LoginKeyNumberWidget extends StatelessWidget {
             child: Container(
               height: height,
               decoration: BoxDecoration(
-                color: (onPressed == null || disabled
-                    ? Colors.grey[100]
-                    : Colors.white),
-                borderRadius: BorderRadius.circular(5),
-              ),
+                  color: (onPressed == null || disabled
+                      ? Colors.grey[100]
+                      : Colors.white),
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: Colors.grey.shade300)),
               child: customTitle ??
                   Center(
                     child: Text(

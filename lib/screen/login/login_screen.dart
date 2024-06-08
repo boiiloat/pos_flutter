@@ -133,7 +133,7 @@ class LoginScreen extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Container(
-                    color: Colors.grey.shade300,
+                    color: Colors.grey.shade200,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.max,

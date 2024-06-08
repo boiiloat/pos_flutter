@@ -6,9 +6,12 @@ class LoginController extends GetxController {
   var pinCode = ''.obs;
   var isLoginProcess = false.obs;
 
-  Future<void> onInitState() async {
-    //
-  }
+  // @override
+  // Future<void> onInit() async {
+  //   super.onInit();
+  //   pinCode.value = '';
+  //   //
+  // }
 
   void updateResult(String value) {
     pinCode.value += value;
@@ -23,7 +26,7 @@ class LoginController extends GetxController {
   }
 
   void onLoginPressed() {
-    Get.to(() => HomeScreen());
-    pinCode.value = "";
+    Get.to(() => const HomeScreen());
+    pinCode.value = '';
   }
 }
