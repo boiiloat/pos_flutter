@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 
 class LoginController extends GetxController {
@@ -21,10 +20,10 @@ class LoginController extends GetxController {
 
   void onBackspace() {
     pinCode("");
-    Program.alert("title", "description");
   }
 
-  void onLoginPressed(String value) async {
-    Get.to(HomeScreen());
+  void onLoginPressed() {
+    Get.to(() => HomeScreen());
+    pinCode.value = "";
   }
 }

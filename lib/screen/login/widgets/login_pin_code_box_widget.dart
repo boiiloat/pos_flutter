@@ -34,9 +34,10 @@ class LoginPinCodeBoxWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 10.0),
                     child: pinCode.isEmpty
                         ? Text(
-                            "PIN Code".tr,
+                            "Pin code".tr,
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 15,
+                              
                               color: pinCode.isEmpty || disabled
                                   ? Colors.grey[400]
                                   : appColor,

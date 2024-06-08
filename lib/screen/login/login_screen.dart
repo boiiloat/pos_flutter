@@ -37,21 +37,22 @@ class LoginScreen extends StatelessWidget {
                           children: [
                             const SizedBox(height: 30),
                             Container(
-                              height: 80,
-                              width: 80,
+                              height: 82,
+                              width: 82,
                               decoration: BoxDecoration(
-                                image: const DecorationImage(
-                                  image: AssetImage(
-                                      "assets/images/logo_image.jpg"),
-                                ),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
+                                  image: const DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/logo_image.jpg"),
+                                  ),
+                                  borderRadius: BorderRadius.circular(100),
+                                  border:
+                                      Border.all(color: Colors.grey.shade200)),
                             ),
                             const SizedBox(height: 15),
                             const Text(
-                              " SNACK & RELAX COFFEE",
+                              " SNACK & RELAX",
                               style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 20,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -65,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              " SNACK & RELAX COFFEE",
+                              " SNACK & RELAX ",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.white,
@@ -80,7 +81,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 15),
                             const Text(
-                              " Main POS Profle",
+                              " Cashier ",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.white,
@@ -102,7 +103,7 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "POS Profile",
+                              "Phone Number",
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey.shade300,
@@ -132,7 +133,7 @@ class LoginScreen extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Container(
-                    color: Colors.grey.shade400,
+                    color: Colors.grey.shade300,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.max,
@@ -269,9 +270,9 @@ class LoginScreen extends StatelessWidget {
                                               ClearKeyWidget(
                                                 title: 'CLEAR',
                                                 flex: 4,
-                                                onBackspacePressed:
-                                                    controller.onBackspace,
                                                 btnColor: Colors.red.shade800,
+                                                onPressed:
+                                                    controller.onBackspace,
                                               ),
                                             ],
                                           ),
@@ -279,9 +280,9 @@ class LoginScreen extends StatelessWidget {
                                             children: [
                                               ClearKeyWidget(
                                                 title: 'Login',
-                                                onBackspacePressed:
-                                                    controller.isLoginProcess,
                                                 btnColor: Colors.blue.shade800,
+                                                onPressed:
+                                                    controller.onLoginPressed,
                                               ),
                                             ],
                                           ),

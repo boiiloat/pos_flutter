@@ -13,7 +13,7 @@ class LoginKeyNumberWidget extends StatelessWidget {
     super.key,
     required this.name,
     this.title,
-    this.height = 60,
+    this.height = 50,
     this.customTitle,
     this.onPressed,
     this.flex = 1,
@@ -26,7 +26,7 @@ class LoginKeyNumberWidget extends StatelessWidget {
     return Expanded(
       flex: flex,
       child: Container(
-        padding: const EdgeInsets.all(3),
+        padding: const EdgeInsets.all(4),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
