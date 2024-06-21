@@ -27,16 +27,7 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.calendar_month,
-                          text: 'Start Working Day',
-                          onPressed: controller.onWorkingdayPressed,
-                        ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.calendar_month,
-                          text: 'Close Working Day',
-                          onPressed: controller.onCloseWorkingdayPressed,
-                        ),
+                    
                         HomeDrawerMenuItemWidget(
                           icon: Icons.schedule,
                           text: 'Start Cashier Shift',

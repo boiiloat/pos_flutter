@@ -99,19 +99,6 @@ class HomeScreen extends StatelessWidget {
                       child: Wrap(
                         children: [
                           HomeButtonWidget(
-                            title: "Start Working Day".tr,
-                            iconData: Icons.calendar_today,
-                            onPressed: controller.onWorkingdayPressed,
-                          ),
-                          HomeButtonWidget(
-                            title: "Close Working Day".tr,
-                            background: Colors.red,
-                            foreground: Colors.white,
-                            iconData: Icons.calendar_today,
-                            foregroundIconColor: Colors.white,
-                            onPressed: controller.onCloseWorkingdayPressed,
-                          ),
-                          HomeButtonWidget(
                             title: "Start Shift".tr,
                             iconData: Icons.access_time,
                             onPressed: controller.onStartShiftPressed,
