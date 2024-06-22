@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ShiftStartScreen extends StatelessWidget {
-  const ShiftStartScreen({super.key});
+class SaleStartScreen extends StatelessWidget {
+  const SaleStartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

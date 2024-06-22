@@ -17,7 +17,7 @@ class Program {
       description,
       maxWidth: 500,
       padding: const EdgeInsets.symmetric(vertical: 10),
-      margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+      // margin: const EdgeInsets.only(top: 3, left: 3, right: 3),
       backgroundColor: background,
       icon: icon,
       colorText: foreground,
@@ -25,7 +25,7 @@ class Program {
       overlayBlur: 0,
       shouldIconPulse: true,
       barBlur: 20,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
       isDismissible: true,
     );
   }

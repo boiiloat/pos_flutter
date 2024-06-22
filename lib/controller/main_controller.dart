@@ -1,12 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/program.dart';
+import 'package:pos_system/screen/StartSale/widgets/start_sale_alert.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import '../screen/cashier_shift/shift_close_screen.dart';
-import '../screen/cashier_shift/shift_starts_screen.dart';
-import '../screen/pos/pos_screen.dart';
+import '../screen/pos/table_plain_screen.dart';
 
 class MainController extends GetxController {
   var isLoading = true.obs;
+  var workingInfor = <String, dynamic>{"wd": null, "cs": null}.obs;
+  var isSaleStarted = false.obs;
+
   void onLogoutPressed() {
     Get.to(const LoginScreen());
   }
@@ -16,21 +19,47 @@ class MainController extends GetxController {
   }
 
   void onBackupPressed() {
-    print("object");
     Program.alert("title", "description");
   }
 
-
-  void onStartShiftPressed() {
-    Get.to(() => const ShiftStartScreen());
+  void onStartSalePressed(BuildContext context) {
+    Get.defaultDialog(
+      radius: 5,
+      title: "Start Sale",
+      backgroundColor: Colors.white,
+      content: StartSaleAlert(
+        onBack: () {
+          Get.back();
+        },
+        onSave: () {
+          isSaleStarted.value = true;
+          Get.back();
+        },
+        text: 'Are you sure you want to start sale?',
+      ),
+    );
   }
 
-  void onCloseShiftPressed() {
-    Get.to(() => const ShiftCloseScreen());
+  void onCloseSalePrssed() {
+    Get.defaultDialog(
+      radius: 5,
+      title: "Close Sale",
+      backgroundColor: Colors.white,
+      content: StartSaleAlert(
+        onBack: () {
+          Get.back();
+        },
+        onSave: () {
+          isSaleStarted.value = false;
+          Get.back();
+        },
+        text: 'Are you sure you want to stop sale?',
+      ),
+    );
   }
 
   void onPOSPressed() {
-    Get.to(() => const POSScreen());
+    Get.to(() => const TablePlainScreen());
   }
 
   void onProfileActionPressed(String value) async {}

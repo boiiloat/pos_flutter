@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/login_controller.dart';
 import 'package:pos_system/screen/login/widgets/clear_key.dart';
-
 import '../login/widgets/login_pin_code_box_widget.dart';
 import '../login/widgets/login_key_number_widget.dart';
 
