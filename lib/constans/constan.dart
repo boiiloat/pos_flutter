@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final Color appColor = HexColor.fromHex("#390095");
+final Color appColor = HexColor.fromHex("#E71C23");
 final Color textColor = HexColor.fromHex("#364254");
 final Color textSecondColor = HexColor.fromHex("#8b98ac");
 final Color primaryColor = HexColor.fromHex("#1f3ef9");
@@ -14,6 +14,7 @@ final Color lightColor = HexColor.fromHex("#f5f5f5");
 final Color profileBorderColor = HexColor.fromHex("#4e90fe");
 final Color homeIconColor = HexColor.fromHex("#c68642");
 final Color homeKPIColor = HexColor.fromHex("#f8fbff");
+final Color arrowback = HexColor.fromHex("#FFFFFF");
 
 extension EIterable<E> on Iterable<E> {
   Iterable<E> sortedBy(Comparable Function(E e) key) =>

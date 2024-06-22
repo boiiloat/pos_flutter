@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/table_plan_controller.dart';
+import 'package:pos_system/screen/home/home_screen.dart';
+import 'package:pos_system/screen/sale/sale_menu_widget.dart';
 
 class TablePlainScreen extends StatelessWidget {
   const TablePlainScreen({super.key});
@@ -32,26 +34,38 @@ class TablePlainScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20.0),
                 child: Wrap(
                   children: List.generate(
-                    20,
+                    25,
                     (index) => Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: InkWell(
-                        onTap: () {},
-                        child: Ink(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.deck,
-                              color: Colors.grey,
-                              size: 35,
+                        onTap: () {
+                          controller.selectIndex(index);
+                          Get.to(SaleMenuScreen());
+                        },
+                        child: Obx(() {
+                          bool isSelected =
+                              controller.selectedIndex.value == index;
+                          return Ink(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: isSelected
+                                      ? Colors.blue
+                                      : Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ),
-                        ),
+                            child: Center(
+                              child: Icon(
+                                Icons.deck,
+                                color: isSelected
+                                    ? Colors.blue
+                                    : Colors.grey.shade400,
+                                size: 35,
+                              ),
+                            ),
+                          );
+                        }),
                       ),
                     ),
                   ),
