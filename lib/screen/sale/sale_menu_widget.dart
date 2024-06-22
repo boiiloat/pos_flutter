@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
 
 import '../../controller/sale_controller.dart';
+import 'sale_buttom_action_widget.dart';
 import 'sale_item_note_widget.dart';
 
 class SaleMenuScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class SaleMenuScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(' POS',style: TextStyle(color: arrowback),),
+        title: Text('POS', style: TextStyle(color: arrowback)),
         backgroundColor: appColor,
         leading: IconButton(
           onPressed: controller.onBackPressed,
@@ -28,50 +29,64 @@ class SaleMenuScreen extends StatelessWidget {
         children: [
           Expanded(
             flex: 8,
-            child: Container(
-              child: Column(
-                children: [
-                   Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: List.generate(
-                        10,
-                        (index) => const SaleItemNoteWidget(
-                          label: 'Aperittize',
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Row(
+                          children: List.generate(
+                            10,
+                            (index) => const SaleItemNoteWidget(
+                              label: 'Aperittize',
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-                  Expanded(
-                    flex: 13,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(
-                              'assets/images/bg_image.jpg',
-                            ),
-                            fit: BoxFit.cover),
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(flex: 8, child: Container(),),
-                          Expanded(flex: 1, child: Container(color: Colors.green,),),
-
-                        ],
+                Expanded(
+                  flex: 13,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/bg_image.jpg'),
+                        fit: BoxFit.cover,
                       ),
                     ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 8,
+                          child: Container(),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                             
+                             children: [
+                              SaleButtomActionWidget(color: Colors.red, icon: Icon(Icons.cancel), label: 'CANCEL BILL',),
+                            
+                              SaleButtomActionWidget(color: Colors.blue, icon: Icon(Icons.print), label: 'PRINT BILL',),
+                             ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Expanded(
