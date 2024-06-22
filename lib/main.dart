@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/screen/home/home_screen.dart';
+import 'package:pos_system/screen/pos/table_plain_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const LoginScreen(),
-      home: const HomeScreen(),
+      home: const TablePlainScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );

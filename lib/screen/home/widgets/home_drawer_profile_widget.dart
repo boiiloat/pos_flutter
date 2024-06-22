@@ -30,7 +30,7 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                         HomeDrawerMenuItemWidget(
                           icon: Icons.play_circle,
                           text: 'Start Sale',
-                          onPressed: controller.onStartSalePressed,
+                          onPressed: () => controller.onStartSalePressed,
                         ),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.stop_circle,

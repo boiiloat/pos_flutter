@@ -37,7 +37,7 @@ class HomeDrawerProfileWidget extends StatelessWidget {
                 ),
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                  decoration: BoxDecoration(),
+                  decoration: const BoxDecoration(),
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

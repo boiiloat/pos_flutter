@@ -103,7 +103,8 @@ class HomeScreen extends StatelessWidget {
                               hidden: controller.isSaleStarted.value,
                               title: "Start Sale",
                               iconData: Icons.play_circle,
-                              onPressed: controller.onStartSalePressed,
+                              onPressed: () =>
+                                  controller.onStartSalePressed(context),
                             ),
                             HomeButtonWidget(
                               hidden: !controller.isSaleStarted.value,

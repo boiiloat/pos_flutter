@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/program.dart';
+import 'package:pos_system/screen/StartSale/widgets/start_sale_alert.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import '../screen/StartSale/shift_close_screen.dart';
-import '../screen/pos/pos_screen.dart';
+import '../screen/pos/table_plain_screen.dart';
 
 class MainController extends GetxController {
   var isLoading = true.obs;
@@ -22,60 +22,44 @@ class MainController extends GetxController {
     Program.alert("title", "description");
   }
 
-  void onStartSalePressed() {
-    Get.dialog(Dialog(
+  void onStartSalePressed(BuildContext context) {
+    Get.defaultDialog(
+      radius: 5,
+      title: "Start Sale",
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(7)),
+      content: StartSaleAlert(
+        onBack: () {
+          Get.back();
+        },
+        onSave: () {
+          isSaleStarted.value = true;
+          Get.back();
+        },
+        text: 'Are you sure you want to start sale?',
       ),
-      child: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextButton(
-              onPressed: () => Get.back(), // Close the dialog
-              child: Text('Close'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Perform some action
-                isSaleStarted.value = false;
-                Get.to(ShiftCloseScreen()); // Close the dialog after the action
-                // Close the dialog after the action
-              },
-              child: Text('Do something'),
-            ),
-          ],
-        ),
-      ),
-    ));
+    );
   }
 
   void onCloseSalePrssed() {
-    Get.dialog(
-      AlertDialog(
-        content: Text('This is the content of the dialog.'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(), // Close the dialog
-            child: Text('Close'),
-          ),
-          TextButton(
-            onPressed: () {
-              // Perform some action
-              isSaleStarted.value = false;
-              Get.back(); // Close the dialog after the action
-              // Close the dialog after the action
-            },
-            child: Text('Do something'),
-          ),
-        ],
+    Get.defaultDialog(
+      radius: 5,
+      title: "Close Sale",
+      backgroundColor: Colors.white,
+      content: StartSaleAlert(
+        onBack: () {
+          Get.back();
+        },
+        onSave: () {
+          isSaleStarted.value = false;
+          Get.back();
+        },
+        text: 'Are you sure you want to stop sale?',
       ),
     );
   }
 
   void onPOSPressed() {
-    Get.to(() => const POSScreen());
+    Get.to(() => const TablePlainScreen());
   }
 
   void onProfileActionPressed(String value) async {}
