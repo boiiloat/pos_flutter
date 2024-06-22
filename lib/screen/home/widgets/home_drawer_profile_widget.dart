@@ -27,16 +27,15 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                    
                         HomeDrawerMenuItemWidget(
-                          icon: Icons.schedule,
-                          text: 'Start Cashier Shift',
-                          onPressed: controller.onStartShiftPressed,
+                          icon: Icons.play_circle,
+                          text: 'Start Sale',
+                          onPressed: controller.onStartSalePressed,
                         ),
                         HomeDrawerMenuItemWidget(
-                          icon: Icons.schedule,
-                          text: 'Close Cashier Shift',
-                          onPressed: controller.onCloseShiftPressed,
+                          icon: Icons.stop_circle,
+                          text: 'Close Sale',
+                          onPressed: controller.onCloseSalePrssed,
                         ),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.shopping_cart,
