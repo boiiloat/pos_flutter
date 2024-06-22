@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/controller/table_plan_controller.dart';
+import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/sale/sale_menu_widget.dart';
 
 class TablePlainScreen extends StatelessWidget {
@@ -13,16 +15,32 @@ class TablePlainScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading:IconButton(onPressed: controller.onBackPressed, icon: Icon(Icons.arrow_back,color: arrowback,)),
           backgroundColor: Colors.red,
-          title: const Text(
-            "Sale",
-            style: TextStyle(color: Colors.white),
+          title: Row(
+            children: [
+              const Text(
+                "Table layout",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(width: 10),
+              Icon(Icons.add_shopping_cart),
+            ],
           ),
           iconTheme: const IconThemeData(color: Colors.white),
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.grid_view),
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: Row(
+                children: [
+              
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add_circle,size: 30,),
+                  ),
+                  Text('Add Table',style: TextStyle(color: Colors.white,fontSize: 16),),
+                ],
+              ),
             ),
           ],
         ),

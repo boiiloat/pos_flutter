@@ -5,6 +5,11 @@ class TablePlanController extends GetxController {
 
     var selectedIndex = (-1).obs;
 
+
+    void onBackPressed(){
+      Get.back();
+    }
+
   void selectIndex(int index) {
     if (selectedIndex.value == index) {
       selectedIndex.value = -1; // Deselect if the same index is tapped again

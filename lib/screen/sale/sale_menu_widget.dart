@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
 
-import 'sale_menu_shot_cut_widget.dart';
+import '../../controller/sale_controller.dart';
+import 'sale_item_note_widget.dart';
 
 class SaleMenuScreen extends StatelessWidget {
   const SaleMenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.put(SaleController());
+
     return Scaffold(
       appBar: AppBar(
+        title: Text(' POS',style: TextStyle(color: arrowback),),
         backgroundColor: appColor,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: controller.onBackPressed,
           icon: Icon(
             Icons.arrow_back,
             color: arrowback,
@@ -26,31 +31,42 @@ class SaleMenuScreen extends StatelessWidget {
             child: Container(
               child: Column(
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: Row(
-                        children: [
-                          SaleMenuShotCutWidget(),
-                          Container(
-                            height: 40,
-                            width: 50,
-                            color: Colors.green,
-                          ),
-                        ],
+                   Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      children: List.generate(
+                        10,
+                        (index) => const SaleItemNoteWidget(
+                          label: 'Aperittize',
+                        ),
                       ),
                     ),
                   ),
+                ),
+              ),
+            ),
                   Expanded(
                     flex: 13,
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage(
                               'assets/images/bg_image.jpg',
                             ),
                             fit: BoxFit.cover),
+                      ),
+                      child: Column(
+                        children: [
+                          Expanded(flex: 8, child: Container(),),
+                          Expanded(flex: 1, child: Container(color: Colors.green,),),
+
+                        ],
                       ),
                     ),
                   ),

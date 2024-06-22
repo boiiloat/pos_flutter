@@ -8,28 +8,21 @@ class SaleItemNoteWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.only(left:15.0),
       child: Container(
-        height: 20,
+        height: 30,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: const Offset(0, 4), // changes position of shadow
-            ),
-          ],
+          color: Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(left: 18.0, right: 18),
+          padding: const EdgeInsets.only(left: 20.0, right: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 label,
+               
               ),
             ],
           ),
