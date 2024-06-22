@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'screen/sale/sale_menu_widget.dart';
+import 'screen/login/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,7 +10,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Your App',
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const LoginScreen(),
-      home: const SaleMenuScreen(),
+      home: const LoginScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );

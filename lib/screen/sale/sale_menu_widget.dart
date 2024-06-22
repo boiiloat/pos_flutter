@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pos_system/constans/constan.dart';
 
-import 'sale_item_note_widget.dart';
 import 'sale_menu_shot_cut_widget.dart';
 
 class SaleMenuScreen extends StatelessWidget {

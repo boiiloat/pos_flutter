@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/table_plan_controller.dart';
-import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/sale/sale_menu_widget.dart';
 
 class TablePlainScreen extends StatelessWidget {

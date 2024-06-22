@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../constans/constan.dart';
 
 class SaleMenuShotCutWidget extends StatelessWidget {
   // final Map<String, dynamic> menu;
