@@ -7,7 +7,7 @@ class SaleProductWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 120,
-      width: 139,
+      width: 153,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: DecorationImage(

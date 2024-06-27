@@ -14,12 +14,13 @@ class TablePlainScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.grey.shade300,
         appBar: AppBar(
-          leading:IconButton(onPressed: controller.onBackPressed, icon: Icon(Icons.arrow_back,color: arrowback,)),
+          leading:IconButton(onPressed: controller.onBackPressed, icon: Icon(Icons.arrow_back,color: arrowback,),),
           backgroundColor: Colors.red,
-          title: Row(
+          title: const Row(
             children: [
-              const Text(
+               Text(
                 "Table layout",
                 style: TextStyle(color: Colors.white),
               ),
@@ -28,21 +29,6 @@ class TablePlainScreen extends StatelessWidget {
             ],
           ),
           iconTheme: const IconThemeData(color: Colors.white),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: Row(
-                children: [
-              
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add_circle,size: 30,),
-                  ),
-                  Text('Add Table',style: TextStyle(color: Colors.white,fontSize: 16),),
-                ],
-              ),
-            ),
-          ],
         ),
         body: Column(
           children: [
@@ -53,33 +39,37 @@ class TablePlainScreen extends StatelessWidget {
                   children: List.generate(
                     25,
                     (index) => Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
                           controller.selectIndex(index);
-                          Get.to(SaleMenuScreen());
+                          Get.to(const SaleMenuScreen());
                         },
                         child: Obx(() {
                           bool isSelected =
                               controller.selectedIndex.value == index;
                           return Ink(
-                            height: 80,
-                            width: 80,
+                            height: 100,
+                            width: 100,
                             decoration: BoxDecoration(
                               border: Border.all(
                                   color: isSelected
                                       ? Colors.blue
-                                      : Colors.grey.shade300),
+                                      : Colors.red),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Center(
-                              child: Icon(
-                                Icons.deck,
-                                color: isSelected
-                                    ? Colors.blue
-                                    : Colors.grey.shade400,
-                                size: 35,
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('T1',style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),),
+                                Icon(
+                                  Icons.deck,
+                                  color: isSelected
+                                      ? Colors.blue
+                                      : Colors.red,
+                                  size: 35,
+                                ),
+                              ],
                             ),
                           );
                         }),

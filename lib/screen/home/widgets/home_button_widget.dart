@@ -33,7 +33,7 @@ class HomeButtonWidget extends StatelessWidget {
             child: const Text(""),
           )
         : Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(7),
             child: Material(
               color: background_,
               borderRadius: BorderRadius.circular(10.0),
@@ -45,7 +45,7 @@ class HomeButtonWidget extends StatelessWidget {
                     color: background_,
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  height: 90,
+                  height: 100,
                   width: 106,
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),

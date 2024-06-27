@@ -13,7 +13,7 @@ class SaleItemNoteWidget extends StatelessWidget {
         height: 25,
         decoration: BoxDecoration(
           color: Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(100),
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 15.0, right: 15),

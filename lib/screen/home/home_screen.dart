@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
     return Obx(
       () => SafeArea(
         child: Container(
-          color: Colors.white,
+          color: Colors.grey.shade300,
           child: Scaffold(
             appBar: AppBar(
               title: const Text(
@@ -62,8 +62,8 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 30),
                           Container(
-                            height: 85,
-                            width: 85,
+                            height: 90,
+                            width: 90,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               image: const DecorationImage(
@@ -72,13 +72,13 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 20),
                           const Text(
                             "SNACK AND RELAX",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15),
+                                fontSize: 20),
                           ),
                           const Text(
                             "POS Profile : Cashier / Address: Sieam Reap, Cambodia",
@@ -93,74 +93,82 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
-                      SizedBox(
-                        width: 350,
-                        child: Wrap(
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            HomeButtonWidget(
-                              hidden: controller.isSaleStarted.value,
-                              title: "Start Sale",
-                              iconData: Icons.play_circle,
-                              onPressed: () =>
-                                  controller.onStartSalePressed(context),
-                            ),
-                            HomeButtonWidget(
-                              hidden: !controller.isSaleStarted.value,
-                              title: "Close Sale",
-                              iconData: Icons.stop_circle,
-                              background: Colors.red,
-                              foreground: Colors.white,
-                              foregroundIconColor: Colors.white,
-                              onPressed: controller.onCloseSalePrssed,
-                            ),
-                            HomeButtonWidget(
-                              title: "POS".tr,
-                              iconData: Icons.shopping_cart_outlined,
-                              onPressed: controller.onPOSPressed,
-                              background: Colors.green,
-                              foreground: Colors.white,
-                              foregroundIconColor: Colors.white,
-                            ),
-                            HomeButtonWidget(
-                                title: "Receipt".tr,
-                                iconData: Icons.receipt_outlined,
-                                onPressed: () {}),
-                            HomeButtonWidget(
-                              title: "Customer".tr,
-                              iconData: Icons.group,
-                              onPressed: () {},
-                            ),
-                            HomeButtonWidget(
-                              title: "Report".tr,
-                              iconData: Icons.assessment_outlined,
-                              onPressed: () {},
-                            ),
-                            HomeButtonWidget(
-                              title: "Backup".tr,
-                              iconData: Icons.save,
-                              onPressed: controller.onBackupPressed,
-                              background: Colors.yellow.shade600,
-                              foreground: Colors.white,
-                              foregroundIconColor: Colors.white,
-                            ),
-                            HomeButtonWidget(
-                              title: "WiFi".tr,
-                              iconData: Icons.wifi_outlined,
-                              onPressed: controller.onWIFIPressed,
-                            ),
-                            HomeButtonWidget(
-                                title: "Reset Transaction".tr,
-                                iconData: Icons.restart_alt_outlined,
-                                onPressed: () {}),
-                            HomeButtonWidget(
-                              title: "Logout".tr,
-                              background: Colors.red,
-                              foreground: Colors.white,
-                              iconData: Icons.logout_outlined,
-                              onPressed: controller.onLogoutPressed,
-                              foregroundIconColor: Colors.white,
+                            SizedBox(
+                              width: 360,
+                              child: Wrap(
+                                children: [
+                                  HomeButtonWidget(
+                                    hidden: controller.isSaleStarted.value,
+                                    title: "Start Sale",
+                                    iconData: Icons.play_circle,
+                                    onPressed: () =>
+                                        controller.onStartSalePressed(context),
+                                  ),
+                                  HomeButtonWidget(
+                                    hidden: !controller.isSaleStarted.value,
+                                    title: "Close Sale",
+                                    iconData: Icons.stop_circle,
+                                    background: Colors.red,
+                                    foreground: Colors.white,
+                                    foregroundIconColor: Colors.white,
+                                    onPressed: controller.onCloseSalePrssed,
+                                  ),
+                                  HomeButtonWidget(
+                                    title: "POS".tr,
+                                    iconData: Icons.shopping_cart_outlined,
+                                    onPressed: controller.onPOSPressed,
+                                    background: Colors.green,
+                                    foreground: Colors.white,
+                                    foregroundIconColor: Colors.white,
+                                  ),
+                                  HomeButtonWidget(
+                                      title: "Receipt".tr,
+                                      iconData: Icons.receipt_outlined,
+                                      onPressed: () {}),
+                                  HomeButtonWidget(
+                                    title: "Customer".tr,
+                                    iconData: Icons.group,
+                                    onPressed: () {},
+                                  ),
+                                  HomeButtonWidget(
+                                    title: "Report".tr,
+                                    iconData: Icons.assessment_outlined,
+                                    onPressed: () {},
+                                  ),
+                                  HomeButtonWidget(
+                                    title: "Backup".tr,
+                                    iconData: Icons.save,
+                                    onPressed: controller.onBackupPressed,
+                                    background: Colors.yellow.shade600,
+                                    foreground: Colors.white,
+                                    foregroundIconColor: Colors.white,
+                                  ),
+                                  HomeButtonWidget(
+                                    title: "WiFi".tr,
+                                    iconData: Icons.wifi_outlined,
+                                    onPressed: controller.onWIFIPressed,
+                                  ),
+                                  HomeButtonWidget(
+                                      title: "Reset Transaction".tr,
+                                      iconData: Icons.restart_alt_outlined,
+                                      onPressed: () {}),
+                                  HomeButtonWidget(
+                                    title: "Logout".tr,
+                                    background: Colors.red,
+                                    foreground: Colors.white,
+                                    iconData: Icons.logout_outlined,
+                                    onPressed: controller.onLogoutPressed,
+                                    foregroundIconColor: Colors.white,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

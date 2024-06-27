@@ -10,20 +10,19 @@ class LoginInputWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<LoginController>();
     return Padding(
-      padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+      padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: Column(
         children: [
-          const SizedBox(height: 80),
+          const SizedBox(height: 100),
           Text(
             'WELCOME BACK',
             style: TextStyle(
-                fontSize: 18,
+                fontSize: 22,
                 color: Colors.blue.shade700,
                 fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 30),
           SizedBox(
-            height: 40.0, // Set the desired height here
             child: TextFormField(
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
@@ -38,21 +37,20 @@ class LoginInputWidget extends StatelessWidget {
                 prefixIcon: Icon(
                   Icons.account_circle,
                   color: Colors.blue.shade700,
-                  size: 20,
+                  size: 25,
                 ),
                 filled: true,
                 fillColor: Colors.white,
                 labelText: "Username",
                 labelStyle: TextStyle(
                   color: Colors.blue.shade700,
-                  fontSize: 13,
+                  fontSize: 15,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 20),
           SizedBox(
-            height: 40.0, // Set the desired height here
             child: TextFormField(
               obscureText: true,
               decoration: InputDecoration(
@@ -68,18 +66,19 @@ class LoginInputWidget extends StatelessWidget {
                 prefixIcon: Icon(
                   Icons.lock_outline_sharp,
                   color: Colors.blue.shade700,
-                  size: 20,
+                  size: 25,
                 ),
                 filled: true,
                 fillColor: Colors.white,
                 labelText: "Password",
                 labelStyle: TextStyle(
                   color: Colors.blue.shade700,
-                  fontSize: 13,
+                  fontSize: 15,
                 ),
               ),
             ),
           ),
+          SizedBox(height: 10),
           Obx(
             () => Row(
               children: [
