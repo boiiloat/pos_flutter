@@ -6,6 +6,7 @@ import '../../controller/sale_controller.dart';
 import 'widgets/menu_item_widget.dart';
 import 'widgets/sale_buttom_action_widget.dart';
 import 'widgets/sale_item_note_widget.dart';
+import 'widgets/sale_product_widget.dart';
 
 class SaleMenuScreen extends StatelessWidget {
   const SaleMenuScreen({super.key});
@@ -15,17 +16,17 @@ class SaleMenuScreen extends StatelessWidget {
     var controller = Get.put(SaleController());
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('POS', style: TextStyle(color: arrowback)),
-        backgroundColor: appColor,
-        leading: IconButton(
-          onPressed: controller.onBackPressed,
-          icon: Icon(
-            Icons.arrow_back,
-            color: arrowback,
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: Text('POS', style: TextStyle(color: arrowback)),
+      //   backgroundColor: appColor,
+      //   leading: IconButton(
+      //     onPressed: controller.onBackPressed,
+      //     icon: Icon(
+      //       Icons.arrow_back,
+      //       color: arrowback,
+      //     ),
+      //   ),
+      // ),
       body: Row(
         children: [
           Expanded(
@@ -33,6 +34,7 @@ class SaleMenuScreen extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
+                  flex: 1,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
@@ -43,9 +45,9 @@ class SaleMenuScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(5.0),
                         child: Row(
                           children: List.generate(
-                            10,
+                            5,
                             (index) => const SaleItemNoteWidget(
-                              label: 'Aperittize',
+                              label: 'Khmer food',
                             ),
                           ),
                         ),
@@ -54,7 +56,7 @@ class SaleMenuScreen extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 13,
+                  flex: 15,
                   child: Container(
                     decoration: const BoxDecoration(
                       image: DecorationImage(
@@ -64,21 +66,44 @@ class SaleMenuScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
+                        // Expanded(
+                        //   flex: 8,
+                        //   child: Container(
+                        //     child: SingleChildScrollView(
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.all(8.0),
+                        //         child: Row(
+                        //           crossAxisAlignment:
+                        //               CrossAxisAlignment.stretch,
+                        //           children: [
+                        //             Container(
+                        //               height: 50,
+                        //               width: 160,
+                        //               color: Colors.orange,
+                        //             )
+                        //             // MenuItemWidget(),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         Expanded(
-                          flex: 8,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5)),
-                            child: SingleChildScrollView(
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Wrap(
+                          flex: 9,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 5),
+                                Wrap(
                                   children: List.generate(
-                                    20,
-                                    (index) => const MenuItemWidget(),
+                                    100,
+                                    (index) => Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: SaleProductWidget(),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                         ),
@@ -87,17 +112,31 @@ class SaleMenuScreen extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.only(right: 10.0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SaleButtomActionWidget(
-                                  color: Colors.red,
-                                  icon: Icon(Icons.cancel),
-                                  label: 'CANCEL BILL',
+                                InkWell(
+                                  onTap: () {
+                                    Get.back();
+                                  },
+                                  child: SaleButtomActionWidget(
+                                    color: Colors.green,
+                                    icon: Icon(Icons.arrow_back),
+                                    label: 'Back',
+                                  ),
                                 ),
-                                SaleButtomActionWidget(
-                                  color: Colors.blue,
-                                  icon: Icon(Icons.print),
-                                  label: 'PRINT BILL',
+                                Row(
+                                  children: [
+                                    SaleButtomActionWidget(
+                                      color: Colors.red,
+                                      icon: Icon(Icons.cancel),
+                                      label: 'CANCEL BILL',
+                                    ),
+                                    SaleButtomActionWidget(
+                                      color: Colors.blue,
+                                      icon: Icon(Icons.print),
+                                      label: 'PRINT BILL',
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

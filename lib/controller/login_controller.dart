@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pos_system/program.dart';
+import 'package:pos_system/screen/home/home_screen.dart';
 
 class LoginController extends GetxController {
   var isLoading = true.obs;
@@ -27,7 +28,7 @@ class LoginController extends GetxController {
   }
 
   void onLoginPressed() {
-    Program.error('Log In', 'Log In fail ! try again');
+    Get.to(() => const HomeScreen());
     // Get.to(() => const HomeScreen());
     // pinCode.value = '';
   }

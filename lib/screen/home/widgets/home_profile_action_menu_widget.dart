@@ -79,11 +79,13 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
                     color: Colors.grey.shade600,
                   ),
                   SizedBox(width: 5),
-                  Text(
-                    'Logout'.tr,
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 14,
+                  InkWell(
+                    child: Text(
+                      'Logout'.tr,
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                      ),
                     ),
                   )
                 ],

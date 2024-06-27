@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const LoginScreen(),
-      home: const SaleMenuScreen(),
+      home: const LoginScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );

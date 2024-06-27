@@ -4,15 +4,18 @@ class SaleButtomActionWidget extends StatelessWidget {
   final Color color;
   final Icon icon;
   final String label;
-   SaleButtomActionWidget({super.key, required this.color, required this.icon, required this.label});
+  SaleButtomActionWidget(
+      {super.key,
+      required this.color,
+      required this.icon,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {
-     return Padding(
-       padding: const EdgeInsets.only(right: 5.0),
-       child: Container(
-        height: 55,
-        width: 130,
+    return Padding(
+      padding: const EdgeInsets.only(right: 5.0),
+      child: Container(
+        width: 110,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3),
           color: color,
@@ -21,12 +24,20 @@ class SaleButtomActionWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon.icon,color: Colors.white,),
-              Text(label, style: TextStyle(fontSize: 13,color: Colors.white)),
+              Icon(
+                icon.icon,
+                color: Colors.white,
+                size: 20,
+              ),
+              Text(label,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.white,
+                  )),
             ],
           ),
         ),
-           ),
-     );
+      ),
+    );
   }
 }
