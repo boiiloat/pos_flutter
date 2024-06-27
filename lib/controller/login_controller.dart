@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
-import 'package:pos_system/screen/home/home_screen.dart';
+import 'package:pos_system/program.dart';
 
 class LoginController extends GetxController {
   var isLoading = true.obs;
   var pinCode = ''.obs;
   var isLoginProcess = false.obs;
+  var isChecked = false.obs;
 
   // @override
   // Future<void> onInit() async {
@@ -26,7 +27,12 @@ class LoginController extends GetxController {
   }
 
   void onLoginPressed() {
-    Get.to(() => const HomeScreen());
-    pinCode.value = '';
+    Program.error('Log In', 'Log In fail ! try again');
+    // Get.to(() => const HomeScreen());
+    // pinCode.value = '';
+  }
+
+  void toggleCheckbox(bool value) {
+    isChecked.value = value;
   }
 }

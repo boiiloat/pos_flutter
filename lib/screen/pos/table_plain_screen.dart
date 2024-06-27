@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/controller/table_plan_controller.dart';
 import 'package:pos_system/program.dart';
-import 'package:pos_system/screen/sale/sale_menu_widget.dart';
+import 'package:pos_system/screen/sale/sale_menu_screen.dart';
 
 class TablePlainScreen extends StatelessWidget {
   const TablePlainScreen({super.key});

@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
 
 import '../../controller/sale_controller.dart';
-import 'sale_buttom_action_widget.dart';
-import 'sale_item_note_widget.dart';
+import 'widgets/menu_item_widget.dart';
+import 'widgets/sale_buttom_action_widget.dart';
+import 'widgets/sale_item_note_widget.dart';
 
 class SaleMenuScreen extends StatelessWidget {
   const SaleMenuScreen({super.key});
@@ -65,7 +66,21 @@ class SaleMenuScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 8,
-                          child: Container(),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5)),
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Wrap(
+                                  children: List.generate(
+                                    20,
+                                    (index) => const MenuItemWidget(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                         Expanded(
                           flex: 1,
@@ -73,12 +88,18 @@ class SaleMenuScreen extends StatelessWidget {
                             padding: const EdgeInsets.only(right: 10.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                             
-                             children: [
-                              SaleButtomActionWidget(color: Colors.red, icon: Icon(Icons.cancel), label: 'CANCEL BILL',),
-                            
-                              SaleButtomActionWidget(color: Colors.blue, icon: Icon(Icons.print), label: 'PRINT BILL',),
-                             ],
+                              children: [
+                                SaleButtomActionWidget(
+                                  color: Colors.red,
+                                  icon: Icon(Icons.cancel),
+                                  label: 'CANCEL BILL',
+                                ),
+                                SaleButtomActionWidget(
+                                  color: Colors.blue,
+                                  icon: Icon(Icons.print),
+                                  label: 'PRINT BILL',
+                                ),
+                              ],
                             ),
                           ),
                         ),

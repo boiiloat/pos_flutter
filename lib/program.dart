@@ -15,10 +15,11 @@ class Program {
     snackController = Get.snackbar(
       title,
       description,
-      maxWidth: 500,
+      maxWidth: 400,
       padding: const EdgeInsets.symmetric(vertical: 10),
       // margin: const EdgeInsets.only(top: 3, left: 3, right: 3),
       backgroundColor: background,
+      borderRadius: 10,
       icon: icon,
       colorText: foreground,
       snackPosition: SnackPosition.TOP,

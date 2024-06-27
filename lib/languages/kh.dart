@@ -15,7 +15,7 @@ Map<String, String> get kh => {
       "PIN Code": "លេខសម្ងាត់",
       "Load menu completed.": "ការទាញម៉ឺនុយបានបញ្ចប់",
       "Load configuration completed.": "ទាញការកំណត់បានបញ្ចប់",
-      "Reload User": "ទាញអ្នកប្រើប្រាស់ឡើងវិញ",
+      "Reload User": "ទាញយកអ្នកប្រើប្រាស់ឡើងវិញ",
       "Reload user completed.": "ទាញយកអ្នកប្រើប្រាស់បានបញ្ចប់",
       "Start Working Day": "បើកថ្ងៃធ្វើការ",
       "Close Working Day": "បិទថ្ងៃធ្វើការ",
