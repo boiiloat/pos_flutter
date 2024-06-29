@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/pos/table_plain_screen.dart';
+import 'package:pos_system/screen/sale/widgets/testing.dart';
 import '../../controller/sale_controller.dart';
+import '../../testing.dart';
 import 'widgets/menu_item_widget.dart';
 import 'widgets/sale_buttom_action_widget.dart';
 import 'widgets/sale_item_note_widget.dart';
@@ -71,17 +74,13 @@ class SaleMenuScreen extends StatelessWidget {
                       '23/05/2024   10 : 11 PM',
                       style: TextStyle(color: Colors.white),
                     ),
-                                             Text(
-                      '23/05/2024   10 : 11 PM',
-                      style: TextStyle(color: Colors.white),
-                    ),
                   ],
                 ),
               ),
             ),
           ),
           Expanded(
-            flex: 15,
+            flex: 12,
             child: Row(
               children: [
                 Expanded(
@@ -222,7 +221,6 @@ class SaleMenuScreen extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Container(
-                    color: Colors.grey.shade300,
                     child: Column(
                       children: [
                         Container(
@@ -245,51 +243,30 @@ class SaleMenuScreen extends StatelessWidget {
                         ),
                         Expanded(
                           flex: 9,
-                          child: Column(
-                            children: [
-                              Container(
-                                color: Colors.grey.shade200,
-
-                                height: 60,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage(
-                                                "assets/images/khmer_food.webp",
-                                              ),
-                                            )),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 8,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Column(
-                                          children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text('Food Name'),
-                                              Text(' 80000\$',style: TextStyle(
-                                                fontSize: 17,
-                                              ),),
-                                            ],
-                                          )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                              ],
+                            ),
                           ),
                         ),
                         Expanded(
