@@ -77,7 +77,7 @@ class SaleMenuScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 12,
+            flex: 15,
             child: Row(
               children: [
                 Expanded(
@@ -218,7 +218,7 @@ class SaleMenuScreen extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Container(
-                    color: Colors.white,
+                    color: Colors.grey.shade300,
                     child: Column(
                       children: [
                         Container(
@@ -244,6 +244,8 @@ class SaleMenuScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
+                                color: Colors.grey.shade200,
+
                                 height: 60,
                                 child: Row(
                                   children: [
@@ -263,8 +265,21 @@ class SaleMenuScreen extends StatelessWidget {
                                     ),
                                     Expanded(
                                       flex: 8,
-                                      child: Container(
-                                        color: Colors.orange,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Column(
+                                          children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Food Name'),
+                                              Text(' 80000\$',style: TextStyle(
+                                                fontSize: 17,
+                                              ),),
+                                            ],
+                                          )
+                                          ],
+                                        ),
                                       ),
                                     )
                                   ],
