@@ -71,6 +71,10 @@ class SaleMenuScreen extends StatelessWidget {
                       '23/05/2024   10 : 11 PM',
                       style: TextStyle(color: Colors.white),
                     ),
+                                             Text(
+                      '23/05/2024   10 : 11 PM',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
