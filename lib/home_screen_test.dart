@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_system/controller/table_controller.dart';
 
 class TableListScreen extends StatelessWidget {
-  final TableController tableController = Get.put(TableController());
+  var controller = Get.put(TableController());
 
   @override
   Widget build(BuildContext context) {
@@ -12,18 +12,16 @@ class TableListScreen extends StatelessWidget {
         title: Text('Table List'),
       ),
       body: Obx(() {
-        if (tableController.tables.isEmpty) {
+        if (controller.tables.isEmpty) {
           return Center(
             child: CircularProgressIndicator(),
           );
         } else {
           return ListView.builder(
-            itemCount: tableController.tables.length,
+            itemCount: controller.tables.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(tableController.tables[index].name),
-                subtitle:
-                    Text('Capacity: ${tableController.tables[index].capacity}'),
+                title: Text(controller.tables[index].name),
               );
             },
           );
@@ -31,10 +29,4 @@ class TableListScreen extends StatelessWidget {
       }),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: TableListScreen(),
-  ));
 }
