@@ -5,6 +5,7 @@ import 'package:pos_system/screen/login/login_screen.dart';
 import 'package:pos_system/screen/pos/table_plain_screen.dart';
 import 'package:pos_system/screen/sale/sale_menu_screen.dart';
 import 'package:pos_system/tableListScreen.dart';
+import 'package:pos_system/testing.dart';
 
 import 'controller/table_controller.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const LoginScreen(),
-      home: TableListScreen(),
+      home: LoginScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );
