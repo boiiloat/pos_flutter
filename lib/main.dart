@@ -16,12 +16,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Your App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       // home: const LoginScreen(),
-      home: TablePlanScreen(),
+      home: SaleMenuScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );
