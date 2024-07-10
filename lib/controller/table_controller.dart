@@ -17,6 +17,7 @@ class TableController extends GetxController {
           await http.get(Uri.parse('http://127.0.0.1:8000/api/tables'));
       if (response.statusCode == 200) {
         tableData.value = jsonDecode(response.body);
+        print(tableData);
       } else {
         print('Failed to load table data');
       }
