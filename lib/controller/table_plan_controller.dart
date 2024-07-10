@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:pos_system/screen/sale/sale_menu_screen.dart';
+
 class TablePlanController extends GetxController {
   var isloading = false;
   var tableData = [].obs;
@@ -26,7 +28,12 @@ class TablePlanController extends GetxController {
       print('Error: $e');
     }
   }
+
   void onBackPressed() {
     Get.back();
+  }
+
+  void onTablePlanPressed() {
+    Get.to(() => SaleMenuScreen());
   }
 }

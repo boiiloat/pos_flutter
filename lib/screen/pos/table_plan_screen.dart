@@ -50,7 +50,7 @@ class TablePlanScreen extends StatelessWidget {
                       controller.tableData.length,
                       (index) => TablePlanWidget(
                         table_label: controller.tableData[index]['name'],
-                        onPressed: () {},
+                        onPressed: controller.onTablePlanPressed,
                       ),
                     ),
                   ),
