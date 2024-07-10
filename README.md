@@ -1,4 +1,4 @@
-# pos_system
+# pos_laravel
 
 A new Flutter project.
 
