@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/StartSale/widgets/start_sale_alert.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import '../screen/pos/table_plain_screen.dart';
+import 'package:pos_system/screen/pos/table_plan_screen.dart';
 
 class MainController extends GetxController {
   var isLoading = true.obs;
@@ -59,7 +59,7 @@ class MainController extends GetxController {
   }
 
   void onPOSPressed() {
-    Get.to(() => const TablePlainScreen());
+    Get.to(() => const TablePlanScreen());
   }
 
   void onProfileActionPressed(String value) async {}

@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
-import 'package:pos_system/screen/pos/table_plain_screen.dart';
 import 'package:pos_system/screen/sale/widgets/testing.dart';
 import '../../controller/sale_controller.dart';
 import '../../testing.dart';

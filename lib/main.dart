@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import 'package:pos_system/screen/pos/table_plain_screen.dart';
+import 'package:pos_system/screen/pos/table_plan_screen.dart';
 import 'package:pos_system/screen/sale/sale_menu_screen.dart';
-import 'package:pos_system/table_list_screen.dart';
 import 'package:pos_system/testing.dart';
 
 void main() {
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const LoginScreen(),
-      home: TableListScreen(),
+      home: TablePlanScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );
