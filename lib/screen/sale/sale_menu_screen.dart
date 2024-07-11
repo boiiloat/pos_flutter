@@ -74,19 +74,19 @@ class SaleMenuScreen extends StatelessWidget {
                         children: [
                           IconButton(
                               onPressed: () {
-                                Get.to(HomeScreen());
+                                Get.to(const HomeScreen());
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.home,
                                 size: 25,
                                 color: Colors.white,
                               )),
-                          Text(
+                          const Text(
                             'ePOS',
                             style: TextStyle(color: Colors.white),
                           ),
-                          SizedBox(width: 10),
-                          Text(
+                          const SizedBox(width: 10),
+                          const Text(
                             'T04',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -109,7 +109,7 @@ class SaleMenuScreen extends StatelessWidget {
                               ),
                             ),
                           )),
-                      Text(
+                      const Text(
                         '23/05/2024   10 : 11 PM',
                         style: TextStyle(color: Colors.white),
                       ),
@@ -189,7 +189,7 @@ class SaleMenuScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   height: 45,
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -204,7 +204,7 @@ class SaleMenuScreen extends StatelessWidget {
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
-                                          child: Center(
+                                          child: const Center(
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
@@ -230,7 +230,7 @@ class SaleMenuScreen extends StatelessWidget {
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
-                                              child: Center(
+                                              child: const Center(
                                                 child: Text(
                                                   'Cancel',
                                                   style: TextStyle(
@@ -238,7 +238,7 @@ class SaleMenuScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(width: 10),
+                                            const SizedBox(width: 10),
                                             Container(
                                               width: 100,
                                               decoration: BoxDecoration(
@@ -246,7 +246,7 @@ class SaleMenuScreen extends StatelessWidget {
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
-                                              child: Center(
+                                              child: const Center(
                                                 child: Text(
                                                   'Hold bill',
                                                   style: TextStyle(
@@ -254,7 +254,7 @@ class SaleMenuScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(width: 10),
+                                            const SizedBox(width: 10),
                                           ],
                                         ),
                                       ],
@@ -270,144 +270,137 @@ class SaleMenuScreen extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 3,
-                    child: Container(
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 50,
-                            color: Colors.blue.shade100,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10.0, right: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Table # :',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(' T03'),
-                                ],
-                              ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          color: Colors.blue.shade100,
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 10.0, right: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Table # :',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(' T03'),
+                              ],
                             ),
                           ),
-                          Expanded(
-                            flex: 9,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                  fuck(),
-                                ],
-                              ),
+                        ),
+                        const Expanded(
+                          flex: 9,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                                fuck(),
+                              ],
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              color: Colors.white,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 7,
-                                    child: Container(
-                                      color: Colors.green,
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0, right: 5),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  'Payment',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            color: Colors.white,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 7,
+                                  child: Container(
+                                    color: Colors.green,
+                                    child: const Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 10.0, right: 5),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Payment',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                '65000\$',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.white,
                                                 ),
-                                                Text(
-                                                  '65000\$',
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Total quantity : 10',
-                                                  style: TextStyle(
-                                                      fontSize: 10,
-                                                      color: Colors.white),
-                                                ),
-                                              ],
-                                            ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'Total quantity : 10',
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.back();
+                                    },
+                                    child: Container(
+                                      color: Colors.blue,
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_forward,
+                                            size: 15,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            'Submit',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Get.back();
-                                      },
-                                      child: Container(
-                                        color: Colors.blue,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.arrow_forward,
-                                              size: 15,
-                                              color: Colors.white,
-                                            ),
-                                            Text(
-                                              'Submit',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 13),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ],
