@@ -93,22 +93,23 @@ class SaleMenuScreen extends StatelessWidget {
                         ],
                       ),
                       Container(
-                          height: 40,
-                          width: 200,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Search',
-                                hintStyle: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.grey.shade400),
-                                border: InputBorder.none,
-                              ),
+                        height: 40,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              hintStyle: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.grey.shade400),
+                              border: InputBorder.none,
                             ),
-                          )),
+                          ),
+                        ),
+                      ),
                       const Text(
                         '23/05/2024   10 : 11 PM',
                         style: TextStyle(color: Colors.white),
