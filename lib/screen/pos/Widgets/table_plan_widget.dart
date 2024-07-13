@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class TablePlanWidget extends StatelessWidget {
+  // ignore: non_constant_identifier_names
   final String table_label;
   final VoidCallback onPressed;
 
-  const TablePlanWidget({super.key, required this.table_label, required this.onPressed});
+  const TablePlanWidget({
+    super.key,
+    // ignore: non_constant_identifier_names
+    required this.table_label,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +30,12 @@ class TablePlanWidget extends StatelessWidget {
             children: [
               Text(
                 table_label,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.deck,
                 color: Colors.blue,
                 size: 35,

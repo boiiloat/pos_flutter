@@ -33,7 +33,7 @@ class SaleProductWidget extends StatelessWidget {
               Container(
                 height: 22,
                 width: 65,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(5),
@@ -43,7 +43,7 @@ class SaleProductWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     productPrice,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -51,7 +51,7 @@ class SaleProductWidget extends StatelessWidget {
           ),
           Container(
             height: 25,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10),
@@ -61,7 +61,7 @@ class SaleProductWidget extends StatelessWidget {
             child: Center(
               child: Text(
                 productName,
-                style: TextStyle(fontSize: 12), // Example style
+                style: const TextStyle(fontSize: 12), // Example style
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:pos_system/program.dart';
 import 'dart:convert';
 
 import '../models/api/product_model.dart';
@@ -22,12 +23,13 @@ class ProductController extends GetxController {
         var jsonData = json.decode(response.body) as List;
         List<Product> products =
             jsonData.map((json) => Product.fromJson(json)).toList();
-        productList.assignAll(products); // Print JSON data here
+        productList.assignAll(products);
+        print(jsonData); // Print JSON data here
       } else {
         throw Exception('Failed to load products');
       }
     } catch (e) {
-      print('Error: $e');
+      Program.error('Program', 'Error');
     }
   }
 }
