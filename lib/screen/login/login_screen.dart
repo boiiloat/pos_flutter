@@ -126,7 +126,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
+           const Expanded(
               flex: 3,
               child: LoginInputWidget(),
             ),

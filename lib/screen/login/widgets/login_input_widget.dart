@@ -8,7 +8,9 @@ class LoginInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<LoginController>();
+    // var controller = Get.find<LoginController>();
+    // final LoginController loginController = get
+    final LoginController loginController = Get.find<LoginController>();
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       child: Column(
@@ -24,6 +26,7 @@ class LoginInputWidget extends StatelessWidget {
           const SizedBox(height: 30),
           SizedBox(
             child: TextFormField(
+              controller: loginController.usernameController,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue.shade100),
@@ -52,6 +55,7 @@ class LoginInputWidget extends StatelessWidget {
           const SizedBox(height: 20),
           SizedBox(
             child: TextFormField(
+              controller: loginController.passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
@@ -78,7 +82,7 @@ class LoginInputWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Obx(
             () => Row(
               children: [
@@ -87,9 +91,9 @@ class LoginInputWidget extends StatelessWidget {
                   child: Checkbox(
                     activeColor: Colors.blue.shade900,
                     checkColor: Colors.white, //
-                    value: controller.isChecked.value,
+                    value: loginController.rememberMe.value,
                     onChanged: (bool? value) {
-                      controller.isChecked.value = value!;
+                      loginController.rememberMe.value = value ?? false;
                     },
                   ),
                 ),
@@ -104,19 +108,34 @@ class LoginInputWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          InkWell(
-            onTap: controller.onLoginPressed,
-            child: Ink(
-              width: 500,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.blue.shade700,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: const Center(
-                child: Text(
-                  'Log In',
-                  style: TextStyle(color: Colors.white),
+          Obx(
+            () => InkWell(
+              onTap: loginController.loading.value
+                  ? null
+                  : () {
+                      loginController.login();
+                    },
+              child: Ink(
+                width: double.infinity,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade700,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: loginController.loading.value
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.0, // Adjust size as needed
+                          ),
+                        )
+                      : Text(
+                          'Log In',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
               ),
             ),
