@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_system/controller/login_controller.dart';
 
 import '../../../controller/main_controller.dart';
 
@@ -9,6 +10,8 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MainController>();
+    // final controllerx = Get.find<LoginController>();
+
     return Container(
       padding: const EdgeInsets.all(5),
       child: PopupMenuButton<String>(
@@ -58,7 +61,7 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
                     size: 20.0,
                     color: Colors.grey.shade600,
                   ),
-                  SizedBox(width: 5),
+                  const SizedBox(width: 5),
                   Text(
                     'Reload'.tr,
                     style: TextStyle(

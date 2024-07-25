@@ -15,15 +15,15 @@ class TablePlanWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       child: InkWell(
         onTap: onPressed,
         child: Ink(
-          height: 100,
-          width: 100,
+          height: 80,
+          width: 80,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue),
-            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade400),
+            borderRadius: BorderRadius.circular(5),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -31,13 +31,13 @@ class TablePlanWidget extends StatelessWidget {
               Text(
                 table_label,
                 style: const TextStyle(
-                  color: Colors.blue,
+                  color: Colors.grey,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const Icon(
                 Icons.deck,
-                color: Colors.blue,
+                color: Colors.grey,
                 size: 35,
               ),
             ],

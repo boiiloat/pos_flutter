@@ -6,6 +6,8 @@ import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/pos/Widgets/table_plan_widget.dart';
 import 'package:pos_system/screen/sale/sale_menu_screen.dart';
 
+import 'Widgets/table_plan_add_new.dart';
+
 class TablePlanScreen extends StatelessWidget {
   const TablePlanScreen({
     super.key,
@@ -42,9 +44,12 @@ class TablePlanScreen extends StatelessWidget {
         body: Obx(
           () => Column(
             children: [
+              TablePlanAddNewWidget(
+                onPressed:controller.onAddNewTablePressed,
+              ),
               SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(2.0),
                   child: Wrap(
                     children: List.generate(
                       controller.tableData.length,
