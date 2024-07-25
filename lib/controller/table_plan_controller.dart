@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:pos_system/program.dart';
 import 'dart:convert';
 
 import 'package:pos_system/screen/sale/sale_menu_screen.dart';
@@ -34,5 +35,9 @@ class TablePlanController extends GetxController {
 
   void onTablePlanPressed() {
     Get.to(() => SaleMenuScreen());
+  }
+
+  void onAddNewTablePressed() {
+    Program.alert("title", "description");
   }
 }

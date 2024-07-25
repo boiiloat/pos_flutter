@@ -10,7 +10,7 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MainController>();
-    // final controllerx = Get.find<LoginController>();
+    final controllerx = Get.find<LoginController>();
 
     return Container(
       padding: const EdgeInsets.all(5),
