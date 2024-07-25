@@ -20,14 +20,13 @@ class LoginController extends GetxController {
     String password = passwordController.text.trim();
 
     loading.value = true; // Start loading
+    await Future.delayed(const Duration(seconds: 1));
 
     if (username.isEmpty || password.isEmpty) {
       Program.error('Error', 'Username and Password cannot be empty');
       loading.value = false; // End loading
       return;
     }
-
-    await Future.delayed(const Duration(seconds: 2));
 
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8000/api/login'),
@@ -43,28 +42,12 @@ class LoginController extends GetxController {
     loading.value = false; // End loading
 
     if (response.statusCode == 200) {
+      usernameController.clear();
+      passwordController.clear();
       Get.to(() => const HomeScreen());
     } else {
-      Program.error("Error", "Username or password not correct");
+      Program.error("Error", "Username or password not co​rrect");
     }
-  }
-
-  void updateResult(String value) {
-    pinCode.value += value;
-  }
-
-  void onKeyNumberPressed(String value) async {
-    pinCode("${pinCode.value}$value");
-  }
-
-  void onBackspace() {
-    pinCode("");
-  }
-
-  void onLoginPressed() {
-    Get.to(() => const HomeScreen());
-    // Get.to(() => const HomeScreen());
-    // pinCode.value = '';
   }
 
   void toggleCheckbox(bool value) {

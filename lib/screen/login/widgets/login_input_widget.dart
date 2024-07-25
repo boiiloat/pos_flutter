@@ -124,7 +124,7 @@ class LoginInputWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: loginController.loading.value
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
@@ -132,7 +132,7 @@ class LoginInputWidget extends StatelessWidget {
                             strokeWidth: 2.0, // Adjust size as needed
                           ),
                         )
-                      : Text(
+                      : const Text(
                           'Log In',
                           style: TextStyle(color: Colors.white),
                         ),
@@ -140,51 +140,6 @@ class LoginInputWidget extends StatelessWidget {
               ),
             ),
           ),
-          // const SizedBox(height: 10),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     InkWell(
-          //       onTap: controller.onLoginPressed,
-          //       child: Ink(
-          //         width: 80,
-          //         height: 28,
-          //         decoration: BoxDecoration(
-          //           border: Border.all(color: Colors.blue.shade700),
-          //           borderRadius: BorderRadius.circular(3),
-          //         ),
-          //         child: Center(
-          //           child: Text(
-          //             'ភាសារខ្មែរ',
-          //             style: TextStyle(
-          //               color: Colors.blue.shade700,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //    const  SizedBox(width: 8),
-          //     InkWell(
-          //       onTap: controller.onLoginPressed,
-          //       child: Ink(
-          //         width: 80,
-          //         height: 28,
-          //         decoration: BoxDecoration(
-          //           border: Border.all(color: Colors.blue.shade700),
-          //           borderRadius: BorderRadius.circular(3),
-          //         ),
-          //         child: Center(
-          //           child: Text(
-          //             'English',
-          //             style: TextStyle(
-          //               color: Colors.blue.shade700,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );

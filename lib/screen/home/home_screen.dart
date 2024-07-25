@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                             height: 90,
                             width: 90,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(100),
                               image: const DecorationImage(
                                 image:
                                     AssetImage("assets/images/logo_image.jpg"),
@@ -104,17 +104,49 @@ class HomeScreen extends StatelessWidget {
                               width: 360,
                               child: Wrap(
                                 children: [
+                                  // HomeButtonWidget(
+                                  //   hidden: controller.isSaleStarted.value,
+                                  //   title: "Start working",
+                                  //   iconData: Icons.play_circle,
+                                  //   onPressed: () =>
+                                  //       controller.onStartSalePressed(context),
+                                  // ),
+                                  // HomeButtonWidget(
+                                  //   hidden: !controller.isSaleStarted.value,
+                                  //   title: "Close Working Day",
+                                  //   iconData: Icons.stop_circle,
+                                  //   background: Colors.red,
+                                  //   foreground: Colors.white,
+                                  //   foregroundIconColor: Colors.white,
+                                  //   onPressed: controller.onCloseSalePrssed,
+                                  // ),
                                   HomeButtonWidget(
                                     hidden: controller.isSaleStarted.value,
-                                    title: "Start Sale",
-                                    iconData: Icons.play_circle,
+                                    title: "Start working",
+                                    iconData: Icons.calendar_month,
                                     onPressed: () =>
                                         controller.onStartSalePressed(context),
                                   ),
                                   HomeButtonWidget(
                                     hidden: !controller.isSaleStarted.value,
-                                    title: "Close Sale",
-                                    iconData: Icons.stop_circle,
+                                    title: "Close Working Day",
+                                    iconData: Icons.calendar_today,
+                                    background: Colors.red,
+                                    foreground: Colors.white,
+                                    foregroundIconColor: Colors.white,
+                                    onPressed: controller.onCloseSalePrssed,
+                                  ),
+                                  HomeButtonWidget(
+                                    hidden: controller.isSaleStarted.value,
+                                    title: "Start Shift",
+                                    iconData: Icons.schedule,
+                                    onPressed: () =>
+                                        controller.onStartSalePressed(context),
+                                  ),
+                                  HomeButtonWidget(
+                                    hidden: !controller.isSaleStarted.value,
+                                    title: "Close Start Shift",
+                                    iconData: Icons.update,
                                     background: Colors.red,
                                     foreground: Colors.white,
                                     foregroundIconColor: Colors.white,
@@ -150,11 +182,11 @@ class HomeScreen extends StatelessWidget {
                                     foreground: Colors.white,
                                     foregroundIconColor: Colors.white,
                                   ),
-                                  HomeButtonWidget(
-                                    title: "WiFi".tr,
-                                    iconData: Icons.wifi_outlined,
-                                    onPressed: controller.onWIFIPressed,
-                                  ),
+                                  // HomeButtonWidget(
+                                  //   title: "WiFi".tr,
+                                  //   iconData: Icons.wifi_outlined,
+                                  //   onPressed: controller.onWIFIPressed,
+                                  // ),
                                   HomeButtonWidget(
                                       title: "Reset Transaction".tr,
                                       iconData: Icons.restart_alt_outlined,
