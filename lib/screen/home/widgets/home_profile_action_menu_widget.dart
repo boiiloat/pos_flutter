@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/login_controller.dart';
+import 'package:pos_system/models/api/user_model.dart';
 
 import '../../../controller/main_controller.dart';
 
@@ -10,7 +11,8 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MainController>();
-    final controllerx = Get.find<LoginController>();
+    final LoginController loginController = Get.find<LoginController>();
+    final User? user = loginController.loggedInUser;
 
     return Container(
       padding: const EdgeInsets.all(5),
@@ -81,7 +83,7 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
                     size: 20.0,
                     color: Colors.grey.shade600,
                   ),
-                 const  SizedBox(width: 5),
+                  const SizedBox(width: 5),
                   InkWell(
                     child: Text(
                       'Logout'.tr,

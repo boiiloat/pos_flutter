@@ -22,10 +22,10 @@ class TablePlanController extends GetxController {
       if (response.statusCode == 200) {
         tableData.value = jsonDecode(response.body);
       } else {
-        print('Failed to load table data');
+        Program.error("title", "Failed to load table data");
       }
     } catch (e) {
-      print('Error: $e');
+      Program.error("title", "$e");
     }
   }
 
@@ -34,7 +34,7 @@ class TablePlanController extends GetxController {
   }
 
   void onTablePlanPressed() {
-    Get.to(() => SaleMenuScreen());
+    Get.to(() => const SaleMenuScreen());
   }
 
   void onAddNewTablePressed() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_system/models/api/user_model.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +15,7 @@ class LoginController extends GetxController {
   var passwordController = TextEditingController();
   var rememberMe = false.obs;
   var loading = false.obs;
+   User? loggedInUser;
 
   void login() async {
     String username = usernameController.text.trim();
@@ -42,11 +44,32 @@ class LoginController extends GetxController {
     loading.value = false; // End loading
 
     if (response.statusCode == 200) {
-      usernameController.clear();
-      passwordController.clear();
-      Get.to(() => const HomeScreen());
+      final responseData = jsonDecode(response.body);
+
+      // Print the raw response for debugging
+
+      // Check if the response contains the expected keys
+      if (responseData.containsKey('status') &&
+          responseData['status'] == 'success' &&
+          responseData.containsKey('users') &&
+          responseData['users'] is Map<String, dynamic>) {
+        try {
+          User loggedInUser = User.fromJson(responseData['users']);
+          print('User Data: ${loggedInUser}');
+
+          usernameController.clear();
+          passwordController.clear();
+          Get.to(() => const HomeScreen());
+          print('Decoded Response: ${responseData}');
+        } catch (e) {
+          Program.error('Error', 'Failed to parse user data');
+          print('Parsing Error: $e');
+        }
+      } else {
+        Program.error("Error", "Invalid response format");
+      }
     } else {
-      Program.error("Error", "Username or password not co​rrect");
+      Program.error("Error", "Username or password not correct");
     }
   }
 
