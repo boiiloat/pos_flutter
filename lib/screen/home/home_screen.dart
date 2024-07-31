@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_system/controller/login_controller.dart';
 import 'package:pos_system/controller/main_controller.dart';
 import 'widgets/home_button_widget.dart';
 import 'widgets/home_drawer_profile_widget.dart';
@@ -11,6 +12,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(MainController());
+    final loginController = Get.find<LoginController>();
+
     return Obx(
       () => SafeArea(
         child: Container(
@@ -19,7 +22,7 @@ class HomeScreen extends StatelessWidget {
             appBar: AppBar(
               title: const Text(
                 "SNACK AND RELAX",
-                style: TextStyle(color: Colors.white, fontSize: 15),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               backgroundColor: Colors.red,
               leading: Builder(
@@ -80,13 +83,14 @@ class HomeScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
-                          const Text(
-                            "POS Profile : Cashier / Address: Sieam Reap, Cambodia",
+                          Text(
+                            "POS Profile : ${_getRoleName(loginController.loggedInUser.value?.roleId)}  / Address: Sieam Reap, Cambodia",
                             style: TextStyle(color: Colors.white, fontSize: 15),
                           ),
+                          // Display role based on roleId
                         ],
                       ),
-                    ),
+                    ),  
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
@@ -104,28 +108,12 @@ class HomeScreen extends StatelessWidget {
                               width: 360,
                               child: Wrap(
                                 children: [
-                                  // HomeButtonWidget(
-                                  //   hidden: controller.isSaleStarted.value,
-                                  //   title: "Start working",
-                                  //   iconData: Icons.play_circle,
-                                  //   onPressed: () =>
-                                  //       controller.onStartSalePressed(context),
-                                  // ),
-                                  // HomeButtonWidget(
-                                  //   hidden: !controller.isSaleStarted.value,
-                                  //   title: "Close Working Day",
-                                  //   iconData: Icons.stop_circle,
-                                  //   background: Colors.red,
-                                  //   foreground: Colors.white,
-                                  //   foregroundIconColor: Colors.white,
-                                  //   onPressed: controller.onCloseSalePrssed,
-                                  // ),
                                   HomeButtonWidget(
                                     hidden: controller.isSaleStarted.value,
                                     title: "Start working",
                                     iconData: Icons.calendar_month,
-                                    onPressed: () =>
-                                        controller.onStartWorkingDayPressed(context),
+                                    onPressed: () => controller
+                                        .onStartWorkingDayPressed(context),
                                   ),
                                   HomeButtonWidget(
                                     hidden: !controller.isSaleStarted.value,
@@ -143,15 +131,6 @@ class HomeScreen extends StatelessWidget {
                                       onPressed: () => {}
                                       // controller.onStartSalePressed(context),
                                       ),
-                                  // HomeButtonWidget(
-                                  //   // hidden: !controller.isSaleStarted.value,
-                                  //   title: "Close Start Shift",
-                                  //   iconData: Icons.update,
-                                  //   background: Colors.red,
-                                  //   foreground: Colors.white,
-                                  //   foregroundIconColor: Colors.white,
-                                  //   onPressed: controller.onCloseSalePrssed,
-                                  // ),
                                   HomeButtonWidget(
                                     title: "POS".tr,
                                     iconData: Icons.shopping_cart_outlined,
@@ -209,5 +188,16 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getRoleName(int? roleId) {
+    switch (roleId) {
+      case 1:
+        return 'Admin';
+      case 2:
+        return 'Cashier';
+      default:
+        return 'Unknown Role';
+    }
   }
 }

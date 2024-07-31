@@ -24,8 +24,8 @@ class LoginScreen extends StatelessWidget {
                 ),
                 child: Center(
                   child: Container(
-                    height: 420,
-                    width: 310,
+                    height: 430,
+                    width: 320,
                     decoration: BoxDecoration(
                       color: Colors.green.shade700,
                       borderRadius: BorderRadius.circular(10),

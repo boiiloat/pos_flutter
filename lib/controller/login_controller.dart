@@ -15,7 +15,7 @@ class LoginController extends GetxController {
   var passwordController = TextEditingController();
   var rememberMe = false.obs;
   var loading = false.obs;
-   User? loggedInUser;
+  var loggedInUser = Rxn<User>();
 
   void login() async {
     String username = usernameController.text.trim();
@@ -46,24 +46,19 @@ class LoginController extends GetxController {
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
 
-      // Print the raw response for debugging
-
-      // Check if the response contains the expected keys
       if (responseData.containsKey('status') &&
           responseData['status'] == 'success' &&
           responseData.containsKey('users') &&
           responseData['users'] is Map<String, dynamic>) {
         try {
-          User loggedInUser = User.fromJson(responseData['users']);
-          print('User Data: ${loggedInUser}');
+          User user = User.fromJson(responseData['users']);
+          loggedInUser.value = user;
 
           usernameController.clear();
           passwordController.clear();
           Get.to(() => const HomeScreen());
-          print('Decoded Response: ${responseData}');
         } catch (e) {
           Program.error('Error', 'Failed to parse user data');
-          print('Parsing Error: $e');
         }
       } else {
         Program.error("Error", "Invalid response format");
@@ -75,5 +70,15 @@ class LoginController extends GetxController {
 
   void toggleCheckbox(bool value) {
     isChecked.value = value;
+  }
+    String _getRoleName(int? roleId) {
+    switch (roleId) {
+      case 1:
+        return 'Admin';
+      case 2:
+        return 'Cashier';
+      default:
+        return 'Unknown Role';
+    }
   }
 }
