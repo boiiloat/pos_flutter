@@ -28,13 +28,13 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         HomeDrawerMenuItemWidget(
-                          icon: Icons.play_circle,
-                          text: 'Start Sale',
-                          onPressed: () => controller.onStartSalePressed,
+                          icon: Icons.calendar_month,
+                          text: 'Start working',
+                          onPressed: () => controller.onStartWorkingDayPressed,
                         ),
                         HomeDrawerMenuItemWidget(
-                          icon: Icons.stop_circle,
-                          text: 'Close Sale',
+                          icon: Icons.schedule,
+                          text: 'Start Shift',
                           onPressed: controller.onCloseSalePrssed,
                         ),
                         HomeDrawerMenuItemWidget(
@@ -48,11 +48,6 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           onPressed: () {},
                         ),
                         HomeDrawerMenuItemWidget(
-                          icon: Icons.monetization_on,
-                          text: 'Cash Drawer',
-                          onPressed: () {},
-                        ),
-                        HomeDrawerMenuItemWidget(
                           icon: Icons.article,
                           text: 'Receipt',
                           onPressed: () {},
@@ -62,20 +57,11 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           text: 'Report',
                           onPressed: () {},
                         ),
+                        const SizedBox(height: 70),
                         const Divider(),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.save,
                           text: 'Backup',
-                          onPressed: () {},
-                        ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.settings,
-                          text: 'Setting',
-                          onPressed: () {},
-                        ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.support_agent,
-                          text: 'Help & Support',
                           onPressed: () {},
                         ),
                       ],

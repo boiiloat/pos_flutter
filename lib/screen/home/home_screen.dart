@@ -18,8 +18,8 @@ class HomeScreen extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               title: const Text(
-                "POS",
-                style: TextStyle(color: Colors.white),
+                "SNACK AND RELAX",
+                style: TextStyle(color: Colors.white, fontSize: 15),
               ),
               backgroundColor: Colors.red,
               leading: Builder(
@@ -125,7 +125,7 @@ class HomeScreen extends StatelessWidget {
                                     title: "Start working",
                                     iconData: Icons.calendar_month,
                                     onPressed: () =>
-                                        controller.onStartSalePressed(context),
+                                        controller.onStartWorkingDayPressed(context),
                                   ),
                                   HomeButtonWidget(
                                     hidden: !controller.isSaleStarted.value,
@@ -137,21 +137,21 @@ class HomeScreen extends StatelessWidget {
                                     onPressed: controller.onCloseSalePrssed,
                                   ),
                                   HomeButtonWidget(
-                                    hidden: controller.isSaleStarted.value,
-                                    title: "Start Shift",
-                                    iconData: Icons.schedule,
-                                    onPressed: () =>
-                                        controller.onStartSalePressed(context),
-                                  ),
-                                  HomeButtonWidget(
-                                    hidden: !controller.isSaleStarted.value,
-                                    title: "Close Start Shift",
-                                    iconData: Icons.update,
-                                    background: Colors.red,
-                                    foreground: Colors.white,
-                                    foregroundIconColor: Colors.white,
-                                    onPressed: controller.onCloseSalePrssed,
-                                  ),
+                                      // hidden: controller.isSaleStarted.value,
+                                      title: "Start Shift",
+                                      iconData: Icons.schedule,
+                                      onPressed: () => {}
+                                      // controller.onStartSalePressed(context),
+                                      ),
+                                  // HomeButtonWidget(
+                                  //   // hidden: !controller.isSaleStarted.value,
+                                  //   title: "Close Start Shift",
+                                  //   iconData: Icons.update,
+                                  //   background: Colors.red,
+                                  //   foreground: Colors.white,
+                                  //   foregroundIconColor: Colors.white,
+                                  //   onPressed: controller.onCloseSalePrssed,
+                                  // ),
                                   HomeButtonWidget(
                                     title: "POS".tr,
                                     iconData: Icons.shopping_cart_outlined,
@@ -182,11 +182,6 @@ class HomeScreen extends StatelessWidget {
                                     foreground: Colors.white,
                                     foregroundIconColor: Colors.white,
                                   ),
-                                  // HomeButtonWidget(
-                                  //   title: "WiFi".tr,
-                                  //   iconData: Icons.wifi_outlined,
-                                  //   onPressed: controller.onWIFIPressed,
-                                  // ),
                                   HomeButtonWidget(
                                       title: "Reset Transaction".tr,
                                       iconData: Icons.restart_alt_outlined,

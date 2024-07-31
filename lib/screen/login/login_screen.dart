@@ -69,6 +69,21 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
+                          "Name",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          " POS Restaurant",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
                           "Bussiness",
                           style: TextStyle(
                             fontSize: 13,
@@ -77,22 +92,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 15),
                         const Text(
-                          " Cashier ",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          "POS Profile",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        const Text(
-                          "+855 90 93 48 72",
+                          "+855 76 58 89 898",
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -126,7 +126,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-           const Expanded(
+            const Expanded(
               flex: 3,
               child: LoginInputWidget(),
             ),

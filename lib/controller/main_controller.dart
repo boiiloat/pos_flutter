@@ -22,10 +22,10 @@ class MainController extends GetxController {
     Program.alert("title", "description");
   }
 
-  void onStartSalePressed(BuildContext context) {
+  void onStartWorkingDayPressed(BuildContext context) {
     Get.defaultDialog(
       radius: 5,
-      title: "Start Sale",
+      title: "Working Day",
       backgroundColor: Colors.white,
       content: StartSaleAlert(
         onBack: () {
@@ -35,7 +35,7 @@ class MainController extends GetxController {
           isSaleStarted.value = true;
           Get.back();
         },
-        text: 'Are you sure you want to start sale?',
+        text: 'Are you sure you want to start working day?',
       ),
     );
   }
@@ -43,7 +43,7 @@ class MainController extends GetxController {
   void onCloseSalePrssed() {
     Get.defaultDialog(
       radius: 5,
-      title: "Close Sale",
+      title: "Close Working Day",
       backgroundColor: Colors.white,
       content: StartSaleAlert(
         onBack: () {
@@ -53,7 +53,7 @@ class MainController extends GetxController {
           isSaleStarted.value = false;
           Get.back();
         },
-        text: 'Are you sure you want to stop sale?',
+        text: 'Are you sure you want to close working day?',
       ),
     );
   }

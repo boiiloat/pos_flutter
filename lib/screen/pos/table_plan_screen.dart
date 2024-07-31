@@ -45,18 +45,15 @@ class TablePlanScreen extends StatelessWidget {
           () => Column(
             children: [
               TablePlanAddNewWidget(
-                onPressed:controller.onAddNewTablePressed,
+                onPressed: controller.onAddNewTablePressed,
               ),
               SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Wrap(
-                    children: List.generate(
-                      controller.tableData.length,
-                      (index) => TablePlanWidget(
-                        table_label: controller.tableData[index]['name'],
-                        onPressed: controller.onTablePlanPressed,
-                      ),
+                child: Wrap(
+                  children: List.generate(
+                    controller.tableData.length,
+                    (index) => TablePlanWidget(
+                      table_label: controller.tableData[index]['name'],
+                      onPressed: controller.onTablePlanPressed,
                     ),
                   ),
                 ),

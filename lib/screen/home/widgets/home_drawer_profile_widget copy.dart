@@ -50,7 +50,7 @@ class HomeDrawerProfileWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "leamloat@gmail.com",
+                        "POS Profile: Cashier",
                         style: TextStyle(color: Colors.white, fontSize: 12),
                       )
                     ],
