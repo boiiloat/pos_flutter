@@ -1,10 +1,15 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pos_system/controller/login_controller.dart';
 
 class HomeDrawerProfileWidget extends StatelessWidget {
   const HomeDrawerProfileWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final loginController = Get.find<LoginController>();
+
     return SizedBox(
       height: 150,
       child: Container(
@@ -38,21 +43,23 @@ class HomeDrawerProfileWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                   decoration: const BoxDecoration(),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "leam loat",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        "POS Profile: Cashier",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      )
+                      Obx(() => Text(
+                            loginController.loggedInUser.value?.fullname ??
+                                'Unknown',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          )),
+                      Obx(() => Text(
+                            'POS Profile: ${_getRoleName(loginController.loggedInUser.value?.roleId)}',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          )),
                     ],
                   ),
                 ),
@@ -62,5 +69,16 @@ class HomeDrawerProfileWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getRoleName(int? roleId) {
+    switch (roleId) {
+      case 1:
+        return 'Admin';
+      case 2:
+        return 'Cashier';
+      default:
+        return 'Unknown';
+    }
   }
 }

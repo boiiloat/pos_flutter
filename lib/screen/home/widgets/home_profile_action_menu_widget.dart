@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/login_controller.dart';
 import 'package:pos_system/controller/main_controller.dart';
+import 'package:pos_system/screen/login/login_screen.dart';
 
 class HomeProfileActionMenuWidget extends StatelessWidget {
   const HomeProfileActionMenuWidget({super.key});
@@ -14,14 +15,13 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(5),
       child: PopupMenuButton<String>(
-        // ignore: sort_child_properties_last
         child: const CircleAvatar(
           backgroundImage: AssetImage("assets/images/logo_image.jpg"),
         ),
         onSelected: (value) {
           if (value == 'logout') {
-            // Perform logout action here
-            // Assuming you have a logout method in LoginController
+            // Call the logout method
+            Get.to(() => const LoginScreen());
           } else {
             mainController.onProfileActionPressed(value);
           }
@@ -91,13 +91,11 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
                     color: Colors.grey.shade600,
                   ),
                   const SizedBox(width: 5),
-                  InkWell(
-                    child: Text(
-                      'Logout'.tr,
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 14,
-                      ),
+                  Text(
+                    'Logout'.tr,
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 14,
                     ),
                   )
                 ],
