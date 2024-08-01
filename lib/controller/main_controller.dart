@@ -4,6 +4,7 @@ import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/StartSale/widgets/start_sale_alert.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
 import 'package:pos_system/screen/pos/table_plan_screen.dart';
+import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
 
 class MainController extends GetxController {
   var isLoading = true.obs;
@@ -23,21 +24,22 @@ class MainController extends GetxController {
   }
 
   void onStartWorkingDayPressed(BuildContext context) {
-    Get.defaultDialog(
-      radius: 5,
-      title: "Working Day",
-      backgroundColor: Colors.white,
-      content: StartSaleAlert(
-        onBack: () {
-          Get.back();
-        },
-        onSave: () {
-          isSaleStarted.value = true;
-          Get.back();
-        },
-        text: 'Are you sure you want to start working day?',
-      ),
-    );
+    Get.to(() => const WorkingDayStartScreen());
+    // Get.defaultDialog(
+    //   radius: 5,
+    //   title: "Working Day",
+    //   backgroundColor: Colors.white,
+    //   content: StartSaleAlert(
+    //     onBack: () {
+    //       Get.back();
+    //     },
+    //     onSave: () {
+    //       isSaleStarted.value = true;
+    //       Get.back();
+    //     },
+    //     text: 'Are you sure you want to start working day?',
+    //   ),
+    // );
   }
 
   void onCloseSalePrssed() {

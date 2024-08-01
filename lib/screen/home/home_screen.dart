@@ -85,12 +85,13 @@ class HomeScreen extends StatelessWidget {
                           ),
                           Text(
                             "POS Profile : ${_getRoleName(loginController.loggedInUser.value?.roleId)}  / Address: Sieam Reap, Cambodia",
-                            style: const TextStyle(color: Colors.white, fontSize: 15),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 15),
                           ),
                           // Display role based on roleId
                         ],
                       ),
-                    ),  
+                    ),
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.max,

@@ -4,6 +4,8 @@ import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
 import 'package:pos_system/screen/pos/table_plan_screen.dart';
 import 'package:pos_system/screen/sale/sale_menu_screen.dart';
+import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
+import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
 import 'package:pos_system/testing.dart';
 
 void main() {
