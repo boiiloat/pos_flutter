@@ -126,12 +126,13 @@ class HomeScreen extends StatelessWidget {
                                     onPressed: controller.onCloseSalePrssed,
                                   ),
                                   HomeButtonWidget(
-                                      // hidden: controller.isSaleStarted.value,
-                                      title: "Start Shift",
-                                      iconData: Icons.schedule,
-                                      onPressed: () => {}
-                                      // controller.onStartSalePressed(context),
-                                      ),
+                                    // hidden: controller.isSaleStarted.value,
+                                    title: "Start Shift",
+                                    iconData: Icons.schedule,
+                                    onPressed: () => controller
+                                        .oncloseWorkingDayPressed(context),
+                                    // controller.onStartSalePressed(context),
+                                  ),
                                   HomeButtonWidget(
                                     title: "POS".tr,
                                     iconData: Icons.shopping_cart_outlined,

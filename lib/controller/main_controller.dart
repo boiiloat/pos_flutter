@@ -4,6 +4,7 @@ import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/StartSale/widgets/start_sale_alert.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
 import 'package:pos_system/screen/pos/table_plan_screen.dart';
+import 'package:pos_system/screen/working_day/working_dat_close_screen.dart';
 import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
 
 class MainController extends GetxController {
@@ -25,6 +26,25 @@ class MainController extends GetxController {
 
   void onStartWorkingDayPressed(BuildContext context) {
     Get.to(() => const WorkingDayStartScreen());
+    // Get.defaultDialog(
+    //   radius: 5,
+    //   title: "Working Day",
+    //   backgroundColor: Colors.white,
+    //   content: StartSaleAlert(
+    //     onBack: () {
+    //       Get.back();
+    //     },
+    //     onSave: () {
+    //       isSaleStarted.value = true;
+    //       Get.back();
+    //     },
+    //     text: 'Are you sure you want to start working day?',
+    //   ),
+    // );
+  }
+
+  void oncloseWorkingDayPressed(BuildContext context) {
+    Get.to(() => const WorkingDayCloseScreen());
     // Get.defaultDialog(
     //   radius: 5,
     //   title: "Working Day",
@@ -70,5 +90,16 @@ class MainController extends GetxController {
     // Program.alert("Testing ", "Testing Successfully");
     // Program.warning("title", "description");
     Program.error("title", "description");
+  }
+
+  // Define the list of dropdown items with shift options
+  var dropdownItems = <String>['Morning Shift', 'Afternoon Shift'].obs;
+
+  // Define the selected item
+  var selectedItem = 'Morning Shift'.obs;
+
+  // Method to update the selected item
+  void updateSelectedItem(String newItem) {
+    selectedItem.value = newItem;
   }
 }

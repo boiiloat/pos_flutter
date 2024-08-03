@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
-import 'package:pos_system/controller/login_controller.dart';
+import 'package:pos_system/controller/main_controller.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
+import 'package:pos_system/screen/working_day/widgets/kpi_working_day_widget.dart';
 
-import 'widgets/kpi_working_day_widget.dart';
-
-class WorkingDayStartScreen extends StatelessWidget {
-  const WorkingDayStartScreen({super.key});
+class CashierShiftCloseScreen extends StatelessWidget {
+  const CashierShiftCloseScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-        'SNACK AND RELAX',
+          'SNACK AND RELAX',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         leading: IconButton(
@@ -35,31 +35,58 @@ class WorkingDayStartScreen extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 10),
-                Icon(Icons.event),
+                Icon(Icons.schedule),
                 SizedBox(width: 5),
                 Text(
-                  'Start working Day',
+                  'CLOSE SHIFT',
                 ),
               ],
             ),
           ),
+         const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              KpiWorkingDayWidget(
+                label: 'Working Day',
+                data: 'WD2024-0019',
+              ),
+               SizedBox(width: 20),
+              KpiWorkingDayWidget(
+                label: 'Cashier Shift',
+                data: 'CS2024-0024',
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               KpiWorkingDayWidget(
-                label: 'Working Date',
-                data: '01/08/2024',
+                label: 'Close Date',
+                data: '02-08-2024',
               ),
               const SizedBox(width: 20),
+              KpiWorkingDayWidget(
+                label: 'Shift Name',
+                data: 'Morning Shift',
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               KpiWorkingDayWidget(
                 label: 'POS Profile',
                 data: 'Admin',
               ),
+              SizedBox(width: 300),
             ],
           ),
-          const SizedBox(height: 10),
+          
+          const SizedBox(height: 15),
           SizedBox(
-            width: 1000,
+            width: 590,
             child: Card(
               elevation: 3,
               child: SizedBox(
@@ -69,7 +96,7 @@ class WorkingDayStartScreen extends StatelessWidget {
                   expands:
                       true, // This makes the TextFormField take all available space
                   decoration: const InputDecoration(
-                    labelText: "Note",
+                    labelText: "Close Note",
                     fillColor: Colors.white,
                     filled: true,
                     border: InputBorder.none,
@@ -87,8 +114,8 @@ class WorkingDayStartScreen extends StatelessWidget {
                 onPressed: () {
                   Get.back();
                 },
-                label: 'Cancal',
-                width: 100,
+                label: 'Cancel',
+                width: 120,
                 color: Colors.red,
               ),
               const SizedBox(width: 280),
@@ -96,7 +123,7 @@ class WorkingDayStartScreen extends StatelessWidget {
                 onPressed: () {
                   Program.alert("title", "description");
                 },
-                label: 'START WORKING DAY',
+                label: 'Close Shift ',
                 width: 180,
                 color: Colors.blue,
               ),

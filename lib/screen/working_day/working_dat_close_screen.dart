@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/program.dart';
+import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
+import 'package:pos_system/screen/working_day/widgets/kpi_working_day_widget.dart';
 
 class WorkingDayCloseScreen extends StatelessWidget {
   const WorkingDayCloseScreen({super.key});
@@ -35,74 +37,22 @@ class WorkingDayCloseScreen extends StatelessWidget {
                 Icon(Icons.event),
                 SizedBox(width: 5),
                 Text(
-                  'Start working Day',
+                  'Working Day #WD2024-0018',
                 ),
               ],
             ),
           ),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 270,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Working Date',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                      Text(
-                        '01/08/2024',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
+              KpiWorkingDayWidget(
+                label: 'Working Date',
+                data: '01/08/2024',
               ),
-              const SizedBox(width: 20),
-              Container(
-                width: 270,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'POS Profile',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                      Text(
-                        'Admin',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
+              SizedBox(width: 15),
+              KpiWorkingDayWidget(
+                label: 'Working Date',
+                data: '01/08/2024',
               ),
             ],
           ),
@@ -118,7 +68,7 @@ class WorkingDayCloseScreen extends StatelessWidget {
                   expands:
                       true, // This makes the TextFormField take all available space
                   decoration: const InputDecoration(
-                    labelText: "Note",
+                    labelText: "Closed Note",
                     fillColor: Colors.white,
                     filled: true,
                     border: InputBorder.none,
@@ -143,9 +93,9 @@ class WorkingDayCloseScreen extends StatelessWidget {
               const SizedBox(width: 280),
               FooterActionWidget(
                 onPressed: () {
-                  Program.alert("title", "description");
+                  Get.to(const HomeScreen());
                 },
-                label: 'START WORKING DAY',
+                label: 'CLOSE WORKING DAY',
                 width: 180,
                 color: Colors.blue,
               ),
