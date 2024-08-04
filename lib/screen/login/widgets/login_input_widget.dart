@@ -82,32 +82,7 @@ class LoginInputWidget extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          Obx(
-            () => Row(
-              children: [
-                Transform.scale(
-                  scale: 0.7,
-                  child: Checkbox(
-                    activeColor: Colors.blue.shade900,
-                    checkColor: Colors.white, //
-                    value: loginController.rememberMe.value,
-                    onChanged: (bool? value) {
-                      loginController.rememberMe.value = value ?? false;
-                    },
-                  ),
-                ),
-                Text(
-                  'Remember Me',
-                  style: TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade700),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 35),
           Obx(
             () => InkWell(
               onTap: loginController.loading.value
