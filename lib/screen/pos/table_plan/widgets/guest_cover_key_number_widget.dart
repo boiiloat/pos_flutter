@@ -38,7 +38,7 @@ class GusetCoverKeyNumberWidget extends StatelessWidget {
               height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.grey.shade400),
+                border: Border.all(color: Colors.grey.shade300),
                 color: (onPressed == null || disabled
                     ? Colors.grey[50]
                     : Colors.white),
@@ -49,9 +49,9 @@ class GusetCoverKeyNumberWidget extends StatelessWidget {
                       title_,
                       style: TextStyle(
                         color: onPressed == null || disabled
-                            ? Colors.grey[500]!
+                            ? Colors.grey[300]!
                             : color,
-                        fontSize: 17,
+                        fontSize: 14,
                       ),
                     ),
                   ),

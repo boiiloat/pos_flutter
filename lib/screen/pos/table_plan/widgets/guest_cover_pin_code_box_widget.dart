@@ -22,7 +22,7 @@ class GuestCoverPincodeBoxWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Colors.grey.shade400),
+          border: Border.all(color: Colors.grey.shade300),
         ),
         child: Row(
           children: [
@@ -37,8 +37,8 @@ class GuestCoverPincodeBoxWidget extends StatelessWidget {
                         ? Text(
                             label,
                             style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey.shade700,
+                              fontSize: 16,
+                              color: Colors.grey.shade300,
                             ),
                           )
                         : SingleChildScrollView(
@@ -50,7 +50,7 @@ class GuestCoverPincodeBoxWidget extends StatelessWidget {
                                 Text(
                                   guestCover,
                                   style: TextStyle(
-                                      color: Colors.grey.shade800,
+                                      color: Colors.grey.shade600,
                                       fontSize: 20),
                                 ),
                               ],

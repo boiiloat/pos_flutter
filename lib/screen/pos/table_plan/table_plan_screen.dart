@@ -19,7 +19,6 @@ class TablePlanScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey.shade300,
         appBar: AppBar(
           title: const Text(
             'SNACK & RELAX',
@@ -52,7 +51,7 @@ class TablePlanScreen extends StatelessWidget {
                 ),
               ),
               TablePlanAddNewWidget(
-                onPressed: controller.onAddNewTablePressed,
+                onPressed: () {},
               ),
               SingleChildScrollView(
                 child: Wrap(

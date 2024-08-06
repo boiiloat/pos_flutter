@@ -59,7 +59,7 @@ class BodySaleMenuWidget extends StatelessWidget {
                                 spacing: 10,
                                 runSpacing: 10,
                                 children: List.generate(
-                                  5, // fixed number of items
+                                  100, // fixed number of items
                                   (index) => Padding(
                                     padding: const EdgeInsets.all(5.0),
                                     child: SaleProductWidget(
