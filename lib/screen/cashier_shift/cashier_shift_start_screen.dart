@@ -6,8 +6,8 @@ import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
 import 'package:pos_system/screen/working_day/widgets/kpi_working_day_widget.dart';
 
-class CashierShiftStartScreen extends StatelessWidget {
-  const CashierShiftStartScreen({super.key});
+class ShiftStartScreen extends StatelessWidget {
+  const ShiftStartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

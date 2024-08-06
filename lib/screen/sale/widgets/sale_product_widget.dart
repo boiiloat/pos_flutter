@@ -20,9 +20,9 @@ class SaleProductWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: DecorationImage(
-          fit: BoxFit.cover,
-          image: NetworkImage(imageUrl), // Load image from URL
-        ),
+            fit: BoxFit.cover,
+            image: AssetImage(imageUrl) // Load image from URL
+            ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

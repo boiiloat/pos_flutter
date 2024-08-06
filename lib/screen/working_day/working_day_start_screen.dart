@@ -15,7 +15,7 @@ class WorkingDayStartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-        'SNACK AND RELAX',
+          'SNACK AND RELAX',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         leading: IconButton(
@@ -43,14 +43,14 @@ class WorkingDayStartScreen extends StatelessWidget {
               ],
             ),
           ),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               KpiWorkingDayWidget(
                 label: 'Working Date',
                 data: '01/08/2024',
               ),
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
               KpiWorkingDayWidget(
                 label: 'POS Profile',
                 data: 'Admin',
@@ -59,7 +59,7 @@ class WorkingDayStartScreen extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           SizedBox(
-            width: 1000,
+            width: 600,
             child: Card(
               elevation: 3,
               child: SizedBox(

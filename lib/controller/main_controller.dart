@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/program.dart';
-import 'package:pos_system/screen/StartSale/widgets/start_sale_alert.dart';
+import 'package:pos_system/screen/cashier_shift/cashier_shift_close_screen.dart';
+import 'package:pos_system/screen/cashier_shift/cashier_shift_start_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
 import 'package:pos_system/screen/pos/table_plan_screen.dart';
 import 'package:pos_system/screen/working_day/working_dat_close_screen.dart';
@@ -26,59 +27,20 @@ class MainController extends GetxController {
 
   void onStartWorkingDayPressed(BuildContext context) {
     Get.to(() => const WorkingDayStartScreen());
-    // Get.defaultDialog(
-    //   radius: 5,
-    //   title: "Working Day",
-    //   backgroundColor: Colors.white,
-    //   content: StartSaleAlert(
-    //     onBack: () {
-    //       Get.back();
-    //     },
-    //     onSave: () {
-    //       isSaleStarted.value = true;
-    //       Get.back();
-    //     },
-    //     text: 'Are you sure you want to start working day?',
-    //   ),
-    // );
   }
 
-  void oncloseWorkingDayPressed(BuildContext context) {
+  void onCloseWorkingDayPressed(BuildContext context) {
     Get.to(() => const WorkingDayCloseScreen());
-    // Get.defaultDialog(
-    //   radius: 5,
-    //   title: "Working Day",
-    //   backgroundColor: Colors.white,
-    //   content: StartSaleAlert(
-    //     onBack: () {
-    //       Get.back();
-    //     },
-    //     onSave: () {
-    //       isSaleStarted.value = true;
-    //       Get.back();
-    //     },
-    //     text: 'Are you sure you want to start working day?',
-    //   ),
-    // );
   }
 
-  void onCloseSalePrssed() {
-    Get.defaultDialog(
-      radius: 5,
-      title: "Close Working Day",
-      backgroundColor: Colors.white,
-      content: StartSaleAlert(
-        onBack: () {
-          Get.back();
-        },
-        onSave: () {
-          isSaleStarted.value = false;
-          Get.back();
-        },
-        text: 'Are you sure you want to close working day?',
-      ),
-    );
+  void onStartShiftPressed(){
+    Get.to(()=> const ShiftStartScreen());
   }
+ void onCloseShiftPressed(){
+    Get.to(()=> const ShiftCloseScreen());
+  }
+
+
 
   void onPOSPressed() {
     Get.to(() => const TablePlanScreen());

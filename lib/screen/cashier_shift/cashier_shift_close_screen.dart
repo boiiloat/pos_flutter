@@ -6,12 +6,11 @@ import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
 import 'package:pos_system/screen/working_day/widgets/kpi_working_day_widget.dart';
 
-class CashierShiftCloseScreen extends StatelessWidget {
-  const CashierShiftCloseScreen({super.key});
+class ShiftCloseScreen extends StatelessWidget {
+  const ShiftCloseScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -43,14 +42,14 @@ class CashierShiftCloseScreen extends StatelessWidget {
               ],
             ),
           ),
-         const Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               KpiWorkingDayWidget(
                 label: 'Working Day',
                 data: 'WD2024-0019',
               ),
-               SizedBox(width: 20),
+              SizedBox(width: 20),
               KpiWorkingDayWidget(
                 label: 'Cashier Shift',
                 data: 'CS2024-0024',
@@ -83,7 +82,6 @@ class CashierShiftCloseScreen extends StatelessWidget {
               SizedBox(width: 300),
             ],
           ),
-          
           const SizedBox(height: 15),
           SizedBox(
             width: 590,

@@ -34,9 +34,19 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           onPressed: () => controller.onStartWorkingDayPressed,
                         ),
                         HomeDrawerMenuItemWidget(
+                          icon: Icons.calendar_month,
+                          text: 'Start working',
+                          onPressed: () => controller.onStartWorkingDayPressed,
+                        ),
+                        HomeDrawerMenuItemWidget(
                           icon: Icons.schedule,
                           text: 'Start Shift',
-                          onPressed: controller.onCloseSalePrssed,
+                          onPressed: () {},
+                        ),
+                        HomeDrawerMenuItemWidget(
+                          icon: Icons.schedule,
+                          text: 'Start Shift',
+                          onPressed: () {},
                         ),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.shopping_cart,
@@ -46,6 +56,11 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                         HomeDrawerMenuItemWidget(
                           icon: Icons.group,
                           text: 'Customer',
+                          onPressed: () {},
+                        ),
+                        HomeDrawerMenuItemWidget(
+                          icon: Icons.group,
+                          text: 'Product',
                           onPressed: () {},
                         ),
                         HomeDrawerMenuItemWidget(

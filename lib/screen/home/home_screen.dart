@@ -116,23 +116,33 @@ class HomeScreen extends StatelessWidget {
                                     onPressed: () => controller
                                         .onStartWorkingDayPressed(context),
                                   ),
-                                  HomeButtonWidget(
-                                    hidden: !controller.isSaleStarted.value,
-                                    title: "Close Working Day",
-                                    iconData: Icons.calendar_today,
-                                    background: Colors.red,
-                                    foreground: Colors.white,
-                                    foregroundIconColor: Colors.white,
-                                    onPressed: controller.onCloseSalePrssed,
-                                  ),
+                                  // HomeButtonWidget(
+                                  //   // hidden: !controller.isSaleStarted.value,
+                                  //   title: "Close Working Day",
+                                  //   iconData: Icons.calendar_today,
+                                  //   background: Colors.red,
+                                  //   foreground: Colors.white,
+                                  //   foregroundIconColor: Colors.white,
+                                  //   onPressed: () => controller
+                                  //       .onCloseWorkingDayPressed(context),
+                                  // ),
                                   HomeButtonWidget(
                                     // hidden: controller.isSaleStarted.value,
                                     title: "Start Shift",
                                     iconData: Icons.schedule,
-                                    onPressed: () => controller
-                                        .oncloseWorkingDayPressed(context),
+                                    onPressed: () =>
+                                        controller.onStartShiftPressed(),
                                     // controller.onStartSalePressed(context),
                                   ),
+                                  // HomeButtonWidget(
+                                  //   // hidden: !controller.isSaleStarted.value,
+                                  //   title: "Close Shift",
+                                  //   iconData: Icons.schedule,
+                                  //   background: Colors.red,
+                                  //   foreground: Colors.white,
+                                  //   foregroundIconColor: Colors.white,
+                                  //   onPressed: controller.onCloseShiftPressed,
+                                  // ),
                                   HomeButtonWidget(
                                     title: "POS".tr,
                                     iconData: Icons.shopping_cart_outlined,
@@ -142,17 +152,23 @@ class HomeScreen extends StatelessWidget {
                                     foregroundIconColor: Colors.white,
                                   ),
                                   HomeButtonWidget(
-                                      title: "Receipt".tr,
-                                      iconData: Icons.receipt_outlined,
-                                      onPressed: () {}),
+                                    title: "Receipt".tr,
+                                    iconData: Icons.receipt_outlined,
+                                    onPressed: () {},
+                                  ),
+                                  HomeButtonWidget(
+                                    title: "Report".tr,
+                                    iconData: Icons.assessment_outlined,
+                                    onPressed: () {},
+                                  ),
                                   HomeButtonWidget(
                                     title: "Customer".tr,
                                     iconData: Icons.group,
                                     onPressed: () {},
                                   ),
                                   HomeButtonWidget(
-                                    title: "Report".tr,
-                                    iconData: Icons.assessment_outlined,
+                                    title: "Product".tr,
+                                    iconData: Icons.list,
                                     onPressed: () {},
                                   ),
                                   HomeButtonWidget(
@@ -164,9 +180,10 @@ class HomeScreen extends StatelessWidget {
                                     foregroundIconColor: Colors.white,
                                   ),
                                   HomeButtonWidget(
-                                      title: "Reset Transaction".tr,
-                                      iconData: Icons.restart_alt_outlined,
-                                      onPressed: () {}),
+                                    title: "Reset Transaction".tr,
+                                    iconData: Icons.restart_alt_outlined,
+                                    onPressed: () {},
+                                  ),
                                   HomeButtonWidget(
                                     title: "Logout".tr,
                                     background: Colors.red,
