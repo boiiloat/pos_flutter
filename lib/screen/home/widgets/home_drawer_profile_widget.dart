@@ -33,16 +33,16 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           text: 'Start working',
                           onPressed: () => controller.onStartWorkingDayPressed,
                         ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.calendar_month,
-                          text: 'Start working',
-                          onPressed: () => controller.onStartWorkingDayPressed,
-                        ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.schedule,
-                          text: 'Start Shift',
-                          onPressed: () {},
-                        ),
+                        // HomeDrawerMenuItemWidget(
+                        //   icon: Icons.calendar_month,
+                        //   text: 'Start working',
+                        //   onPressed: () => controller.onStartWorkingDayPressed,
+                        // ),
+                        // HomeDrawerMenuItemWidget(
+                        //   icon: Icons.schedule,
+                        //   text: 'Start Shift',
+                        //   onPressed: () {},
+                        // ),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.schedule,
                           text: 'Start Shift',
@@ -51,16 +51,6 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                         HomeDrawerMenuItemWidget(
                           icon: Icons.shopping_cart,
                           text: 'POS',
-                          onPressed: () {},
-                        ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.group,
-                          text: 'Customer',
-                          onPressed: () {},
-                        ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.group,
-                          text: 'Product',
                           onPressed: () {},
                         ),
                         HomeDrawerMenuItemWidget(
@@ -73,7 +63,18 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           text: 'Report',
                           onPressed: () {},
                         ),
-                        const SizedBox(height: 70),
+                        HomeDrawerMenuItemWidget(
+                          icon: Icons.group,
+                          text: 'Customer',
+                          onPressed: () {},
+                        ),
+                        HomeDrawerMenuItemWidget(
+                          icon: Icons.list,
+                          text: 'Product',
+                          onPressed: () {},
+                        ),
+
+                        const SizedBox(height: 30),
                         const Divider(),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.save,

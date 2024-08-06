@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               title: const Text(
-                "SNACK AND RELAX",
+                "SNACK & RELAX",
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               backgroundColor: Colors.red,
@@ -77,7 +77,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           const Text(
-                            "SNACK AND RELAX",
+                            "SNACK & RELAX",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -171,14 +171,7 @@ class HomeScreen extends StatelessWidget {
                                     iconData: Icons.list,
                                     onPressed: () {},
                                   ),
-                                  HomeButtonWidget(
-                                    title: "Backup".tr,
-                                    iconData: Icons.save,
-                                    onPressed: controller.onBackupPressed,
-                                    background: Colors.yellow.shade600,
-                                    foreground: Colors.white,
-                                    foregroundIconColor: Colors.white,
-                                  ),
+
                                   HomeButtonWidget(
                                     title: "Reset Transaction".tr,
                                     iconData: Icons.restart_alt_outlined,

@@ -16,7 +16,7 @@ class ShiftStartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'SNACK AND RELAX',
+          'SNACK & RELAX',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         leading: IconButton(

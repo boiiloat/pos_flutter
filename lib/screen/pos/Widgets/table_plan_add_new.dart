@@ -13,7 +13,7 @@ class TablePlanAddNewWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(8, 0, 20, 10),
           child: InkWell(
             onTap: onPressed,
             child: Container(
