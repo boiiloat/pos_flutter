@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
-import '../../home/home_screen.dart';
+import '../../../home/home_screen.dart';
 
 class AppBarSaleMenuWidget extends StatelessWidget {
   const AppBarSaleMenuWidget({super.key});
@@ -28,7 +27,7 @@ class AppBarSaleMenuWidget extends StatelessWidget {
                       color: Colors.white,
                     )),
                 const Text(
-                  'ePOS',
+                  'POS',
                   style: TextStyle(color: Colors.white),
                 ),
                 const SizedBox(width: 10),
@@ -47,11 +46,15 @@ class AppBarSaleMenuWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: 'Search',
+                    hintText: 'Search....',
                     hintStyle: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey.shade400),
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white,
+                    ),
                     border: InputBorder.none,
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey.shade200,
                   ),
                 ),
               ),

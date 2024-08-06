@@ -5,7 +5,7 @@ import 'package:pos_system/program.dart';
 import 'dart:convert';
 
 import 'package:pos_system/screen/pos/table_plan/widgets/guest_cover_popup_input_widget.dart';
-import 'package:pos_system/screen/sale/sale_menu_screen.dart';
+import 'package:pos_system/screen/pos/sale/sale_menu_screen.dart';
 
 class TablePlanController extends GetxController {
   var isloading = false;
