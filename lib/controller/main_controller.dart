@@ -4,7 +4,7 @@ import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/cashier_shift/cashier_shift_close_screen.dart';
 import 'package:pos_system/screen/cashier_shift/cashier_shift_start_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import 'package:pos_system/screen/pos/table_plan_screen.dart';
+import 'package:pos_system/screen/pos/table_plan/table_plan_screen.dart';
 import 'package:pos_system/screen/working_day/working_dat_close_screen.dart';
 import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
 
@@ -33,14 +33,13 @@ class MainController extends GetxController {
     Get.to(() => const WorkingDayCloseScreen());
   }
 
-  void onStartShiftPressed(){
-    Get.to(()=> const ShiftStartScreen());
-  }
- void onCloseShiftPressed(){
-    Get.to(()=> const ShiftCloseScreen());
+  void onStartShiftPressed() {
+    Get.to(() => const ShiftStartScreen());
   }
 
-
+  void onCloseShiftPressed() {
+    Get.to(() => const ShiftCloseScreen());
+  }
 
   void onPOSPressed() {
     Get.to(() => const TablePlanScreen());
