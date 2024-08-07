@@ -15,13 +15,13 @@ class SaleProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 120,
-      width: 153,
+      height: 100,
+      width: 147,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage(imageUrl) // Load image from URL
+            image: NetworkImage(imageUrl) // Load image from URL
             ),
       ),
       child: Column(

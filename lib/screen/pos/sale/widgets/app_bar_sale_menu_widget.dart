@@ -60,7 +60,7 @@ class AppBarSaleMenuWidget extends StatelessWidget {
               ),
             ),
             const Text(
-              '23/05/2024   10 : 11 PM',
+              '23-05-2024   10 : 11 PM',
               style: TextStyle(color: Colors.white),
             ),
           ],

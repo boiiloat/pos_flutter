@@ -10,7 +10,7 @@ class SaleItemNoteWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 5.0),
       child: Container(
-        height: 25,
+        height: 30,
         decoration: BoxDecoration(
           color: Colors.grey.shade300,
           borderRadius: BorderRadius.circular(100),
@@ -22,7 +22,7 @@ class SaleItemNoteWidget extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(fontSize: 13),
+                style: const TextStyle(fontSize: 13),
               ),
             ],
           ),
