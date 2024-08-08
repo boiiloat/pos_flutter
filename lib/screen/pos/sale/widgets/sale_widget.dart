@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pos_system/controller/sale_controller.dart';
 
 class SaleWidget extends StatelessWidget {
-  const SaleWidget({super.key});
+  final String imageUrl; // Change type to String
+  final String qty;
+  final String productnam;
+  final String price;
+
+  const SaleWidget({
+    super.key,
+    required this.imageUrl, // Change parameter name to imageUrl
+    required this.qty,
+    required this.productnam,
+    required this.price,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SaleController());
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(7, 5, 7, 0),
       child: Container(
@@ -24,10 +39,8 @@ class SaleWidget extends StatelessWidget {
                   border: Border.all(
                     color: Colors.grey.shade100,
                   ),
-                  image: const DecorationImage(
-                    image: NetworkImage(
-                      'https://whitneybond.com/wp-content/uploads/2021/06/steak-marinade-13.jpg',
-                    ),
+                  image: DecorationImage(
+                    image: AssetImage(imageUrl), // Use imageUrl here
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -38,9 +51,9 @@ class SaleWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 140,
+                  width: 130,
                   child: Text(
-                    'Steak khmer',
+                    productnam, // Use productnam parameter
                     style: const TextStyle(color: Colors.black, fontSize: 15),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -52,11 +65,12 @@ class SaleWidget extends StatelessWidget {
                     children: [
                       const Text(
                         'Qty :',
+                        style: TextStyle(fontSize: 14),
                       ),
                       const SizedBox(width: 4),
-                      const Text(
-                        '10',
-                        style: TextStyle(),
+                      Text(
+                        qty, // Use qty parameter
+                        style: TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
@@ -66,45 +80,43 @@ class SaleWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '\$10.00',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                PopupMenuButton<String>(
-                  color: Colors.white,
-                  onSelected: (value) {
-                    // Handle menu item selection
-                  },
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem<String>(
-                        value: 'Re-order',
-                        child: Text('Re-order'),
-                      ),
-                      PopupMenuItem<String>(
-                        value: 'Qty',
-                        child: Text('Qty'),
-                      ),
-                      PopupMenuItem<String>(
-                        value: 'Price',
-                        child: Text('Price'),
-                      ),
-                      PopupMenuItem<String>(
-                        value: 'Discount',
-                        child: Text('Discount'),
-                      ),
-                      PopupMenuItem<String>(
-                        value: 'Remove Item',
-                        child: Text('Remove Item'),
-                      ),
-                    ];
-                  },
-                  icon: Icon(
-                    Icons.more_vert,
-                    size: 18,
+                  "\$ $price", // Use price parameter
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+                SizedBox(width: 5),
+                PopupMenuButton<String>(
+                  icon: Icon(Icons.more_vert, size: 20),
+                  onSelected: (value) {
+                    controller.handleMenuSelection(value);
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem(
+                      value: 're_order',
+                      child: Text('Re-Order'),
+                    ),
+                    PopupMenuItem(
+                      value: 'qty',
+                      child: Text('Qty'),
+                    ),
+                    PopupMenuItem(
+                      value: 'price',
+                      child: Text('Price'),
+                    ),
+                    PopupMenuItem(
+                      value: 'discount',
+                      child: Text('Discount'),
+                    ),
+                    PopupMenuItem(
+                      value: 'remove_item',
+                      child: Text('Remove Item'),
+                    ),
+                  ],
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

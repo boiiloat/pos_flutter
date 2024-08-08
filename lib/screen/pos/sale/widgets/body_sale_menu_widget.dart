@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_system/controller/sale_controller.dart';
+import 'package:pos_system/program.dart';
 
 import 'sale_item_note_widget.dart';
 import 'sale_product_widget.dart';
@@ -10,6 +12,7 @@ class BodySaleMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SaleController());
     return Row(
       children: [
         Expanded(
@@ -67,361 +70,361 @@ class BodySaleMenuWidget extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              // Wrap(
-                              //   children: [
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName: 'ណែម', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/2.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName:
-                              //             'ឆាត្រប់', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/3.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.50', // example fixed price
-                              //         productName:
-                              //             'ប្រហុកខ្ទឹមស', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/4.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$3.00', // example fixed price
-                              //         productName:
-                              //             'អាម៉ុក', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/5.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\1.50', // example fixed price
-                              //         productName:
-                              //             'ឆាជូអែម', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/6.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$4.00', // example fixed price
-                              //         productName:
-                              //             'ពងទាត្រីប្រម៉ា', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/7.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName:
-                              //             'ឆាឡុកឡាក់', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/8.webp', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.50', // example fixed price
-                              //         productName:
-                              //             'ស្ទេកសាច់គោខ្មែរ', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/9.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName:
-                              //             'ឆាប៉េងប៉ោះ', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/10.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName:
-                              //             'Salad', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/11.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName:
-                              //             'spigati', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/12.webp', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName:
-                              //             'Salmond', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/110.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.50', // example fixed price
-                              //         productName:
-                              //             'Coffee latte', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/111.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.50', // example fixed price
-                              //         productName:
-                              //             'passion', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/112.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.50', // example fixed price
-                              //         productName:
-                              //             'straberry frappe', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/113.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$3.00', // example fixed price
-                              //         productName: 'BBQ', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/114.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$4.00', // example fixed price
-                              //         productName:
-                              //             'Chocolate cake', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/115.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$4.00', // example fixed price
-                              //         productName:
-                              //             'Passion Cake', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/116.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$4.00', // example fixed price
-                              //         productName:
-                              //             'Banana Cake', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/117.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$4.00', // example fixed price
-                              //         productName:
-                              //             'Vanilla', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/118.webp', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.50', // example fixed price
-                              //         productName:
-                              //             'Coffee frape', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/119.webp', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.50', // example fixed price
-                              //         productName:
-                              //             'Cappuchino', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1112.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName:
-                              //             'Blue berry ', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1113.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$1.00', // example fixed price
-                              //         productName:
-                              //             'lemond', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1114.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$3.00', // example fixed price
-                              //         productName:
-                              //             'Product 3', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1115.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$3.00', // example fixed price
-                              //         productName:
-                              //             'Product 3', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1116.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$3.00', // example fixed price
-                              //         productName:
-                              //             'Product 3', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1117.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$3.00', // example fixed price
-                              //         productName:
-                              //             'Product 3', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1118.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$3.00', // example fixed price
-                              //         productName:
-                              //             'Product 3', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1119.jpeg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$3.00', // example fixed price
-                              //         productName:
-                              //             'Product 3', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/1120.jpg', // example fixed image URL
-                              //         productPrice:
-                              //             '\$30', // example fixed price
-                              //         productName:
-                              //             'Product 3', // example fixed name
-                              //       ),
-                              //     ),
-                              //     Padding(
-                              //       padding: EdgeInsets.all(4.0),
-                              //       child: SaleProductWidget(
-                              //         imageUrl:
-                              //             'assets/images/khmer_food.webp', // example fixed image URL
-                              //         productPrice:
-                              //             '\$30', // example fixed price
-                              //         productName:
-                              //             'Product 3', // example fixed name
-                              //       ),
-                              //     ),
-                              //     // Add more SaleProductWidgets as needed
-                              //   ],
-                              // )
+                              Wrap(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName: 'ណែម', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/2.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName:
+                                          'ឆាត្រប់', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/3.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.50', // example fixed price
+                                      productName:
+                                          'ប្រហុកខ្ទឹមស', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/4.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$3.00', // example fixed price
+                                      productName:
+                                          'អាម៉ុក', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/5.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\1.50', // example fixed price
+                                      productName:
+                                          'ឆាជូអែម', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/6.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$4.00', // example fixed price
+                                      productName:
+                                          'ពងទាត្រីប្រម៉ា', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/7.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName:
+                                          'ឆាឡុកឡាក់', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/8.webp', // example fixed image URL
+                                      productPrice:
+                                          '\$1.50', // example fixed price
+                                      productName:
+                                          'ស្ទេកសាច់គោខ្មែរ', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/9.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName:
+                                          'ឆាប៉េងប៉ោះ', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/10.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName:
+                                          'Salad', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/11.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName:
+                                          'spigati', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/12.webp', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName:
+                                          'Salmond', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/110.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.50', // example fixed price
+                                      productName:
+                                          'Coffee latte', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/111.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.50', // example fixed price
+                                      productName:
+                                          'passion', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/112.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.50', // example fixed price
+                                      productName:
+                                          'straberry frappe', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/113.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$3.00', // example fixed price
+                                      productName: 'BBQ', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/114.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$4.00', // example fixed price
+                                      productName:
+                                          'Chocolate cake', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/115.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$4.00', // example fixed price
+                                      productName:
+                                          'Passion Cake', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/116.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$4.00', // example fixed price
+                                      productName:
+                                          'Banana Cake', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/117.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$4.00', // example fixed price
+                                      productName:
+                                          'Vanilla', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/118.webp', // example fixed image URL
+                                      productPrice:
+                                          '\$1.50', // example fixed price
+                                      productName:
+                                          'Coffee frape', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/119.webp', // example fixed image URL
+                                      productPrice:
+                                          '\$1.50', // example fixed price
+                                      productName:
+                                          'Cappuchino', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1112.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName:
+                                          'Blue berry ', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1113.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$1.00', // example fixed price
+                                      productName:
+                                          'lemond', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1114.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$3.00', // example fixed price
+                                      productName:
+                                          'Product 3', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1115.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$3.00', // example fixed price
+                                      productName:
+                                          'Product 3', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1116.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$3.00', // example fixed price
+                                      productName:
+                                          'Product 3', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1117.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$3.00', // example fixed price
+                                      productName:
+                                          'Product 3', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1118.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$3.00', // example fixed price
+                                      productName:
+                                          'Product 3', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1119.jpeg', // example fixed image URL
+                                      productPrice:
+                                          '\$3.00', // example fixed price
+                                      productName:
+                                          'Product 3', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/1120.jpg', // example fixed image URL
+                                      productPrice:
+                                          '\$30', // example fixed price
+                                      productName:
+                                          'Product 3', // example fixed name
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: SaleProductWidget(
+                                      imageUrl:
+                                          'assets/images/khmer_food.webp', // example fixed image URL
+                                      productPrice:
+                                          '\$30', // example fixed price
+                                      productName:
+                                          'Product 3', // example fixed name
+                                    ),
+                                  ),
+                                  // Add more SaleProductWidgets as needed
+                                ],
+                              )
                             ],
                           ),
                         ),
@@ -524,36 +527,58 @@ class BodySaleMenuWidget extends StatelessWidget {
               ),
               Expanded(
                 flex: 9,
-                child: SingleChildScrollView(
-                  child: Container(
-                    color: Colors.grey.shade300,
-                    child: Column(
-                      children: [
-                        // const SizedBox(height: 15),
-                        // Icon(
-                        //   Icons.shopping_cart_outlined,
-                        //   color: Colors.grey.shade400,
-                        //   size: 50,
-                        // ),
-                        // const SizedBox(height: 5),
-                        // Text(dart pub add web
-                        //   "Data is empty",
-                        //   style: TextStyle(
-                        //     fontStyle: FontStyle.italic,
-                        //     color: Colors.grey.shade500,
-                        //     fontSize: 10,
-                        //   ),
-                        // )
-                        SaleWidget(),
-                        SaleWidget(),
-                        SaleWidget(),
-                        SaleWidget(),
-                        SaleWidget(),
+                child: Container(
+                  color: Colors.grey
+                      .shade200, // Background color for the full expanded area
+                  child: SingleChildScrollView(
+                    child: Container(
+                      color: Colors
+                          .grey.shade200, // Background color for the container
+                      child: Column(
+                        children: [
+                          // const SizedBox(height: 15),
+                          // Icon(
+                          //   Icons.shopping_cart_outlined,
+                          //   color: Colors.grey.shade400,
+                          //   size: 50,
+                          // ),
+                          // const SizedBox(height: 5),
+                          // Text(
+                          //   "Data is empty",
+                          //   style: TextStyle(
+                          //     fontStyle: FontStyle.italic,
+                          //     color: Colors.grey.shade500,
+                          //     fontSize: 10,
+                          //   ),
+                          // )
+                          SaleWidget(
+                            imageUrl: 'assets/images/1.jpg',
+                            qty: '1',
+                            productnam: 'ណែម',
+                            price: '1.00',
+                          ),
+                          SaleWidget(
+                            imageUrl: 'assets/images/2.jpg',
+                            qty: '2',
+                            productnam: 'ឆាត្រប់',
+                            price: '2.00',
+                          ),
+                          SaleWidget(
+                            imageUrl: 'assets/images/3.jpg',
+                            qty: '3',
+                            productnam: 'ប្រហុកខ្ទឹមស',
+                            price: '4.50',
+                          ),
+                          SaleWidget(
+                            imageUrl: 'assets/images/8.webp',
+                            qty: '1',
+                            productnam: 'ស្ទេកសាច់គោខ្មែរ',
+                            price: '1.50',
+                          ),
 
-                        SaleWidget(),
-                        SaleWidget(),
-                        SizedBox(height: 5),
-                      ],
+                          SizedBox(height: 5),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -566,44 +591,47 @@ class BodySaleMenuWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 7,
-                        child: Container(
-                          color: Colors.green,
-                          child: const Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 10.0, right: 5, top: 2),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Payment',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Text(
-                                      '\$0.00',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
+                        child: InkWell(
+                          onTap: controller.onPaymentPressed,
+                          child: Container(
+                            color: Colors.green,
+                            child: const Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 10.0, right: 5, top: 2),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Payment',
+                                        style: TextStyle(color: Colors.white),
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        '\$ 9.00',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Total quantity : 0',
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.white),
-                                    ),
-                                  ],
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Total quantity : 7',
+                                        style: TextStyle(
+                                            fontSize: 10, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -611,7 +639,7 @@ class BodySaleMenuWidget extends StatelessWidget {
                         flex: 3,
                         child: InkWell(
                           onTap: () {
-                            Get.back();
+                            Program.alert("title", "description");
                           },
                           child: Container(
                             color: Colors.blue,

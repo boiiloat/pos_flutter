@@ -5,10 +5,10 @@ import 'package:pos_system/controller/table_plan_controller.dart';
 import 'guest_cover_key_number_widget.dart';
 import 'guest_cover_pin_code_box_widget.dart';
 
-class GuestCoverPopupInputWidget extends StatelessWidget {
+class InputNumberWidget extends StatelessWidget {
   final VoidCallback onPressed;
   final String label;
-  const GuestCoverPopupInputWidget(
+  const InputNumberWidget(
       {super.key, required this.onPressed, required this.label});
 
   @override
@@ -16,6 +16,7 @@ class GuestCoverPopupInputWidget extends StatelessWidget {
     var controller = Get.put(TablePlanController());
     return Obx(
       () => Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 10),
           Text(
@@ -116,6 +117,32 @@ class GuestCoverPopupInputWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GusetCoverKeyNumberWidget(
+                    name: "00",
+                    title: "00",
+                    color: Colors.grey.shade600,
+                    disabled: controller.isLoginProcess.value,
+                    onPressed: controller.onKeyNumberPressed,
+                  ),
+                  GusetCoverKeyNumberWidget(
+                    name: "0",
+                    title: "0",
+                    color: Colors.grey.shade600,
+                    disabled: controller.isLoginProcess.value,
+                    onPressed: controller.onKeyNumberPressed,
+                  ),
+                  GusetCoverKeyNumberWidget(
+                    name: ".",
+                    title: ".",
+                    color: Colors.grey.shade600,
+                    disabled: controller.isLoginProcess.value,
+                    onPressed: controller.onKeyNumberPressed,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GusetCoverKeyNumberWidget(
                     name: "cancel",
                     title: "Cancel",
                     color: Colors.red,
@@ -124,13 +151,6 @@ class GuestCoverPopupInputWidget extends StatelessWidget {
                       Get.back(),
                       controller.onCancelPressed,
                     },
-                  ),
-                  GusetCoverKeyNumberWidget(
-                    name: "0",
-                    title: "0",
-                    color: Colors.grey.shade600,
-                    disabled: controller.isLoginProcess.value,
-                    onPressed: controller.onKeyNumberPressed,
                   ),
                   GusetCoverKeyNumberWidget(
                     name: "Accept",

@@ -5,7 +5,6 @@ import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/controller/product_controller.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/pos/sale/widgets/testing.dart';
-import '../../../controller/sale_controller.dart';
 import '../../../testing.dart';
 import 'widgets/app_bar_sale_menu_widget.dart';
 import 'widgets/body_sale_menu_widget.dart';

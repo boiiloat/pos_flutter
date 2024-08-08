@@ -54,10 +54,11 @@ class TablePlanController extends GetxController {
           padding: const EdgeInsets.all(
               16.0), // Optional: Add padding to the content
           child: GuestCoverPopupInputWidget(
+            label: 'Guest Cover',
             onPressed: () {
               Get.back();
               Get.to(
-                () =>const SaleMenuScreen(),
+                () => const SaleMenuScreen(),
               );
             },
           ),
