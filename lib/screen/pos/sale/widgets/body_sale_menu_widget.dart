@@ -549,10 +549,7 @@ class BodySaleMenuWidget extends StatelessWidget {
                         SaleWidget(),
                         SaleWidget(),
                         SaleWidget(),
-                        SaleWidget(),
-                        SaleWidget(),
-                        SaleWidget(),
-                        SaleWidget(),
+
                         SaleWidget(),
                         SaleWidget(),
                         SizedBox(height: 5),
