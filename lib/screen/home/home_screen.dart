@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(MainController());
-    final loginController = Get.find<LoginController>();
+    // final loginController = Get.find<LoginController>();
 
     return Obx(
       () => SafeArea(
@@ -83,11 +83,11 @@ class HomeScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
-                          Text(
-                            "POS Profile : ${_getRoleName(loginController.loggedInUser.value?.roleId)}  / Address: Sieam Reap, Cambodia",
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15),
-                          ),
+                          // Text(
+                          //   "POS Profile : ${_getRoleName(loginController.loggedInUser.value?.roleId)}  / Address: Sieam Reap, Cambodia",
+                          //   style: const TextStyle(
+                          //       color: Colors.white, fontSize: 15),
+                          // ),
                           // Display role based on roleId
                         ],
                       ),
@@ -154,7 +154,7 @@ class HomeScreen extends StatelessWidget {
                                   HomeButtonWidget(
                                     title: "Receipt".tr,
                                     iconData: Icons.receipt_outlined,
-                                    onPressed: () {},
+                                    onPressed: controller.onReceiptPressed
                                   ),
                                   HomeButtonWidget(
                                     title: "Report".tr,

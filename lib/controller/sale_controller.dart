@@ -111,20 +111,27 @@ class SaleController extends GetxController {
   void onPaymentPressed() {
     Get.dialog(
       Dialog(
-        backgroundColor: Colors.white,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
               Radius.circular(7)), // Adjust the border radius if needed
         ),
         child: Container(
-          width: 350, // Set desired width
-          height: 550,
+          width: 450, // Set desired width
+          height: 600,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: SalaPaymentWidget(), // Set desired height
+          child: const SalaPaymentWidget(), // Set desired height
         ),
       ),
     );
+  }
+
+  // The selected payment type ID
+  var selectedPaymentType = ''.obs;
+
+  // Update the selected payment type
+  void selectPaymentType(String paymentType) {
+    selectedPaymentType.value = paymentType;
   }
 }

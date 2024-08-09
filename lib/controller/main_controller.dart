@@ -8,6 +8,8 @@ import 'package:pos_system/screen/pos/table_plan/table_plan_screen.dart';
 import 'package:pos_system/screen/working_day/working_dat_close_screen.dart';
 import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
 
+import '../screen/receipt/receipt_screen.dart';
+
 class MainController extends GetxController {
   var isLoading = true.obs;
   var workingInfor = <String, dynamic>{"wd": null, "cs": null}.obs;
@@ -51,6 +53,10 @@ class MainController extends GetxController {
     // Program.alert("Testing ", "Testing Successfully");
     // Program.warning("title", "description");
     Program.error("title", "description");
+  }
+
+  void onReceiptPressed() {
+    Get.to(() => ReceiptScreen());
   }
 
   // Define the list of dropdown items with shift options
