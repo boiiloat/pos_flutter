@@ -17,7 +17,7 @@ class ReceiptKpiWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 90,
-      width: 300,
+      width: 320,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
@@ -50,7 +50,7 @@ class ReceiptKpiWidget extends StatelessWidget {
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                'Per Month',
+                                'Current Day',
                                 style: TextStyle(fontSize: 10),
                               ),
                             ],

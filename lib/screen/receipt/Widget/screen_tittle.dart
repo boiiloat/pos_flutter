@@ -17,7 +17,10 @@ class ScreenTittle extends StatelessWidget {
         children: [
           Icon(icon.icon),
           SizedBox(width: 10),
-          Text(label),
+          Text(
+            label,
+            style: TextStyle(fontSize: 18),
+          ),
         ],
       ),
     );

@@ -9,6 +9,7 @@ import 'package:pos_system/screen/working_day/working_dat_close_screen.dart';
 import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
 
 import '../screen/receipt/receipt_screen.dart';
+import '../screen/report/report_screen.dart';
 
 class MainController extends GetxController {
   var isLoading = true.obs;
@@ -57,6 +58,10 @@ class MainController extends GetxController {
 
   void onReceiptPressed() {
     Get.to(() => ReceiptScreen());
+  }
+
+  void onReportPressed() {
+    Get.to(() => ReportScreen());
   }
 
   // Define the list of dropdown items with shift options
