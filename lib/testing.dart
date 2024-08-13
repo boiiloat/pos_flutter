@@ -67,7 +67,7 @@ class InvoiceScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                     )),
                     Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           'Description',
                           style: TextStyle(fontWeight: FontWeight.bold),
@@ -82,13 +82,13 @@ class InvoiceScreen extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.right)),
                     Expanded(
-                        child: Text('Dis',
+                        child: Text('Discount',
                             style: TextStyle(fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.right)),
+                            textAlign: TextAlign.center)),
                     Expanded(
                         child: Text('Amount',
                             style: TextStyle(fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.right)),
+                            textAlign: TextAlign.center)),
                   ],
                 ),
               ),
@@ -104,7 +104,7 @@ class InvoiceScreen extends StatelessWidget {
                           child: Text('${index + 1}',
                               textAlign: TextAlign.center)),
                       Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: Text(
                             item.description,
                             style: TextStyle(fontFamily: 'Khmer'),
@@ -122,13 +122,13 @@ class InvoiceScreen extends StatelessWidget {
                       )),
                       Expanded(
                           child: Text(
-                        item.discount,
-                        textAlign: TextAlign.end,
+                        '-',
+                        textAlign: TextAlign.center,
                       )),
                       Expanded(
                           child: Text(
                         '\ ${item.amount}',
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.center,
                       )),
                     ],
                   ),
