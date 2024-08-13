@@ -163,17 +163,17 @@ class HomeScreen extends StatelessWidget {
                                   HomeButtonWidget(
                                     title: "Customer".tr,
                                     iconData: Icons.group,
-                                    onPressed: () {},
+                                    onPressed: controller.onCustomerPressed,
                                   ),
                                   HomeButtonWidget(
                                     title: "Product".tr,
                                     iconData: Icons.list,
-                                    onPressed: () {},
+                                    onPressed: controller.onProductPressed,
                                   ),
                                   HomeButtonWidget(
                                     title: "Reset Transaction".tr,
                                     iconData: Icons.restart_alt_outlined,
-                                    onPressed: () {},
+                                    onPressed: controller.onResetTransactionPressed,
                                   ),
                                   HomeButtonWidget(
                                     title: "Logout".tr,
