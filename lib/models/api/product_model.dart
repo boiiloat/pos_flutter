@@ -45,24 +45,23 @@
 //   }
 // }
 
-// lib/models/product.dart
+// lib/models/product_model.dart
 class Product {
+  final String productImage;
   final String productName;
   final double cost;
   final double price;
   final String category;
   final String createdBy;
-  final String action;
-  final ProductImage productImage;
 
   Product({
+    required this.productImage,
     required this.productName,
     required this.cost,
     required this.price,
     required this.category,
     required this.createdBy,
-    required this.action,
-    required this.productImage,
   });
 }
+
 

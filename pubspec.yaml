@@ -42,6 +42,7 @@ dependencies:
   pdf_image_renderer: ^0.7.0
   path_provider: ^2.1.4
   flutter_pdfview: ^1.3.2
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -81,9 +82,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  #   - family: Schyler
+  #   - family: Khmer
   #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Khmer.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
