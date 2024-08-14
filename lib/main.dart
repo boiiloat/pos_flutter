@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       // home: const LoginScreen(),
-      home: InvoiceScreen(),
+      home: LoginScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );
