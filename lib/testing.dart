@@ -142,14 +142,6 @@ class InvoiceScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Row(
-                        children: [
-                          Text('Discount',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(width: 50),
-                          Text('\$ 0.00', textAlign: TextAlign.right),
-                        ],
-                      ),
                       SizedBox(height: 5),
                       Row(
                         children: [
@@ -157,6 +149,14 @@ class InvoiceScreen extends StatelessWidget {
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           SizedBox(width: 50),
                           Text('\$ 15.00', textAlign: TextAlign.right),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Discount',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(width: 55),
+                          Text('\$ 0.00', textAlign: TextAlign.right),
                         ],
                       ),
                       SizedBox(height: 5),
