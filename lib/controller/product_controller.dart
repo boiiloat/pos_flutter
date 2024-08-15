@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:pos_system/program.dart';
+import 'package:pos_system/screen/product/Widgets/product_add_new.widget.dart';
 import 'dart:convert';
 
 import '../models/api/product_model.dart';
@@ -95,32 +96,7 @@ class ProductController extends GetxController {
   void onAddNewProductPressed() {
     Get.dialog(
       Dialog(
-        child: Container(
-          height: 600,
-          width: 500,
-          color: Colors.white,
-          child: Expanded(
-              child: Column(
-            children: [
-              Expanded(
-                  flex: 1,
-                  child: Container(
-                    color: Colors.red,
-                    child: Center(
-                      child: Text(
-                        'Add New Product',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  )),
-              Expanded(
-                  flex: 9,
-                  child: Container(
-                    color: Colors.white,
-                  ))
-            ],
-          )),
-        ),
+        child: ProductAddNewWidget()
       ),
     );
   }

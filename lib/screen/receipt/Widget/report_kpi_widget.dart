@@ -16,8 +16,8 @@ class ReceiptKpiWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 90,
-      width: 320,
+      height: 80,
+      width: 280,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
@@ -38,7 +38,7 @@ class ReceiptKpiWidget extends StatelessWidget {
                       flex: 1,
                       child: Container(
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(20, 5, 0, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -102,7 +102,7 @@ class ReceiptKpiWidget extends StatelessWidget {
                       label,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 13,
+                        fontSize: 15,
                       ),
                     ),
                   ],

@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:pos_system/controller/customer_controller.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/customer/Widgets/customer_fill_widget.dart';
 
-class CustomerAddNewWidget extends StatelessWidget {
-  const CustomerAddNewWidget({super.key});
+class ProductAddNewWidget extends StatelessWidget {
+  const ProductAddNewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(CustomerController());
     return Container(
       width: 450,
       height: 500,
@@ -37,28 +33,20 @@ class CustomerAddNewWidget extends StatelessWidget {
             child: Container(
               child: Column(
                 children: [
-                  SizedBox(height: 10),
-                  Text(
-                    'User Profile',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                   Container(
                     height: 70,
                     width: 70,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
                           image: NetworkImage(
-                            'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541',
+                            'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=',
                           ),
                           fit: BoxFit.cover),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 15),
                   InkWell(
                     onTap: () {
                       Program.alert("title", "description");
@@ -81,27 +69,27 @@ class CustomerAddNewWidget extends StatelessWidget {
                   SizedBox(height: 20),
                   CustomerFillWidget(
                     icon: Icon(Icons.home),
-                    hintText: 'full name',
+                    hintText: 'Product Name',
+                  ),
+                  SizedBox(height: 10),
+                  CustomerFillWidget(
+                    icon: Icon(Icons.home),
+                    hintText: 'Cost',
                   ),
                   SizedBox(height: 10),
 
                   CustomerFillWidget(
                     icon: Icon(Icons.person_2_outlined),
-                    hintText: 'username',
+                    hintText: 'Price',
                   ),
                   SizedBox(height: 10),
 
-                  CustomerFillWidget(
-                    icon: Icon(Icons.key),
-                    hintText: 'password',
-                  ),
-                  SizedBox(height: 10),
                   SizedBox(
                     width: 300,
                     height: 40,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText: 'Roll',
+                        hintText: 'Category',
                         hintStyle: TextStyle(
                           color: Colors.grey.shade700,
                           fontSize: 15,
@@ -124,6 +112,41 @@ class CustomerAddNewWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  SizedBox(height: 10),
+                  // SizedBox(
+                  //   width: 300,
+                  //   height: 40,
+                  //   child: Obx(
+                  //     () => DropdownButtonFormField<String>(
+                  //       value: controller.selectedRole.value,
+                  //       decoration: InputDecoration(
+                  //         contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  //         focusedBorder: OutlineInputBorder(
+                  //           borderSide: BorderSide(color: Colors.blue.shade100),
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //         enabledBorder: OutlineInputBorder(
+                  //           borderSide: BorderSide(
+                  //             color: Colors.blue.shade700,
+                  //           ),
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //       ),
+                  //       items: <String>['Admin', 'Cashier'].map((String value) {
+                  //         return DropdownMenuItem<String>(
+                  //           value: value,
+                  //           child: Text(value),
+                  //         );
+                  //       }).toList(),
+                  //       onChanged: (newValue) {
+                  //         if (newValue != null) {
+                  //           controller.setSelectedRole(newValue);
+                  //         }
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(height: 20),
                   Container(
                     height: 40,

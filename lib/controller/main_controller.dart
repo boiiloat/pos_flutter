@@ -25,7 +25,7 @@ class MainController extends GetxController {
     Get.to(const LoginScreen());
   }
 
-    void updateSelectedItem(String newItem) {
+  void updateSelectedItem(String newItem) {
     selectedItem.value = newItem;
   }
 
@@ -68,7 +68,7 @@ class MainController extends GetxController {
   }
 
   void onReportPressed() {
-    Get.to(() => const ReportScreen());
+    Get.to(() => ReportScreen());
   }
 
   void onCustomerPressed() {
