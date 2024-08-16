@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
-import 'package:pos_system/controller/login_controller.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
 

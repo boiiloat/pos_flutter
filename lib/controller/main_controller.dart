@@ -7,12 +7,15 @@ import 'package:pos_system/screen/customer/customer_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
 import 'package:pos_system/screen/pos/table_plan/table_plan_screen.dart';
 import 'package:pos_system/screen/product/product_screen.dart';
+import 'package:pos_system/screen/report/report_expense/report_expense_screen.dart';
+import 'package:pos_system/screen/report/report_stock/report_stcok_screen.dart';
+import 'package:pos_system/screen/report/report_working_day/report_working_day_screen.dart';
 import 'package:pos_system/screen/resetransection/reset_transection_screen.dart';
 import 'package:pos_system/screen/working_day/working_dat_close_screen.dart';
 import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
 
 import '../screen/receipt/receipt_screen.dart';
-import '../screen/report/report_screen.dart';
+import '../screen/report/main_report/report_screen.dart';
 
 class MainController extends GetxController {
   var isLoading = true.obs;
@@ -67,10 +70,6 @@ class MainController extends GetxController {
     Get.to(() => ReceiptScreen());
   }
 
-  void onReportPressed() {
-    Get.to(() => ReportScreen());
-  }
-
   void onCustomerPressed() {
     Get.to(() => const CustomerScreen());
   }
@@ -81,5 +80,21 @@ class MainController extends GetxController {
 
   void onResetTransactionPressed() {
     Get.to(() => const ResetTransectionScreen());
+  }
+
+  void onReportPressed() {
+    Get.to(() => ReportScreen());
+  }
+
+  void onStockReportPressed() {
+    Get.to(() => ReportStockScreen());
+  }
+
+  void onWorkingDayReportPressed() {
+    Get.to(() => ReportWorkingDayScreen());
+  }
+
+  void onExpensePressed() {
+    Get.to(() => ReportExpanseScreen());
   }
 }

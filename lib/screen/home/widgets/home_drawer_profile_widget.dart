@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/controller/login_controller.dart';
 import '../../../controller/main_controller.dart';
 import 'home_drawer_menu_item_widget.dart';
 import 'home_drawer_profile_widget copy.dart';
@@ -8,6 +7,7 @@ import 'home_logout_button_widget.dart';
 
 class HomeScreenDrawerWidget extends StatelessWidget {
   const HomeScreenDrawerWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     var controller = Get.find<MainController>();
@@ -29,20 +29,10 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         HomeDrawerMenuItemWidget(
-                          icon: Icons.calendar_month,
-                          text: 'Start working',
-                          onPressed: () => controller.onStartWorkingDayPressed,
-                        ),
-                        // HomeDrawerMenuItemWidget(
-                        //   icon: Icons.calendar_month,
-                        //   text: 'Start working',
-                        //   onPressed: () => controller.onStartWorkingDayPressed,
-                        // ),
-                        // HomeDrawerMenuItemWidget(
-                        //   icon: Icons.schedule,
-                        //   text: 'Start Shift',
-                        //   onPressed: () {},
-                        // ),
+                            icon: Icons.calendar_month,
+                            text: 'Start working',
+                            onPressed: () =>
+                                controller.onStartWorkingDayPressed),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.schedule,
                           text: 'Start Shift',
@@ -53,16 +43,56 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           text: 'POS',
                           onPressed: () {},
                         ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.article,
-                          text: 'Receipt',
-                          onPressed: () {},
+                        // Report ExpansionTile
+                        ExpansionTile(
+                          leading: Icon(Icons.article),
+                          title: Text('Report'),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16.0), // Indent submenu items
+                              child: Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () => controller.onReportPressed(),
+                                    child: ListTile(
+                                      title: Text(
+                                        'Report Screen',
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () =>
+                                        controller.onStockReportPressed(),
+                                    child: ListTile(
+                                      title: Text(
+                                        'Stock Report',
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () =>
+                                        controller.onWorkingDayReportPressed(),
+                                    child: ListTile(
+                                      title: Text('Working Day Report',
+                                          style: TextStyle(fontSize: 13)),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () => controller.onExpensePressed(),
+                                    child: ListTile(
+                                      title: Text('Expense',
+                                          style: TextStyle(fontSize: 13)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.insert_chart,
-                          text: 'Report',
-                          onPressed: () {},
-                        ),
+                        // Other Menu Items
                         HomeDrawerMenuItemWidget(
                           icon: Icons.group,
                           text: 'Customer',
@@ -73,9 +103,9 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           text: 'Product',
                           onPressed: () {},
                         ),
-
                         const SizedBox(height: 30),
-                        const Divider(),
+                        // Only show the divider if ExpansionTile is not expanded
+                        Divider(),
                         HomeDrawerMenuItemWidget(
                           icon: Icons.save,
                           text: 'Backup',
@@ -86,7 +116,6 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              // logout drawer button
               const HomeLogoutButtonWidget(),
             ],
           ),

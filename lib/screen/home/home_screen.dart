@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/controller/login_controller.dart';
 import 'package:pos_system/controller/main_controller.dart';
 import 'widgets/home_button_widget.dart';
 import 'widgets/home_drawer_profile_widget.dart';
@@ -33,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                   icon: const Icon(
                     Icons.menu,
                     color: Colors.white,
-                  ),
+                  ),  
                 ),
               ),
               actions: const [
@@ -173,7 +172,8 @@ class HomeScreen extends StatelessWidget {
                                   HomeButtonWidget(
                                     title: "Reset Transaction".tr,
                                     iconData: Icons.restart_alt_outlined,
-                                    onPressed: controller.onResetTransactionPressed,
+                                    onPressed:
+                                        controller.onResetTransactionPressed,
                                   ),
                                   HomeButtonWidget(
                                     title: "Logout".tr,

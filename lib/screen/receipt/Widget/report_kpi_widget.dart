@@ -68,8 +68,8 @@ class ReceiptKpiWidget extends StatelessWidget {
                             children: [
                               SizedBox(height: 2),
                               Container(
-                                height: 50,
-                                width: 50,
+                                height: 45,
+                                width: 45,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   color: color,
