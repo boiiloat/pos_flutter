@@ -34,28 +34,14 @@ class ReportWorkingDayScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 2,
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.assessment_outlined),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    'Working Day #WD2024-00012',
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                'Working Day & Cashier Shift Report',
-                                style: TextStyle(fontSize: 13),
-                              ),
-                            ],
+                      child: Column(
+                        children: [
+                          Text(
+                            'Working Day #WD2024-00012',
+                            style: TextStyle(fontSize: 15),
                           ),
-                        ),
+                          Text('data'),
+                        ],
                       ),
                     ),
                     Expanded(
