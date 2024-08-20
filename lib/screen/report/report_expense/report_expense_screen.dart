@@ -11,7 +11,7 @@ class ReportExpanseScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'SNACK & RELAX',
+          'SNACK & RELAX CAFE',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         leading: IconButton(

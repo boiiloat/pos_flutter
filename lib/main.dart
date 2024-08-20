@@ -18,6 +18,8 @@ import 'package:pos_system/screen/working_day/working_dat_close_screen.dart';
 import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
 import 'package:pos_system/testing.dart';
 
+import 'screen/report/report_stock/report_stcok_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       // home: const LoginScreen(),
-      home: ReportWorkingDayScreen(),
+      home: ReportStockScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );

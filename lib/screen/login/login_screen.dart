@@ -46,7 +46,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 15),
                         const Text(
-                          " SNACK & RELAX",
+                          " SNACK & RELAX CAFE",
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -62,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         const Text(
-                          " SNACK & RELAX ",
+                          " SNACK & RELAX CAFE",
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,

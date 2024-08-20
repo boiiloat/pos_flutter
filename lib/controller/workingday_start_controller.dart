@@ -1,26 +1,43 @@
 import 'package:get/get.dart';
 
-class WorkingDayStartController extends GetxController{
-   // This map will track which container is expanded.
+class WorkingDayStartController extends GetxController {
+  // Track which container is expanded. The key is the index of the container, and the value is whether it is expanded or not.
   var expandedContainers = <int, bool>{}.obs;
-  var selectedIndex = Rx<int?>(null);
+
+  // Track the selected main container index (Working Day). Initialized to -1, indicating no selection.
+  var selectedIndex = (-1).obs;
+
+  // Track the selected sub-container index (Cashier Shift). Initialized to -1, indicating no selection.
+  var selectedSubContainerIndex = (-1).obs;
 
   // Function to toggle a container's expanded state.
   void toggleContainer(int index) {
     if (expandedContainers[index] == true) {
+      // If the container is already expanded, collapse it.
       expandedContainers[index] = false;
     } else {
-      // Collapse all other containers
+      // Collapse all other containers and expand the selected one.
       expandedContainers.forEach((key, value) {
         expandedContainers[key] = false;
       });
-      // Expand the clicked container
       expandedContainers[index] = true;
     }
   }
-  // Function to set the selected container index.
+
+  // Method to handle the main container selection (Working Day).
   void selectContainer(int index) {
-    selectedIndex.value = selectedIndex.value == index ? null : index;
+    selectedIndex.value = index;
+    selectedSubContainerIndex.value = -1; // Reset sub-container selection when changing main container.
   }
-  
+
+  // Method to handle sub-container selection (Cashier Shift).
+  void selectSubContainer(int index) {
+    selectedSubContainerIndex.value = index;
+    print("Sub-container #$index selected"); // Optional: For debugging or logging purposes.
+  }
+  var selectedValue = 'Value 1'.obs; // Initial value
+
+  void updateValue(String newValue) {
+    selectedValue.value = newValue;
+  }
 }

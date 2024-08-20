@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               title: const Text(
-                "SNACK & RELAX",
+                "SNACK & RELAX CAFE",
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               backgroundColor: Colors.red,
@@ -76,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           const Text(
-                            "SNACK & RELAX",
+                            "SNACK & RELAX CAFE",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

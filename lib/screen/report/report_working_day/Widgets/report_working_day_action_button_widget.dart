@@ -14,7 +14,7 @@ class ReportWorkingDayActionButtonWidget extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         height: 40,
         decoration: BoxDecoration(
           color: Colors.white, // You can change the color as needed
@@ -23,7 +23,7 @@ class ReportWorkingDayActionButtonWidget extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
 
               blurRadius: 5,
-              offset: Offset(0, 2), // changes position of shadow
+              offset: const Offset(0, 2), // changes position of shadow
             ),
           ],
           borderRadius:

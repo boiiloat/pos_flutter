@@ -110,7 +110,7 @@ class ReceiptScreen extends StatelessWidget {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text(
-          'SNACK & RELAX',
+          'SNACK & RELAX CAFE',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         leading: IconButton(
