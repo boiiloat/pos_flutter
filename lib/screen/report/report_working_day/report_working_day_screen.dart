@@ -85,8 +85,8 @@ class ReportWorkingDayScreen extends StatelessWidget {
                           ),
                           ReportWorkingDayMainWidget(
                             working_day: 'WD2024-00024',
-                            shift_opened: '2024-9-10 was opened by Leam loat',
-                            shift_closed: '2024-9-10 was closed by Leam loat',
+                            shift_opened: '2024-9-11 was opened by Leam loat',
+                            shift_closed: '2024-9-11 was closed by Leam loat',
                             shift_number: 'Total Shift: 1',
                             index: 2, // Pass index here
                           ),
@@ -106,60 +106,207 @@ class ReportWorkingDayScreen extends StatelessWidget {
                     flex: 2,
                     child: Container(
                       color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ReportWorkingDayActionButtonWidget(
-                            label: 'Sale Summary',
-                            onPressed: () {},
-                          ),
-                          const SizedBox(width: 10),
-                          ReportWorkingDayActionButtonWidget(
-                            label: 'Sale Product Summary',
-                            onPressed: () {},
-                          ),
-                          const SizedBox(width: 10),
-                          ReportWorkingDayActionButtonWidget(
-                            label: 'Sale Transection',
-                            onPressed: () {},
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ReportWorkingDayActionButtonWidget(
+                              label: 'Sale Summary',
+                              onPressed: () {},
+                              color: Colors.blue.shade200,
+                              label_color: Colors.white,
+                            ),
+                            const SizedBox(width: 10),
+                            ReportWorkingDayActionButtonWidget(
+                              label: 'Sale Transection',
+                              onPressed: () {},
+                              color: Colors.white,
+                              label_color: Colors.black,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
                     flex: 15,
-                    child: Container(
-                      color: Colors.grey.shade400,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: 400,
-                            height: 500,
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Close Working Day Summary',
-                                  ),
-                                  Text(
-                                    'WD2024-00022',
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Working Day Information",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
+                    child: SingleChildScrollView(
+                      child: Container(
+                        color: Colors.grey.shade400,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 350,
+                              height: 500,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Close Cashier Shift Summary',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                    Text(
+                                      'CS2024-00022',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Shift Information",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Working Day'),
+                                        Text('WD2024-00022')
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Created Date'),
+                                        Text('2024-9-10')
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('2024-9-10'),
+                                        Text('Admin')
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Close By'),
+                                        Text('Admin'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Status '),
+                                        Text('Closed'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Exchange Rate '),
+                                        Text('\$ 1 = ៛​ 4,000'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Sale Summary",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Sale Sub total '),
+                                        Text('\$ 15.00'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Total Sale Revenue'),
+                                        Text('\$ 15.00'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Payment Breakdown",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('ABA Dollar'),
+                                        Text('\$15.00'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("Total Payment"),
+                                        Text("\$ 15.00"),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(""),
+                                        Text("៛​ 60,000"),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Divider(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Total Revenue'),
+                                        Text('\$ 15.00'),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(''),
+                                        Text('៛ 60,000'),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pos_system/constans/constan.dart';
 
 class ReportWorkingDayActionButtonWidget extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
+  final Color color;
+  final Color label_color;
   const ReportWorkingDayActionButtonWidget({
     super.key,
     required this.label,
     required this.onPressed,
+    required this.color, required this.label_color,
   });
 
   @override
@@ -17,7 +21,7 @@ class ReportWorkingDayActionButtonWidget extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         height: 40,
         decoration: BoxDecoration(
-          color: Colors.white, // You can change the color as needed
+          color: color, // You can change the color as needed
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
@@ -32,6 +36,7 @@ class ReportWorkingDayActionButtonWidget extends StatelessWidget {
         child: Center(
           child: Text(
             label,
+            style: TextStyle(color: label_color),
             // optional text styling
           ),
         ),
