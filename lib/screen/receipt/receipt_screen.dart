@@ -209,60 +209,55 @@ class ReceiptScreen extends StatelessWidget {
               itemCount: receipts.length,
               itemBuilder: (context, index) {
                 final receipt = receipts[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey[300]!),
-                      ),
+                return Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey[300]!),
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: Center(child: Text(receipt.invoiceNumber))),
-                        Expanded(
-                            child: Center(child: Text(receipt.tableNumber))),
-                        Expanded(child: Center(child: Text(receipt.dateTime))),
-                        Expanded(
-                            child: Center(
-                                child: Text(
-                                    '\$ ${receipt.totalAmount.toStringAsFixed(2)}'))),
-                        Expanded(
-                            child: Center(
-                                child: Text(
-                                    '\$ ${receipt.discount.toStringAsFixed(2)}'))),
-                        Expanded(
-                            child: Center(
-                                child: Text(
-                                    '\$ ${receipt.grandTotal.toStringAsFixed(2)}'))),
-                        Expanded(
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Center(child: Text(receipt.invoiceNumber))),
+                      Expanded(child: Center(child: Text(receipt.tableNumber))),
+                      Expanded(child: Center(child: Text(receipt.dateTime))),
+                      Expanded(
                           child: Center(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 3, 15, 3),
-                                child: Text(
-                                  receipt.status,
-                                  style: TextStyle(
-                                    color: receipt.status == 'Paid'
-                                        ? Colors.white
-                                        : Colors.red,
-                                    fontSize: 13,
-                                  ),
+                              child: Text(
+                                  '\$ ${receipt.totalAmount.toStringAsFixed(2)}'))),
+                      Expanded(
+                          child: Center(
+                              child: Text(
+                                  '\$ ${receipt.discount.toStringAsFixed(2)}'))),
+                      Expanded(
+                          child: Center(
+                              child: Text(
+                                  '\$ ${receipt.grandTotal.toStringAsFixed(2)}'))),
+                      Expanded(
+                        child: Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 3, 15, 3),
+                              child: Text(
+                                receipt.status,
+                                style: TextStyle(
+                                  color: receipt.status == 'Paid'
+                                      ? Colors.white
+                                      : Colors.red,
+                                  fontSize: 13,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },

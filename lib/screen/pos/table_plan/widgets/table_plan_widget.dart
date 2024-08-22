@@ -4,12 +4,14 @@ class TablePlanWidget extends StatelessWidget {
   // ignore: non_constant_identifier_names
   final String table_label;
   final VoidCallback onPressed;
+  final Color color;
 
   const TablePlanWidget({
     super.key,
     // ignore: non_constant_identifier_names
     required this.table_label,
     required this.onPressed,
+    required this.color,
   });
 
   @override
@@ -19,10 +21,10 @@ class TablePlanWidget extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child: Ink(
-          height: 80,
-          width: 80,
+          height: 70,
+          width: 70,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade400),
+            border: Border.all(color: color),
             borderRadius: BorderRadius.circular(5),
           ),
           child: Column(
@@ -30,15 +32,14 @@ class TablePlanWidget extends StatelessWidget {
             children: [
               Text(
                 table_label,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
+                style: TextStyle(
+                  color: color,
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.deck,
-                color: Colors.grey,
-                size: 35,
+                color: color,
+                size: 28,
               ),
             ],
           ),

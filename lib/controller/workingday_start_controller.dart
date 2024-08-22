@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WorkingDayStartController extends GetxController {
@@ -27,17 +28,38 @@ class WorkingDayStartController extends GetxController {
   // Method to handle the main container selection (Working Day).
   void selectContainer(int index) {
     selectedIndex.value = index;
-    selectedSubContainerIndex.value = -1; // Reset sub-container selection when changing main container.
+    selectedSubContainerIndex.value =
+        -1; // Reset sub-container selection when changing main container.
   }
 
   // Method to handle sub-container selection (Cashier Shift).
   void selectSubContainer(int index) {
     selectedSubContainerIndex.value = index;
-    print("Sub-container #$index selected"); // Optional: For debugging or logging purposes.
+    print(
+        "Sub-container #$index selected"); // Optional: For debugging or logging purposes.
   }
+
   var selectedValue = 'Value 1'.obs; // Initial value
 
   void updateValue(String newValue) {
     selectedValue.value = newValue;
+  }
+
+  void onYesPressed() {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+              Radius.circular(7)), // Adjust the border radius if needed
+        ),
+        child: Container(
+          width: 100, // Set the desired width
+          height: 400, // Set the desired height
+          padding: const EdgeInsets.all(
+              16.0), // Optional: Add padding to the content
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
+import 'package:pos_system/controller/workingday_start_controller.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
 
@@ -11,6 +12,7 @@ class WorkingDayStartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(WorkingDayStartController());
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -93,7 +95,85 @@ class WorkingDayStartScreen extends StatelessWidget {
               const SizedBox(width: 280),
               FooterActionWidget(
                 onPressed: () {
-                  Program.alert("title", "description");
+                  Get.dialog(
+                    Dialog(
+                      backgroundColor: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            5)), // Optional: Adjust the border radius
+                      ),
+                      child: IntrinsicWidth(
+                        child: IntrinsicHeight(
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(30, 15, 30,
+                                15), // Optional: Add padding to the content
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Start Working Day',
+                                      style: TextStyle(
+                                          fontSize: 17.0,
+                                          fontWeight: FontWeight
+                                              .bold), // Optional: Customize text style
+                                      // Center the text
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Are you sure to start working day?',
+                                  style: TextStyle(
+                                      fontSize:
+                                          12.0), // Optional: Customize text style
+                                  textAlign:
+                                      TextAlign.center, // Center the text
+                                ),
+                                SizedBox(height: 25.0), // Optional: Add spacing
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Container(
+                                      height: 30,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Okay',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
                 },
                 label: 'START WORKING DAY',
                 width: 180,

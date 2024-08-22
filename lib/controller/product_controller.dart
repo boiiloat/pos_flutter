@@ -6,6 +6,7 @@ import 'package:pos_system/screen/product/Widgets/product_add_new.widget.dart';
 import 'dart:convert';
 
 import '../models/api/product_model.dart';
+import '../screen/product/Widgets/category_add_new_widget.dart';
 
 class ProductController extends GetxController {
   var products = <Product>[].obs;
@@ -100,4 +101,14 @@ class ProductController extends GetxController {
       ),
     );
   }
+
+    void onAddNewCategory() {
+    Get.dialog(
+      Dialog(
+        child: CategoryAddNewWidget()
+      ),
+    );
+  }
+
+  
 }

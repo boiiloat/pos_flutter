@@ -38,13 +38,24 @@ class ProductScreen extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 15.0, right: 15, top: 5),
+            padding: const EdgeInsets.only(left: 15.0, right: 15, top: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
+                Container(
                   width: 200,
                   height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(5),
+                  ),
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Search',
@@ -52,21 +63,24 @@ class ProductScreen extends StatelessWidget {
                           TextStyle(color: Colors.grey.shade600, fontSize: 14),
                       suffixIcon: Icon(
                         Icons.search,
-                        color: Colors.blue.shade700,
+                        color: Colors.black,
                       ),
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 16),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.blue.shade700),
+                        borderRadius:
+                            BorderRadius.circular(5), // Match the border radius
+                        borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.blue.shade700),
+                        borderRadius:
+                            BorderRadius.circular(5), // Match the border radius
+                        borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.blue.shade100),
+                        borderRadius:
+                            BorderRadius.circular(5), // Match the border radius
+                        borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
                     ),
                   ),
@@ -74,12 +88,20 @@ class ProductScreen extends StatelessWidget {
                 Row(
                   children: [
                     InkWell(
-                      onTap: controller.onAddNewProductPressed,
-                      child: Ink(
+                      onTap: controller.onAddNewCategory,
+                      child: Container(
                         width: 150,
                         height: 38,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
+                          color: Colors
+                              .white, // Change the background color to white
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Row(
@@ -98,11 +120,19 @@ class ProductScreen extends StatelessWidget {
                     SizedBox(width: 10),
                     InkWell(
                       onTap: controller.onAddNewProductPressed,
-                      child: Ink(
+                      child: Container(
                         width: 150,
                         height: 38,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
+                          color: Colors
+                              .white, // Change the background color to white
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Row(
@@ -123,7 +153,7 @@ class ProductScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(left: 15.0, right: 15),
             child: Container(
@@ -131,7 +161,7 @@ class ProductScreen extends StatelessWidget {
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(2),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
               child: Row(
                 children: [
                   Expanded(
@@ -180,7 +210,7 @@ class ProductScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 8),
+                          vertical: 5, horizontal: 4),
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(color: Colors.grey[300]!),
@@ -191,8 +221,8 @@ class ProductScreen extends StatelessWidget {
                           Expanded(
                               child: Center(
                                   child: Container(
-                            height: 50,
-                            width: 50,
+                            height: 40,
+                            width: 40,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100),
@@ -219,8 +249,8 @@ class ProductScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Container(
-                                  width: 70,
-                                  height: 30,
+                                  width: 60,
+                                  height: 25,
                                   decoration: BoxDecoration(
                                     color: Colors.red,
                                     borderRadius: BorderRadius.circular(5),
@@ -228,7 +258,8 @@ class ProductScreen extends StatelessWidget {
                                   child: Center(
                                     child: Text(
                                       'Remove',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 12),
                                     ),
                                   ),
                                 ),
