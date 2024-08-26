@@ -47,7 +47,8 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
                           loginController.loggedInUser.value?.fullname ??
                               'Unknown',
                           style: const TextStyle(
-                            color: Colors.black,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
                         ),

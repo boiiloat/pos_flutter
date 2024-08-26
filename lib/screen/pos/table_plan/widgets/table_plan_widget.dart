@@ -4,14 +4,12 @@ class TablePlanWidget extends StatelessWidget {
   // ignore: non_constant_identifier_names
   final String table_label;
   final VoidCallback onPressed;
-  final Color color;
 
   const TablePlanWidget({
     super.key,
     // ignore: non_constant_identifier_names
     required this.table_label,
     required this.onPressed,
-    required this.color,
   });
 
   @override
@@ -24,7 +22,7 @@ class TablePlanWidget extends StatelessWidget {
           height: 70,
           width: 70,
           decoration: BoxDecoration(
-            border: Border.all(color: color),
+            border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5),
           ),
           child: Column(
@@ -33,12 +31,12 @@ class TablePlanWidget extends StatelessWidget {
               Text(
                 table_label,
                 style: TextStyle(
-                  color: color,
+                  color: Colors.grey,
                 ),
               ),
               Icon(
                 Icons.deck,
-                color: color,
+                color: Colors.grey,
                 size: 28,
               ),
             ],
