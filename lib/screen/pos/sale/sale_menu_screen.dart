@@ -21,6 +21,7 @@ class SaleMenuScreen extends StatelessWidget {
     // var controller = Get.put(ProductController());
     // // var controller = Get.put(SaleController());
     // // var controller = Get.put(ProductController);
+    
     return Scaffold(
       body: Column(
         children: [
