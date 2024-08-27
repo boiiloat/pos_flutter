@@ -1,67 +1,71 @@
-// class Product {
-//   final int id;
-//   final String name;
-//   final double price;
-//   final String image;
-//   final bool stockable;
-//   final int categoryId;
-//   final DateTime createDate;
-//   final int createBy;
-//   final bool isDeleted;
-//   final DateTime? deletedDate;
-//   final int? deletedBy;
+import 'dart:convert';
 
-//   Product({
-//     required this.id,
-//     required this.name,
-//     required this.price,
-//     required this.image,
-//     required this.stockable,
-//     required this.categoryId,
-//     required this.createDate,
-//     required this.createBy,
-//     required this.isDeleted,
-//     this.deletedDate,
-//     this.deletedBy,
-//   });
-
-//   factory Product.fromJson(Map<String, dynamic> json) {
-//     return Product(
-//       id: json['id'],
-//       name: json['name'],
-//       price:
-//           json['price'] != null ? double.parse(json['price'].toString()) : 0.0,
-//       image: json['image'] ?? '',
-//       stockable: json['stockable'] == 1, // Convert int to bool
-//       categoryId: json['category_id'] ?? 0,
-//       createDate: DateTime.parse(json['create_date'] ?? ''),
-//       createBy: json['create_by'] ?? 0,
-//       isDeleted: json['is_deleted'] == 1, // Convert int to bool
-//       deletedDate: json['deleted_date'] != null
-//           ? DateTime.parse(json['deleted_date'])
-//           : null,
-//       deletedBy: json['deleted_by'] ?? null,
-//     );
-//   }
-// }
-
-// lib/models/product_model.dart
 class Product {
-  final String productImage;
-  final String productName;
-  final double cost;
-  final double price;
-  final String category;
-  final String createdBy;
+  final int id;
+  final String name;
+  final String price;
+  final String image;
+  final bool stockable;
+  final int categoryId;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? createDate;
+  final String createBy;
+  final bool isDeleted;
+  final String? deletedDate;
+  final String? deletedBy;
 
   Product({
-    required this.productImage,
-    required this.productName,
-    required this.cost,
+    required this.id,
+    required this.name,
     required this.price,
-    required this.category,
-    required this.createdBy,
+    required this.image,
+    required this.stockable,
+    required this.categoryId,
+    this.createdAt,
+    this.updatedAt,
+    this.createDate,
+    required this.createBy,
+    required this.isDeleted,
+    this.deletedDate,
+    this.deletedBy,
   });
+
+  // Factory method to create a Product from JSON
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'],
+      name: json['name'],
+      price: json['price'],
+      image: json['image'],
+      stockable: json['stockable'] == 1,
+      categoryId: json['category_id'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      createDate: json['create_date'],
+      createBy: json['create_by'],
+      isDeleted: json['is_deleted'] == 1,
+      deletedDate: json['deleted_date'],
+      deletedBy: json['deleted_by'],
+    );
+  }
+
+  // Convert a Product to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'price': price,
+      'image': image,
+      'stockable': stockable ? 1 : 0,
+      'category_id': categoryId,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'create_date': createDate,
+      'create_by': createBy,
+      'is_deleted': isDeleted ? 1 : 0,
+      'deleted_date': deletedDate,
+      'deleted_by': deletedBy,
+    };
+  }
 }
-
-
