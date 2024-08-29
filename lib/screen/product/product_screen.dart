@@ -28,201 +28,180 @@ class ProductScreen extends StatelessWidget {
             )),
         backgroundColor: appColor,
       ),
-      body: SingleChildScrollView(
-        child: Obx(
-          () => Column(
-            children: [
-              Row(
-                children: [
-                  ScreenTittle(
-                    icon: Icon(Icons.list),
-                    label: 'Product',
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0, right: 15, top: 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 200,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            blurRadius: 5,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(5),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 200,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
                       ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          hintStyle: TextStyle(
-                              color: Colors.grey.shade600, fontSize: 14),
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: Colors.black,
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 16),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(
-                                5), // Match the border radius
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(
-                                5), // Match the border radius
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(
-                                5), // Match the border radius
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
+                    ],
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      hintStyle:
+                          TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                      suffixIcon: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      child: Container(
+                        width: 150,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.category_sharp),
+                            SizedBox(width: 10),
+                            Text(
+                              'Category',
+                              style: TextStyle(fontSize: 13),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        InkWell(
-                          child: Container(
-                            width: 150,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              color: Colors
-                                  .white, // Change the background color to white
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(5),
+                    SizedBox(width: 10),
+                    InkWell(
+                      child: Container(
+                        width: 150,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.category_sharp),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Category',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                        SizedBox(width: 10),
-                        InkWell(
-                          // onTap: controller.onAddNewProductPressed,
-                          child: Container(
-                            width: 150,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              color: Colors
-                                  .white, // Change the background color to white
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add_circle),
+                            SizedBox(width: 10),
+                            Text(
+                              'Add Product',
+                              style: TextStyle(fontSize: 13),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.add_circle),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Add Product',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
                         ),
-                      ],
-                    )
+                      ),
+                    ),
                   ],
                 ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0, right: 15),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
               ),
-              const SizedBox(height: 20),
-              Column(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
+              child: Row(
                 children: [
-                  // Header Row
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0, right: 15),
+                  Expanded(
+                      child: Center(
+                          child: Text('Product Image',
+                              style: TextStyle(fontWeight: FontWeight.bold)))),
+                  Expanded(
+                      child: Center(
+                          child: Text('Product Name',
+                              style: TextStyle(fontWeight: FontWeight.bold)))),
+                  Expanded(
+                      child: Center(
+                          child: Text('Price',
+                              style: TextStyle(fontWeight: FontWeight.bold)))),
+                  Expanded(
+                      child: Center(
+                          child: Text('Category',
+                              style: TextStyle(fontWeight: FontWeight.bold)))),
+                  Expanded(
+                      child: Center(
+                          child: Text('Created By',
+                              style: TextStyle(fontWeight: FontWeight.bold)))),
+                  Expanded(
+                      child: Center(
+                          child: Text('Action',
+                              style: TextStyle(fontWeight: FontWeight.bold)))),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Obx(
+              () => ListView(
+                children: controller.products.map((product) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.only(left: 15.0, right: 15, top: 5),
                     child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
-                      ),
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(2),
+                        border: Border.all(color: Colors.grey[300]!, width: 1),
+                      ),
                       child: Row(
                         children: [
                           Expanded(
-                              child: Center(
-                                  child: Text('Product Image',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))),
-                          Expanded(
-                              child: Center(
-                                  child: Text('Product Name',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))),
-                          Expanded(
-                              child: Center(
-                                  child: Text('Price',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))),
-                          Expanded(
-                              child: Center(
-                                  child: Text('Category',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))),
-                          Expanded(
-                              child: Center(
-                                  child: Text('Created By',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))),
-                          Expanded(
-                              child: Center(
-                                  child: Text('Action',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Data Rows
-                  // Data Rows
-                  ...controller.products.map((product) {
-                    return Padding(
-                      padding:
-                          const EdgeInsets.only(left: 15.0, right: 15, top: 5),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(2),
-                          border:
-                              Border.all(color: Colors.grey[300]!, width: 1),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Center(
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    5), // Adjust the radius as needed
                                 child: Image.network(
                                   'http://127.0.0.1:8000${product.image}',
                                   height: 50,
@@ -231,45 +210,43 @@ class ProductScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: Center(child: Text(product.name)),
-                            ),
-                            Expanded(
-                              child: Center(child: Text('\$${product.price}')),
-                            ),
-                            Expanded(
-                              child: Center(
-                                  child: Text(product.categoryName ??
-                                      'N/A')), // Use categoryName
-                            ),
-                            Expanded(
-                              child: Center(child: Text(product.createBy)),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    Program.alert("title", "description");
-                                    // Handle action here
-                                  },
+                          ),
+                          Expanded(
+                            child: Center(child: Text(product.name)),
+                          ),
+                          Expanded(
+                            child: Center(child: Text('\$${product.price}')),
+                          ),
+                          Expanded(
+                            child: Center(
+                                child: Text(product.categoryName ?? 'N/A')),
+                          ),
+                          Expanded(
+                            child: Center(child: Text(product.createBy)),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
                                 ),
+                                onPressed: () {
+                                  Program.alert("title", "description");
+                                  // Handle action here
+                                },
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    );
-                  }).toList(),
-                ],
+                    ),
+                  );
+                }).toList(),
               ),
-              const SizedBox(height: 10),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
