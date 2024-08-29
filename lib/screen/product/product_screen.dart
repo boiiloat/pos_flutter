@@ -182,11 +182,6 @@ class ProductScreen extends StatelessWidget {
                                           fontWeight: FontWeight.bold)))),
                           Expanded(
                               child: Center(
-                                  child: Text('Cost',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))),
-                          Expanded(
-                              child: Center(
                                   child: Text('Price',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)))),
@@ -242,11 +237,10 @@ class ProductScreen extends StatelessWidget {
                               child: Center(child: Text('\$${product.price}')),
                             ),
                             Expanded(
-                              child: Center(child: Text('\$${product.price}')),
+                              child:
+                                  Center(child: Text('${product.categoryId}')),
                             ),
-                            Expanded(
-                              child: Center(child: Text('\$${product.price}')),
-                            ),
+
                             // Expanded(
                             //   child: Center(child: Text(product.categoryId)),
                             // ),
