@@ -205,6 +205,7 @@ class ProductScreen extends StatelessWidget {
                     ),
                   ),
                   // Data Rows
+                  // Data Rows
                   ...controller.products.map((product) {
                     return Padding(
                       padding:
@@ -237,13 +238,10 @@ class ProductScreen extends StatelessWidget {
                               child: Center(child: Text('\$${product.price}')),
                             ),
                             Expanded(
-                              child:
-                                  Center(child: Text('${product.categoryId}')),
+                              child: Center(
+                                  child: Text(product.categoryName ??
+                                      'N/A')), // Use categoryName
                             ),
-
-                            // Expanded(
-                            //   child: Center(child: Text(product.categoryId)),
-                            // ),
                             Expanded(
                               child: Center(child: Text(product.createBy)),
                             ),

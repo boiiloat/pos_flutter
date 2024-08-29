@@ -7,6 +7,7 @@ class Product {
   final String image;
   final bool stockable;
   final int categoryId;
+  final String? categoryName; // Add category name
   final String? createdAt;
   final String? updatedAt;
   final String? createDate;
@@ -22,6 +23,7 @@ class Product {
     required this.image,
     required this.stockable,
     required this.categoryId,
+    this.categoryName, // Initialize category name
     this.createdAt,
     this.updatedAt,
     this.createDate,
@@ -40,6 +42,7 @@ class Product {
       image: json['image'],
       stockable: json['stockable'] == 1,
       categoryId: json['category_id'],
+      categoryName: json['category_name'], // Extract category name from JSON
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       createDate: json['create_date'],
@@ -59,6 +62,7 @@ class Product {
       'image': image,
       'stockable': stockable ? 1 : 0,
       'category_id': categoryId,
+      'category_name': categoryName, // Include category name in JSON
       'created_at': createdAt,
       'updated_at': updatedAt,
       'create_date': createDate,
