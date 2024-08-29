@@ -83,11 +83,11 @@ class HomeScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
-                          Text(
-                            "POS Profile : ${_getRoleName(loginController.loggedInUser.value?.roleId)}  / Address: Sieam Reap, Cambodia",
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15),
-                          ),
+                          // Text(
+                          //   "POS Profile : ${_getRoleName(loginController.loggedInUser.value?.roleId)}  / Address: Sieam Reap, Cambodia",
+                          //   style: const TextStyle(
+                          //       color: Colors.white, fontSize: 15),
+                          // ),
                         ],
                       ),
                     ),

@@ -43,19 +43,19 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          loginController.loggedInUser.value?.fullname ??
-                              'Unknown',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          ' ${_getRoleName(loginController.loggedInUser.value?.roleId)} Role ',
-                          style: const TextStyle(fontSize: 12),
-                        ),
+                        // Text(
+                        //   loginController.loggedInUser.value?.fullname ??
+                        //       'Unknown',
+                        //   style: const TextStyle(
+                        //     color: Colors.grey,
+                        //     fontWeight: FontWeight.bold,
+                        //     fontSize: 14,
+                        //   ),
+                        // ),
+                        // Text(
+                        //   ' ${_getRoleName(loginController.loggedInUser.value?.roleId)} Role ',
+                        //   style: const TextStyle(fontSize: 12),
+                        // ),
                       ],
                     ),
                   ],

@@ -71,7 +71,8 @@ class LoginController extends GetxController {
   void toggleCheckbox(bool value) {
     isChecked.value = value;
   }
-    String _getRoleName(int? roleId) {
+
+  String _getRoleName(int? roleId) {
     switch (roleId) {
       case 1:
         return 'Admin';

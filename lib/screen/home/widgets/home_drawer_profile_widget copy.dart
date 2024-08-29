@@ -46,20 +46,20 @@ class HomeDrawerProfileWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Obx(() => Text(
-                            loginController.loggedInUser.value?.fullname ??
-                                'Unknown',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          )),
-                      Obx(() => Text(
-                            'POS Profile: ${_getRoleName(loginController.loggedInUser.value?.roleId)}',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
-                          )),
+                      // Obx(() => Text(
+                      //       loginController.loggedInUser.value?.fullname ??
+                      //           'Unknown',
+                      //       style: const TextStyle(
+                      //         color: Colors.white,
+                      //         fontWeight: FontWeight.bold,
+                      //         fontSize: 16,
+                      //       ),
+                      //     )),
+                      // Obx(() => Text(
+                      //       'POS Profile: ${_getRoleName(loginController.loggedInUser.value?.roleId)}',
+                      //       style: const TextStyle(
+                      //           color: Colors.white, fontSize: 12),
+                      //     )),
                     ],
                   ),
                 ),
