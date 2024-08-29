@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/sale_controller.dart';
 import 'package:pos_system/program.dart';
+import 'package:pos_system/screen/pos/sale/widgets/sale_order_widget.dart';
 
 import '../../../../controller/product_controller.dart';
 import 'sale_item_note_widget.dart';
@@ -203,145 +204,8 @@ class BodySaleMenuWidget extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 9,
-                  child: Container(
-                    color: Colors.grey
-                        .shade200, // Background color for the full expanded area
-                    child: SingleChildScrollView(
-                      child: Container(
-                        color: Colors.grey
-                            .shade200, // Background color for the container
-                        child: Column(
-                          children: [
-                            // const SizedBox(height: 15),
-                            // Icon(
-                            //   Icons.shopping_cart_outlined,
-                            //   color: Colors.grey.shade400,
-                            //   size: 50,
-                            // ),
-                            // const SizedBox(height: 5),
-                            // Text(
-                            //   "Data is empty",
-                            //   style: TextStyle(
-                            //     fontStyle: FontStyle.italic,
-                            //     color: Colors.grey.shade500,
-                            //     fontSize: 10,
-                            //   ),
-                            // )
-                            SaleWidget(
-                              imageUrl: 'assets/images/1.jpg',
-                              qty: '1',
-                              productnam: 'ណែម',
-                              price: '1.00',
-                            ),
-                            SaleWidget(
-                              imageUrl: 'assets/images/2.jpg',
-                              qty: '2',
-                              productnam: 'ឆាត្រប់',
-                              price: '2.00',
-                            ),
-                            SaleWidget(
-                              imageUrl: 'assets/images/3.jpg',
-                              qty: '3',
-                              productnam: 'ប្រហុកខ្ទឹមស',
-                              price: '4.50',
-                            ),
-                            SaleWidget(
-                              imageUrl: 'assets/images/8.webp',
-                              qty: '1',
-                              productnam: 'ស្ទេកសាច់គោខ្មែរ',
-                              price: '1.50',
-                            ),
-
-                            SizedBox(height: 5),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: SaleOrderWidget(),
                 ),
-
-                // Expanded(
-                //   flex: 1,
-                //   child: Container(
-                //     color: Colors.white,
-                //     child: Row(
-                //       children: [
-                //         Expanded(
-                //           flex: 7,
-                //           child: InkWell(
-                //             onTap: controller.onPaymentPressed,
-                //             child: Container(
-                //               color: Colors.green,
-                //               child: const Column(
-                //                 children: [
-                //                   Padding(
-                //                     padding: EdgeInsets.only(
-                //                         left: 10.0, right: 5, top: 2),
-                //                     child: Row(
-                //                       mainAxisAlignment:
-                //                           MainAxisAlignment.spaceBetween,
-                //                       children: [
-                //                         Text(
-                //                           'Payment',
-                //                           style: TextStyle(color: Colors.white),
-                //                         ),
-                //                         Text(
-                //                           '\$ 9.00',
-                //                           style: TextStyle(
-                //                             fontSize: 20,
-                //                             color: Colors.white,
-                //                           ),
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ),
-                //                   Padding(
-                //                     padding: EdgeInsets.only(left: 10.0),
-                //                     child: Row(
-                //                       children: [
-                //                         Text(
-                //                           'Total quantity : 7',
-                //                           style: TextStyle(
-                //                               fontSize: 10, color: Colors.white),
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ),
-                //                 ],
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //         Expanded(
-                //           flex: 3,
-                //           child: InkWell(
-                //             onTap: () {
-                //               Program.alert("title", "description");
-                //             },
-                //             child: Container(
-                //               color: Colors.blue,
-                //               child: const Column(
-                //                 mainAxisAlignment: MainAxisAlignment.center,
-                //                 children: [
-                //                   Icon(
-                //                     Icons.arrow_forward,
-                //                     size: 15,
-                //                     color: Colors.white,
-                //                   ),
-                //                   Text(
-                //                     'Submit Order',
-                //                     style: TextStyle(
-                //                         color: Colors.white, fontSize: 13),
-                //                   ),
-                //                 ],
-                //               ),
-                //             ),
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // )
               ],
             ),
           ),
