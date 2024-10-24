@@ -17,7 +17,7 @@ class ReceiptKpiWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 80,
-      width: 280,
+      width: 330,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
