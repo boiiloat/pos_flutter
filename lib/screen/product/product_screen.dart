@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/product_controller.dart';
 import 'package:pos_system/constans/constan.dart';
+import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/receipt/Widget/screen_tittle.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -28,17 +29,10 @@ class ProductScreen extends StatelessWidget {
         backgroundColor: appColor,
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              ScreenTittle(
-                icon: Icon(Icons.list),
-                label: 'Product',
-              ),
-            ],
-          ),
           Padding(
-            padding: const EdgeInsets.only(left: 15.0, right: 15, top: 0),
+            padding: const EdgeInsets.all(15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -68,18 +62,15 @@ class ProductScreen extends StatelessWidget {
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 16),
                       border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(5), // Match the border radius
+                        borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(5), // Match the border radius
+                        borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(5), // Match the border radius
+                        borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
                     ),
@@ -88,13 +79,11 @@ class ProductScreen extends StatelessWidget {
                 Row(
                   children: [
                     InkWell(
-                      onTap: controller.onAddNewCategory,
                       child: Container(
                         width: 150,
                         height: 38,
                         decoration: BoxDecoration(
-                          color: Colors
-                              .white, // Change the background color to white
+                          color: Colors.white,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
@@ -119,13 +108,11 @@ class ProductScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 10),
                     InkWell(
-                      onTap: controller.onAddNewProductPressed,
                       child: Container(
                         width: 150,
                         height: 38,
                         decoration: BoxDecoration(
-                          color: Colors
-                              .white, // Change the background color to white
+                          color: Colors.white,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
@@ -149,7 +136,7 @@ class ProductScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -174,10 +161,6 @@ class ProductScreen extends StatelessWidget {
                               style: TextStyle(fontWeight: FontWeight.bold)))),
                   Expanded(
                       child: Center(
-                          child: Text('Cost',
-                              style: TextStyle(fontWeight: FontWeight.bold)))),
-                  Expanded(
-                      child: Center(
                           child: Text('Price',
                               style: TextStyle(fontWeight: FontWeight.bold)))),
                   Expanded(
@@ -198,81 +181,70 @@ class ProductScreen extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: Obx(() {
-              if (controller.products.isEmpty) {
-                return const Center(child: Text('No customers found'));
-              }
-              return ListView.builder(
-                itemCount: controller.products.length,
-                itemBuilder: (context, index) {
-                  var product = controller.products[index];
+            child: Obx(
+              () => ListView(
+                children: controller.products.map((product) {
                   return Padding(
-                    padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                    padding:
+                        const EdgeInsets.only(left: 15.0, right: 15, top: 5),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 4),
                       decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: Colors.grey[300]!),
-                        ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(2),
+                        border: Border.all(color: Colors.grey[300]!, width: 1),
                       ),
                       child: Row(
                         children: [
                           Expanded(
-                              child: Center(
-                                  child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                  image: AssetImage(product.productImage),
-                                  fit: BoxFit.cover),
-                            ),
-                          ))),
-                          Expanded(
-                              child: Center(child: Text(product.productName))),
-                          Expanded(
-                              child: Center(
-                                  child:
-                                      Text(product.cost.toStringAsFixed(2)))),
-                          Expanded(
-                              child: Center(
-                                  child:
-                                      Text(product.price.toStringAsFixed(2)))),
-                          Expanded(
-                              child: Center(child: Text(product.category))),
-                          Expanded(
-                              child: Center(child: Text(product.createdBy))),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 60,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Remove',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    ),
-                                  ),
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    5), // Adjust the radius as needed
+                                child: Image.network(
+                                  'http://127.0.0.1:8000${product.image}',
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
                                 ),
-                              ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Center(child: Text(product.name)),
+                          ),
+                          Expanded(
+                            child: Center(child: Text('\$${product.price}')),
+                          ),
+                          Expanded(
+                            child: Center(
+                                child: Text(product.categoryName ?? 'N/A')),
+                          ),
+                          Expanded(
+                            child: Center(child: Text(product.createBy)),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  Program.alert("title", "description");
+                                  // Handle action here
+                                },
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                   );
-                },
-              );
-            }),
+                }).toList(),
+              ),
+            ),
           ),
         ],
       ),

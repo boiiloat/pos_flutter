@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/main_controller.dart';
+import '../../controller/login_controller.dart';
 import 'widgets/home_button_widget.dart';
 import 'widgets/home_drawer_profile_widget.dart';
 import 'widgets/home_profile_action_menu_widget.dart';
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(MainController());
-    // final loginController = Get.find<LoginController>();
+    final loginController = Get.find<LoginController>();
 
     return Obx(
       () => SafeArea(
@@ -32,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                   icon: const Icon(
                     Icons.menu,
                     color: Colors.white,
-                  ),  
+                  ),
                 ),
               ),
               actions: const [
@@ -87,7 +88,6 @@ class HomeScreen extends StatelessWidget {
                           //   style: const TextStyle(
                           //       color: Colors.white, fontSize: 15),
                           // ),
-                          // Display role based on roleId
                         ],
                       ),
                     ),

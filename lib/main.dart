@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      // home: const LoginScreen(),
-      home: CustomerScreen(),
+
+      home: LoginScreen(),
       // home: Testing(),
       debugShowCheckedModeBanner: false,
     );

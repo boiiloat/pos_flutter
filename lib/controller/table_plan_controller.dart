@@ -8,7 +8,7 @@ import 'package:pos_system/screen/pos/table_plan/widgets/guest_cover_popup_input
 import 'package:pos_system/screen/pos/sale/sale_menu_screen.dart';
 
 class TablePlanController extends GetxController {
-  var isloading = false;
+  var isloading = false.obs;
   var tableData = [].obs;
   var guestCover = ''.obs;
   var isLoading = true.obs;
@@ -65,8 +65,6 @@ class TablePlanController extends GetxController {
         ),
       ),
     );
-
-    // Get.to(() => const SaleMenuScreen());
   }
 
   void onAddNewTablePressed() {
