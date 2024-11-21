@@ -1,8 +1,6 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
-import 'package:pos_system/screen/report/main_report/Widget/report_chart_widget.dart';
 import 'package:pos_system/screen/report/main_report/Widget/report_total_receipt_widget.dart';
 
 import '../../receipt/Widget/report_kpi_widget.dart';
@@ -34,7 +32,7 @@ class ReportScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

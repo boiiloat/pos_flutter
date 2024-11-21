@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(MainController());
-    final loginController = Get.find<LoginController>();
+    // final loginController = Get.find<LoginController>();
 
     return Obx(
       () => SafeArea(

@@ -44,17 +44,19 @@ class AppBarSaleMenuWidget extends StatelessWidget {
                   BoxDecoration(border: Border.all(color: Colors.white)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search....',
-                    hintStyle: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white,
+                child: Center(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search....',
+                      hintStyle: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                      border: InputBorder.none,
                     ),
-                    border: InputBorder.none,
-                  ),
-                  style: TextStyle(
-                    color: Colors.grey.shade200,
+                    style: TextStyle(
+                      color: Colors.grey.shade200,
+                    ),
                   ),
                 ),
               ),
