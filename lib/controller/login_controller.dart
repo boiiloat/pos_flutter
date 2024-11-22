@@ -40,6 +40,7 @@ class LoginController extends GetxController {
         'password': password,
       }),
     );
+    // print(response.body); 
 
     loading.value = false; // End loading
 
@@ -48,15 +49,16 @@ class LoginController extends GetxController {
 
       if (responseData.containsKey('status') &&
           responseData['status'] == 'success' &&
-          responseData.containsKey('users') &&
-          responseData['users'] is Map<String, dynamic>) {
+          responseData.containsKey('user') && // Change from 'users' to 'user'
+          responseData['user'] is Map<String, dynamic>) {
         try {
-          User user = User.fromJson(responseData['users']);
+          User user = User.fromJson(
+              responseData['user']); // Corrected from 'users' to 'user'
           loggedInUser.value = user;
 
           usernameController.clear();
           passwordController.clear();
-          Get.to(() => const HomeScreen());
+          Get.off(() => const HomeScreen());
         } catch (e) {
           Program.error('Error', 'Failed to parse user data');
         }

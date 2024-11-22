@@ -37,13 +37,21 @@ class User {
       username: json['username'],
       profile: json['profile'],
       roleId: json['role_id'],
-      createDate: json['create_date'] != null ? DateTime.parse(json['create_date']) : null,
+      createDate: json['create_date'] != null
+          ? DateTime.parse(json['create_date'])
+          : null,
       createBy: json['create_by'],
       isDelete: json['is_delete'],
-      deleteDate: json['delete_date'] != null ? DateTime.parse(json['delete_date']) : null,
+      deleteDate: json['delete_date'] != null
+          ? DateTime.parse(json['delete_date'])
+          : null,
       deleteBy: json['delete_by'],
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
     );
   }
 
