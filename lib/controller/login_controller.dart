@@ -1,21 +1,28 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/models/api/user_model.dart';
-import 'package:pos_system/program.dart';
-import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../models/api/user_model.dart';
+import '../program.dart';
+import '../screen/home/home_screen.dart';
 
 class LoginController extends GetxController {
-  var isLoading = true.obs;
-  var pinCode = ''.obs;
-  var isLoginProcess = false.obs;
-  var isChecked = false.obs;
   var usernameController = TextEditingController();
   var passwordController = TextEditingController();
-  var rememberMe = false.obs;
+  var isPasswordHidden = true.obs;
   var loading = false.obs;
   var loggedInUser = Rxn<User>();
+
+  // Toggles password visibility temporarily
+  void togglePasswordVisibilityTemporarily() {
+    isPasswordHidden.value = false; // Show password
+
+    // Automatically hide password after 2 seconds
+    Timer(const Duration(seconds: 1), () {
+      isPasswordHidden.value = true;
+    });
+  }
 
   void login() async {
     String username = usernameController.text.trim();
@@ -40,7 +47,6 @@ class LoginController extends GetxController {
         'password': password,
       }),
     );
-    // print(response.body); 
 
     loading.value = false; // End loading
 
@@ -49,11 +55,10 @@ class LoginController extends GetxController {
 
       if (responseData.containsKey('status') &&
           responseData['status'] == 'success' &&
-          responseData.containsKey('user') && // Change from 'users' to 'user'
+          responseData.containsKey('user') &&
           responseData['user'] is Map<String, dynamic>) {
         try {
-          User user = User.fromJson(
-              responseData['user']); // Corrected from 'users' to 'user'
+          User user = User.fromJson(responseData['user']);
           loggedInUser.value = user;
 
           usernameController.clear();
@@ -67,21 +72,6 @@ class LoginController extends GetxController {
       }
     } else {
       Program.error("Error", "Username or password not correct");
-    }
-  }
-
-  void toggleCheckbox(bool value) {
-    isChecked.value = value;
-  }
-
-  String _getRoleName(int? roleId) {
-    switch (roleId) {
-      case 1:
-        return 'Admin';
-      case 2:
-        return 'Cashier';
-      default:
-        return 'Unknown Role';
     }
   }
 }
