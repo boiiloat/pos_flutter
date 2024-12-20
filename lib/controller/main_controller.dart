@@ -25,7 +25,7 @@ class MainController extends GetxController {
   var dropdownItems = <String>['Morning Shift', 'Afternoon Shift'].obs;
 
   void onLogoutPressed() {
-    Get.to(const LoginScreen());
+    Get.off(const LoginScreen());
   }
 
   void updateSelectedItem(String newItem) {
