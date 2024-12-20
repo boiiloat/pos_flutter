@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/screen/cashier_shift/cashier_shift_close_screen.dart';
 import 'package:pos_system/screen/cashier_shift/cashier_shift_start_screen.dart';
 import 'package:pos_system/screen/customer/customer_screen.dart';
@@ -20,8 +21,9 @@ import 'package:pos_system/testing.dart';
 
 import 'screen/report/report_stock/report_stcok_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  await GetStorage.init(); // Initialize GetStorage
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

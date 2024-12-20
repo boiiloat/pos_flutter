@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:get_storage/get_storage.dart';
 import '../models/api/user_model.dart';
 import '../program.dart';
 import '../screen/home/home_screen.dart';
@@ -13,6 +14,7 @@ class LoginController extends GetxController {
   var isPasswordHidden = true.obs;
   var loading = false.obs;
   var loggedInUser = Rxn<User>();
+  final box = GetStorage(); // Initialize GetStorage for storing data
 
   // Toggles password visibility temporarily
   void togglePasswordVisibilityTemporarily() {
@@ -61,9 +63,14 @@ class LoginController extends GetxController {
           User user = User.fromJson(responseData['user']);
           loggedInUser.value = user;
 
+          // Store the token in GetStorage
+          if (responseData.containsKey('token')) {
+            box.write('authToken', responseData['token']);
+          }
+
           usernameController.clear();
           passwordController.clear();
-          Program.alert("Login", "Login Successfull ");
+          Program.alert("Login", "Login Successful");
           Get.off(() => const HomeScreen());
         } catch (e) {
           Program.error('Error', 'Failed to parse user data');
