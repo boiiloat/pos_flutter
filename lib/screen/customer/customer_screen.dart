@@ -151,8 +151,26 @@ class CustomerScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Center(
-                              child: Text(customer.profile ?? "null"),
+                            child: Container(
+                              width: 55,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                shape: BoxShape
+                                    .circle, // Makes the container circular
+                                color: Colors.grey[
+                                    300], // Background color for placeholder
+                                image: customer.profile != null &&
+                                        customer.profile!.isNotEmpty
+                                    ? DecorationImage(
+                                        image: NetworkImage(customer
+                                            .profile!), // Profile image from URL
+                                        fit: BoxFit.cover,
+                                      )
+                                    : DecorationImage(
+                                        image: NetworkImage(
+                                            'assets/images/profile_placeholder.png'), // Placeholder image
+                                      ),
+                              ),
                             ),
                           ),
                           Expanded(

@@ -60,10 +60,6 @@ class CustomerController extends GetxController {
         } else {
           // Map the response data to the customer model
           customers.value = data.map((e) => Customer.fromJson(e)).toList();
-          // Print all user data to the console for debugging
-          for (var customer in customers) {
-            print('Customer Data: ${customer.toJson()}');
-          }
         }
       } else {
         Program.error('Error', 'Failed to fetch customers: ${response.body}');
