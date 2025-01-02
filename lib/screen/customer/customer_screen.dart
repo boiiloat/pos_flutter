@@ -95,12 +95,17 @@ class CustomerScreen extends StatelessWidget {
                                     TextStyle(fontWeight: FontWeight.bold)))),
                     Expanded(
                         child: Center(
-                            child: Text('Create By',
+                            child: Text('Role',
                                 style:
                                     TextStyle(fontWeight: FontWeight.bold)))),
                     Expanded(
                         child: Center(
-                            child: Text('Role',
+                            child: Text('Create Date',
+                                style:
+                                    TextStyle(fontWeight: FontWeight.bold)))),
+                    Expanded(
+                        child: Center(
+                            child: Text('Create By',
                                 style:
                                     TextStyle(fontWeight: FontWeight.bold)))),
                     Expanded(

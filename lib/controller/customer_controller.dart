@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:pos_system/screen/customer/Widgets/customer_add_new_widget.dart';
 import '../../models/api/customer_model.dart';
 import '../../program.dart';
@@ -17,6 +18,18 @@ class CustomerController extends GetxController {
   void onInit() {
     super.onInit();
     fetchCustomers(); // Fetch customers when the controller is initialized
+  }
+
+  // foramt date
+    // Function to format the date
+  String formatDayMonthYear(String? date) {
+    if (date == null || date.isEmpty) return 'No Date Provided';
+    try {
+      DateTime parsedDate = DateTime.parse(date);
+      return DateFormat('dd-MM-yyyy').format(parsedDate); // Format as day-month-year
+    } catch (e) {
+      return 'Invalid Date';
+    }
   }
 
   // Get the role name based on roleId
@@ -51,7 +64,6 @@ class CustomerController extends GetxController {
       );
 
       // Log the API response
-      print('API Response: ${response.body}');
 
       if (response.statusCode == 200) {
         if (response.body.isEmpty) {
@@ -70,7 +82,6 @@ class CustomerController extends GetxController {
       }
     } catch (e) {
       // Log the error
-      print('Error fetching customers: $e');
       Program.error('Error', 'Error fetching customers: $e');
     } finally {
       isLoading.value = false;
