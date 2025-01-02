@@ -50,17 +50,27 @@ class CustomerController extends GetxController {
         },
       );
 
+      // Log the API response
+      print('API Response: ${response.body}');
+
       if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        if (data.isEmpty) {
+        if (response.body.isEmpty) {
           Program.error('Info', 'No customers found.');
         } else {
-          customers.value = data.map((e) => Customer.fromJson(e)).toList();
+          try {
+            List<dynamic> data = json.decode(response.body);
+            customers.value = data.map((e) => Customer.fromJson(e)).toList();
+          } catch (e) {
+            print('Error parsing JSON: $e');
+            Program.error('Error', 'Invalid JSON response from the server.');
+          }
         }
       } else {
         Program.error('Error', 'Failed to fetch customers: ${response.body}');
       }
     } catch (e) {
+      // Log the error
+      print('Error fetching customers: $e');
       Program.error('Error', 'Error fetching customers: $e');
     } finally {
       isLoading.value = false;

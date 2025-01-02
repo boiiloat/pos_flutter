@@ -4,7 +4,7 @@ class Customer {
   final String username;
   final String? profile;
   final int roleId;
-  final int createBy;
+  final String createBy;
   final String? createDate;
   final int isDelete;
   final String? deleteDate;
@@ -25,24 +25,22 @@ class Customer {
     this.updatedAt,
   });
 
-  /// Factory method to create a Customer instance from JSON
   factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
-      id: json['id'] ?? 0, // Default to 0 if null
-      fullname: json['fullname'] ?? '', // Default to empty string if null
+      id: json['id'] ?? 0,
+      fullname: json['fullname'] ?? '',
       username: json['username'] ?? '',
-      profile: json['profile'], // Nullable
+      profile: json['profile'],
       roleId: json['role_id'] ?? 0,
       createBy: json['create_by'] ?? 0,
-      createDate: json['create_date'], // Nullable
+      createDate: json['create_date'],
       isDelete: json['is_delete'] ?? 0,
-      deleteDate: json['delete_date'], // Nullable
-      createdAt: json['created_at'], // Nullable
-      updatedAt: json['updated_at'], // Nullable
+      deleteDate: json['delete_date'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
     );
   }
 
-  /// Converts a Customer instance to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
