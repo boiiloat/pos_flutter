@@ -4,19 +4,18 @@ class StartSaleAlert extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onSave;
   final String text;
-  const StartSaleAlert({
-    super.key,
-    required this.onBack,
-    required this.onSave,
-    required this.text
-  });
+  const StartSaleAlert(
+      {super.key,
+      required this.onBack,
+      required this.onSave,
+      required this.text});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-         Text(text),
+        Text(text),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

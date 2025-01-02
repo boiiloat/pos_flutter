@@ -49,7 +49,7 @@ class ProductAddNewWidget extends StatelessWidget {
                   SizedBox(height: 15),
                   InkWell(
                     onTap: () {
-                      Program.alert("title", "description");
+                      Program.success("title", "description");
                     },
                     child: Container(
                       height: 25,

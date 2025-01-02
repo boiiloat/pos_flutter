@@ -70,7 +70,7 @@ class LoginController extends GetxController {
 
           usernameController.clear();
           passwordController.clear();
-          Program.alert("Login", "Login Successful");
+          Program.success("Login", "Login Successful");
           Get.off(() => const HomeScreen());
         } catch (e) {
           Program.error('Error', 'Failed to parse user data');

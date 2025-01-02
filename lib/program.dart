@@ -31,7 +31,7 @@ class Program {
     );
   }
 
-  static alert(String title, String description) async {
+  static success(String title, String description) async {
     if (Get.isSnackbarOpen == false) {
       getSnackbar_(
         title: title,

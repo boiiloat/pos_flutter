@@ -37,7 +37,7 @@ class MainController extends GetxController {
   }
 
   void onBackupPressed() {
-    Program.alert("title", "description");
+    Program.success("title", "description");
   }
 
   void onStartWorkingDayPressed(BuildContext context) {

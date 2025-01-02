@@ -232,7 +232,7 @@ class ProductScreen extends StatelessWidget {
                                   color: Colors.red,
                                 ),
                                 onPressed: () {
-                                  Program.alert("title", "description");
+                                  Program.success("title", "description");
                                   // Handle action here
                                 },
                               ),

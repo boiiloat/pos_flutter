@@ -6,11 +6,11 @@ import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/customer/Widgets/customer_fill_widget.dart';
 
 class CustomerAddNewWidget extends StatelessWidget {
-  const CustomerAddNewWidget({super.key});
+   CustomerAddNewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(CustomerController());
+    var controller = Get.find<CustomerController>();
     return Container(
       width: 450,
       height: 500,
@@ -61,7 +61,7 @@ class CustomerAddNewWidget extends StatelessWidget {
                   SizedBox(height: 10),
                   InkWell(
                     onTap: () {
-                      Program.alert("title", "description");
+                      Program.success("title", "description");
                     },
                     child: Container(
                       height: 25,

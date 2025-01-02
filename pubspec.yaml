@@ -46,6 +46,7 @@ dependencies:
   pie_chart: ^5.4.0
   excel: ^4.0.6
   get_storage: ^2.1.1
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

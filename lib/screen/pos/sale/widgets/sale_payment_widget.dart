@@ -169,7 +169,7 @@ class SalaPaymentWidget extends StatelessWidget {
                   label: 'Payment With Print',
                   icon: Icon(Icons.print),
                   onPressed: () {
-                    Program.alert("title", "description");
+                    Program.success("title", "description");
                   },
                 ),
               ),
@@ -180,7 +180,7 @@ class SalaPaymentWidget extends StatelessWidget {
                   color: Colors.red,
                   icon: Icon(Icons.monetization_on),
                   onPressed: () {
-                    Program.alert("title", "description");
+                    Program.success("title", "description");
                   },
                 ),
               ),

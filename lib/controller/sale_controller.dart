@@ -101,10 +101,10 @@ class SaleController extends GetxController {
         );
         break;
       case 'remove_item':
-        Program.alert("Remove Item", "Item removed");
+        Program.success("Remove Item", "Item removed");
         break;
       default:
-        Program.alert("title", "description");
+        Program.success("title", "description");
     }
   }
 

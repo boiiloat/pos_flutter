@@ -119,7 +119,7 @@ class ShiftCloseScreen extends StatelessWidget {
               const SizedBox(width: 280),
               FooterActionWidget(
                 onPressed: () {
-                  Program.alert("title", "description");
+                  Program.success("title", "description");
                 },
                 label: 'Close Shift ',
                 width: 180,

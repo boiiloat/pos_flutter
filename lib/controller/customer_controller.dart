@@ -8,21 +8,10 @@ import '../../models/api/customer_model.dart';
 import '../../program.dart';
 
 class CustomerController extends GetxController {
-  var customers = <Customer>[].obs; // List of customers
-  var selectedRole = 'Admin'.obs; // Default selected role
-  var isLoading = false.obs; // Loading indicator for API calls
-  final box = GetStorage(); // To access locally stored token
-
-  // Get the role name based on roleId
-  String getRoleName(int roleId) {
-    if (roleId == 1) {
-      return "Admin"; // Role 1 = Admin
-    } else if (roleId == 2) {
-      return "Cashier"; // Role 2 = Cashier
-    } else {
-      return "Unknown"; // Return "Unknown" for any other roleId
-    }
-  }
+  var customers = <Customer>[].obs; // Observable list of customers
+  var selectedRole = 'Admin'.obs; // Observable selected role
+  var isLoading = false.obs; // Observable loading state
+  final box = GetStorage(); // Local storage for token
 
   @override
   void onInit() {
@@ -30,15 +19,25 @@ class CustomerController extends GetxController {
     fetchCustomers(); // Fetch customers when the controller is initialized
   }
 
-  // Fetches customers from the API and updates the list
+  // Get the role name based on roleId
+  String getRoleName(int roleId) {
+    switch (roleId) {
+      case 1:
+        return "Admin";
+      case 2:
+        return "Cashier";
+      default:
+        return "Unknown";
+    }
+  }
+
+  // Fetches customers from the API
   Future<void> fetchCustomers() async {
     isLoading.value = true;
 
     try {
-      // Retrieve the token from GetStorage
       String? token = box.read('authToken');
       if (token == null) {
-        // Handle case where the token is missing
         Program.error('Error', 'No authentication token found.');
         return;
       }
@@ -46,19 +45,16 @@ class CustomerController extends GetxController {
       final response = await http.get(
         Uri.parse('http://127.0.0.1:8000/api/users'),
         headers: {
-          'Authorization': 'Bearer $token', // Include the token in headers
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
-      // Check for a valid response
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         if (data.isEmpty) {
-          // Handle empty data
-          Program.error('Error', 'No customers found.');
+          Program.error('Info', 'No customers found.');
         } else {
-          // Map the response data to the customer model
           customers.value = data.map((e) => Customer.fromJson(e)).toList();
         }
       } else {
@@ -83,5 +79,34 @@ class CustomerController extends GetxController {
         child: CustomerAddNewWidget(),
       ),
     );
+  }
+
+  // Deletes a customer by ID
+  Future<void> deleteCustomer(int id) async {
+    try {
+      String? token = box.read('authToken');
+      if (token == null) {
+        Program.error('Error', 'No authentication token found.');
+        return;
+      }
+
+      final response = await http.delete(
+        Uri.parse('http://127.0.0.1:8000/api/users/$id'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Remove the customer from the list
+        customers.removeWhere((customer) => customer.id == id);
+        Program.success('Success', 'Customer deleted successfully.');
+      } else {
+        Program.error('Error', 'Failed to delete customer: ${response.body}');
+      }
+    } catch (e) {
+      Program.error('Error', 'Error deleting customer: $e');
+    }
   }
 }

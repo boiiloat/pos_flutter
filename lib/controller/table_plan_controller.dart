@@ -68,7 +68,7 @@ class TablePlanController extends GetxController {
   }
 
   void onAddNewTablePressed() {
-    Program.alert("title", "description");
+    Program.success("title", "description");
   }
 
   void onBackspace() {
