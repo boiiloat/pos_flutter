@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pos_system/controller/customer_controller.dart';
 import 'package:pos_system/models/api/customer_model.dart';
 
 class CustomerItemWidget extends StatelessWidget {
   final Customer customer;
   final CustomerController controller;
+  final bool isAdmin; // Add a parameter to check if the user is an admin
 
   const CustomerItemWidget({
     super.key,
     required this.customer,
     required this.controller,
+    required this.isAdmin,
   });
 
   @override
@@ -53,7 +54,6 @@ class CustomerItemWidget extends StatelessWidget {
                   ),
                 ),
               ),
-
               // Role
               Expanded(
                 child: Center(
@@ -67,14 +67,12 @@ class CustomerItemWidget extends StatelessWidget {
               Expanded(
                 child: Center(
                   child: Text(
-                    customer.createDate ??
-                        'No Date Provided', // Display formatted date
+                    controller.formatDate(customer.createDate), // Use the formatted date
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-
-              //create by
+              // Create By
               Expanded(
                 child: Center(
                   child: Text(
@@ -83,28 +81,29 @@ class CustomerItemWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              // Action
-              Expanded(
-                child: Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () {
-                          // Handle edit action
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          controller.deleteCustomer(customer.id);
-                        },
-                      ),
-                    ],
+              // Action (only for admins)
+              if (isAdmin)
+                Expanded(
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () {
+                            // Handle edit action
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            controller.deleteCustomer(customer.id!);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

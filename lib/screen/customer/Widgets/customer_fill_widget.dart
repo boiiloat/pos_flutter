@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 class CustomerFillWidget extends StatelessWidget {
-  final String hintText;
   final Icon icon;
+  final String hintText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final bool obscureText;
 
   const CustomerFillWidget({
     super.key,
-    required this.hintText,
     required this.icon,
+    required this.hintText,
+    this.controller,
+    this.validator,
+    this.obscureText = false,
   });
 
   @override
@@ -16,6 +22,9 @@ class CustomerFillWidget extends StatelessWidget {
       width: 300,
       height: 40,
       child: TextFormField(
+        controller: controller,
+        validator: validator,
+        obscureText: obscureText,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
@@ -32,6 +41,7 @@ class CustomerFillWidget extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(10),
           ),
+          prefixIcon: icon,
         ),
       ),
     );

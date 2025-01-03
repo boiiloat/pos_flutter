@@ -13,6 +13,7 @@ class CustomerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(CustomerController());
+    final bool isAdmin = controller.selectedRole.value == 'Admin'; // Check if the user is an admin
 
     return Scaffold(
       appBar: AppBar(
@@ -58,10 +59,11 @@ class CustomerScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const SearchWidget(),
-                  AddNewButtonWidget(
-                    onPressed: controller.onAddCustomerPressed,
-                    label: 'Add New Customer',
-                  ),
+                  if (isAdmin) // Only show the "Add New Customer" button for admins
+                    AddNewButtonWidget(
+                      onPressed: controller.onAddCustomerPressed,
+                      label: 'Add New Customer',
+                    ),
                 ],
               ),
             ),
@@ -76,7 +78,7 @@ class CustomerScreen extends StatelessWidget {
                 ),
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                child: const Row(
+                child: Row(
                   children: [
                     Expanded(
                         child: Center(
@@ -108,11 +110,13 @@ class CustomerScreen extends StatelessWidget {
                             child: Text('Create By',
                                 style:
                                     TextStyle(fontWeight: FontWeight.bold)))),
-                    Expanded(
+                    if (isAdmin) // Only show the "Action" header for admins
+                      Expanded(
                         child: Center(
-                            child: Text('Action',
-                                style:
-                                    TextStyle(fontWeight: FontWeight.bold)))),
+                          child: Text('Action',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -127,6 +131,7 @@ class CustomerScreen extends StatelessWidget {
                   return CustomerItemWidget(
                     customer: customer,
                     controller: controller,
+                    isAdmin: isAdmin, // Pass the role to the item widget
                   );
                 },
               ),

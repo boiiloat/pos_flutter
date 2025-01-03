@@ -20,8 +20,7 @@ class CustomerController extends GetxController {
     fetchCustomers(); // Fetch customers when the controller is initialized
   }
 
-  // foramt date
-    // Function to format the date
+  // Function to format the date
   String formatDayMonthYear(String? date) {
     if (date == null || date.isEmpty) return 'No Date Provided';
     try {
@@ -44,6 +43,17 @@ class CustomerController extends GetxController {
     }
   }
 
+  // Function to format the date
+  String formatDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) return 'No Date Provided';
+    try {
+      DateTime parsedDate = DateTime.parse(dateString);
+      return DateFormat('dd-MM-yyyy').format(parsedDate); // Format as day-month-year
+    } catch (e) {
+      return 'Invalid Date';
+    }
+  }
+
   // Fetches customers from the API
   Future<void> fetchCustomers() async {
     isLoading.value = true;
@@ -63,8 +73,6 @@ class CustomerController extends GetxController {
         },
       );
 
-      // Log the API response
-
       if (response.statusCode == 200) {
         if (response.body.isEmpty) {
           Program.error('Info', 'No customers found.');
@@ -73,7 +81,6 @@ class CustomerController extends GetxController {
             List<dynamic> data = json.decode(response.body);
             customers.value = data.map((e) => Customer.fromJson(e)).toList();
           } catch (e) {
-            print('Error parsing JSON: $e');
             Program.error('Error', 'Invalid JSON response from the server.');
           }
         }
@@ -81,7 +88,6 @@ class CustomerController extends GetxController {
         Program.error('Error', 'Failed to fetch customers: ${response.body}');
       }
     } catch (e) {
-      // Log the error
       Program.error('Error', 'Error fetching customers: $e');
     } finally {
       isLoading.value = false;
@@ -128,6 +134,42 @@ class CustomerController extends GetxController {
       }
     } catch (e) {
       Program.error('Error', 'Error deleting customer: $e');
+    }
+  }
+  
+
+  // create new customer
+
+    Future<void> createCustomer(Map<String, dynamic> customerData) async {
+    isLoading.value = true;
+
+    try {
+      String? token = box.read('authToken');
+      if (token == null) {
+        Program.error('Error', 'No authentication token found.');
+        return;
+      }
+
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/api/users'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(customerData),
+      );
+
+      if (response.statusCode == 200) {
+        // Refresh the customer list
+        fetchCustomers();
+        Program.success('Success', 'Customer added successfully.');
+      } else {
+        Program.error('Error', 'Failed to add customer: ${response.body}');
+      }
+    } catch (e) {
+      Program.error('Error', 'Error adding customer: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 }
