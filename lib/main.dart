@@ -18,7 +18,6 @@ import 'package:pos_system/screen/report/report_working_day/report_working_day_s
 import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
 import 'package:pos_system/screen/working_day/working_dat_close_screen.dart';
 import 'package:pos_system/screen/working_day/working_day_start_screen.dart';
-import 'package:pos_system/testing.dart';
 
 import 'screen/report/report_stock/report_stcok_screen.dart';
 

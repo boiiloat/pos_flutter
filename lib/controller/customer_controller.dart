@@ -88,7 +88,8 @@ class CustomerController extends GetxController {
           }
         }
       } else {
-        Program.error('Error', 'Failed to fetch customers: ${response.body}');
+        // Program.error('Error', 'Failed to fetch customers: ${response.body}');
+        print('${response.body}');
       }
     } catch (e) {
       Program.error('Error', 'Error fetching customers: $e');
@@ -131,54 +132,55 @@ class CustomerController extends GetxController {
     }
   }
 
-void onAddCustomerPressed() {
-  Get.dialog(
-    Dialog(
-      child: CustomerAddNewWidget(),
-    ),
-  );
-}
-
-Future<void> createCustomer(Map<String, dynamic> customerData) async {
-  try {
-    String? token = box.read('authToken');
-    if (token == null) {
-      Program.error('Error', 'No authentication token found.');
-      return;
-    }
-
-    final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/users'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(customerData),
+  void onAddCustomerPressed() {
+    Get.dialog(
+      Dialog(
+        child: CustomerAddNewWidget(),
+      ),
     );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final responseData = json.decode(response.body);
-      if (responseData['message'] == 'User created successfully') {
-        await fetchCustomers(); // Refresh the customer list
-        Program.success('Success', 'Customer added successfully.');
-      } else {
-        Program.error('Error', 'Unexpected response: ${response.body}');
-      }
-    } else {
-      Program.error('Error', 'Failed to add customer: ${response.body}');
-    }
-  } catch (e) {
-    Program.error('Error', 'Error adding customer: $e');
   }
-}
 
-// upload image 
+  Future<void> createCustomer(Map<String, dynamic> customerData) async {
+    try {
+      String? token = box.read('authToken');
+      if (token == null) {
+        Program.error('Error', 'No authentication token found.');
+        return;
+      }
+
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/api/users'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(customerData),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+        if (responseData['message'] == 'User created successfully') {
+          await fetchCustomers(); // Refresh the customer list
+          Program.success('Success', 'Customer added successfully.');
+        } else {
+          Program.error('Error', 'Unexpected response: ${response.body}');
+        }
+      } else {
+        Program.error('Error', 'Failed to add customer: ${response.body}');
+      }
+    } catch (e) {
+      Program.error('Error', 'Error adding customer: $e');
+    }
+  }
+
+// upload image
 // Function to upload the image to the backend
   Future<String?> uploadImage(File imageFile) async {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('http://127.0.0.1:8000/api/upload-image'), // Replace with your API endpoint
+        Uri.parse(
+            'http://127.0.0.1:8000/api/upload-image'), // Replace with your API endpoint
       );
 
       // Attach the image file
@@ -208,8 +210,4 @@ Future<void> createCustomer(Map<String, dynamic> customerData) async {
       return null;
     }
   }
-
-
-
 }
-
