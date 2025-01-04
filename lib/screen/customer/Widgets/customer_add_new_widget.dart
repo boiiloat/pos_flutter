@@ -6,7 +6,6 @@ import 'package:pos_system/screen/customer/Widgets/customer_fill_widget.dart';
 
 class CustomerAddNewWidget extends StatefulWidget {
   const CustomerAddNewWidget({super.key});
-
   @override
   State<CustomerAddNewWidget> createState() => _CustomerAddNewWidgetState();
 }
@@ -184,27 +183,32 @@ class _CustomerAddNewWidgetState extends State<CustomerAddNewWidget> {
                     InkWell(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          print("Form is valid. Proceeding to submit...");
-                          // Prepare the data to send to the backend
                           final newCustomer = {
                             'fullname': _fullNameController.text,
                             'username': _usernameController.text,
                             'password': _passwordController.text,
                             'role_id': _selectedRoleId,
-                            'profile': _imageUrl, // Optional image URL
+                            'profile': _imageUrl,
                           };
 
+                          // Close the dialog immediately
+                          Get.back();
+
+                          // Call the API to create the customer
                           try {
-                            // Call the API to create a new customer
                             await controller.createCustomer(newCustomer);
+                            // Optionally, show a success message
+                            Program.success(
+                                "Success", "Customer added successfully!");
                           } catch (e) {
+                            // Show an error message if the API call fails
                             Program.error(
                                 "Error", "Failed to add customer: $e");
                           }
                         } else {
-                          print("Form is invalid. Please check the fields.");
+                          // Handle form validation failure (optional)
+                          print("Form validation failed.");
                         }
-                        
                       },
                       child: Container(
                         height: 40,

@@ -27,7 +27,6 @@ class ProductController extends GetxController {
       }
     } catch (e) {
       // Handle error
-      print('Error fetching products: $e');
     }
   }
 }

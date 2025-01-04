@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -101,15 +102,6 @@ class CustomerController extends GetxController {
     selectedRole.value = role;
   }
 
-  // Opens a dialog to add a new customer
-  void onAddCustomerPressed() {
-    Get.dialog(
-      Dialog(
-        child: CustomerAddNewWidget(),
-      ),
-    );
-  }
-
   // Deletes a customer by ID
   Future<void> deleteCustomer(int id) async {
     try {
@@ -139,50 +131,85 @@ class CustomerController extends GetxController {
     }
   }
 
-  // create new customer
+void onAddCustomerPressed() {
+  Get.dialog(
+    Dialog(
+      child: CustomerAddNewWidget(),
+    ),
+  );
+}
 
-  Future<void> createCustomer(Map<String, dynamic> customerData) async {
-    isLoading.value = true;
-
-    try {
-      String? token = box.read('authToken');
-      if (token == null) {
-        Program.error('Error', 'No authentication token found.');
-        return;
-      }
-
-      // print("Sending request to create customer: $customerData");
-
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/users'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: json.encode(customerData),
-      );
-
-      // print("API Response: ${response.statusCode} - ${response.body}");
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Parse the response
-        final responseData = json.decode(response.body);
-        if (responseData['message'] == 'User created successfully') {
-          // Refresh the customer list
-          await fetchCustomers();
-          Program.success('Success', 'Customer added successfully.');
-          Get.back(); // Close the dialog
-        } else {
-          Program.error('Error', 'Unexpected response: ${response.body}');
-        }
-      } else {
-        Program.error('Error', 'Failed to add customer: ${response.body}');
-      }
-    } catch (e) {
-      // print("Error creating customer: $e");
-      Program.error('Error', 'Error adding customer: $e');
-    } finally {
-      isLoading.value = false;
+Future<void> createCustomer(Map<String, dynamic> customerData) async {
+  try {
+    String? token = box.read('authToken');
+    if (token == null) {
+      Program.error('Error', 'No authentication token found.');
+      return;
     }
+
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/users'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(customerData),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      if (responseData['message'] == 'User created successfully') {
+        await fetchCustomers(); // Refresh the customer list
+        Program.success('Success', 'Customer added successfully.');
+      } else {
+        Program.error('Error', 'Unexpected response: ${response.body}');
+      }
+    } else {
+      Program.error('Error', 'Failed to add customer: ${response.body}');
+    }
+  } catch (e) {
+    Program.error('Error', 'Error adding customer: $e');
   }
 }
+
+// upload image 
+// Function to upload the image to the backend
+  Future<String?> uploadImage(File imageFile) async {
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://127.0.0.1:8000/api/upload-image'), // Replace with your API endpoint
+      );
+
+      // Attach the image file
+      var stream = http.ByteStream(imageFile.openRead());
+      var length = await imageFile.length();
+      var multipartFile = http.MultipartFile(
+        'profile',
+        stream,
+        length,
+        filename: imageFile.path.split('/').last,
+      );
+
+      request.files.add(multipartFile);
+
+      // Send the request
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        // Parse the response to get the image path
+        var responseData = await response.stream.bytesToString();
+        return responseData; // Assuming the server returns the image path
+      } else {
+        throw Exception('Failed to upload image');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+
+
+}
+
