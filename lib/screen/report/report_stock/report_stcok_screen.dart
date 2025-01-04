@@ -186,7 +186,7 @@ class ReportStockScreen extends StatelessWidget {
                       hintText: 'Search',
                       hintStyle:
                           TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                      suffixIcon: Icon(
+                      suffixIcon: const Icon(
                         Icons.search,
                         color: Colors.black,
                       ),
@@ -224,12 +224,12 @@ class ReportStockScreen extends StatelessWidget {
                     ],
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Row(
                       children: [
-                        const Icon(Icons.downloading_sharp),
-                        const SizedBox(width: 10),
-                        const Text('Export To Excel'),
+                        Icon(Icons.downloading_sharp),
+                        SizedBox(width: 10),
+                        Text('Export To Excel'),
                       ],
                     ),
                   ),
@@ -241,7 +241,7 @@ class ReportStockScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2),
               ),
-              child: Row(
+              child: const Row(
                 children: [
                   Expanded(
                       child: Center(
@@ -314,7 +314,7 @@ class ReportStockScreen extends StatelessWidget {
                             child: Center(
                                 child: Text(
                                     '\$ ${item.price.toStringAsFixed(2)}'))),
-                        Expanded(child: Center(child: Text('${item.balance}'))),
+                        Expanded(child: Center(child: Text(item.balance))),
                       ],
                     ),
                   );

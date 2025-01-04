@@ -35,7 +35,7 @@ class FooterActionWidget extends StatelessWidget {
           child: Center(
             child: Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 12,
                 color: Colors.white,
               ),

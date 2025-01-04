@@ -20,7 +20,7 @@ class ReportSummaryWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Centered word at the top
-                Center(
+                const Center(
                   child: Text(
                     'Summary',
                     style: TextStyle(fontSize: 18),
@@ -32,7 +32,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Quantity',
                         style: TextStyle(
                             color: Colors.blue,
@@ -44,8 +44,8 @@ class ReportSummaryWidget extends StatelessWidget {
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
                           child: Center(
                             child: Text(
                               '102',
@@ -59,7 +59,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   ),
                 ),
                 // Divider
-                Divider(),
+                const Divider(),
                 // Row 2
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -67,7 +67,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Invoice',
                         style: TextStyle(
                             color: Colors.blue,
@@ -79,8 +79,8 @@ class ReportSummaryWidget extends StatelessWidget {
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
                           child: Center(
                             child: Text(
                               '12',
@@ -94,7 +94,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   ),
                 ),
                 // Divider
-                Divider(),
+                const Divider(),
 
                 // Row 3
                 Padding(
@@ -103,7 +103,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Paid',
                         style: TextStyle(
                             color: Colors.blue,
@@ -115,8 +115,8 @@ class ReportSummaryWidget extends StatelessWidget {
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
                           child: Center(
                             child: Text(
                               '10',
@@ -130,7 +130,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   ),
                 ),
                 // Divider
-                Divider(),
+                const Divider(),
 
                 // Row 4
                 Padding(
@@ -139,7 +139,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Unpaid',
                         style: TextStyle(
                             color: Colors.blue,
@@ -151,8 +151,8 @@ class ReportSummaryWidget extends StatelessWidget {
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
                           child: Center(
                             child: Text(
                               '02',
@@ -166,7 +166,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   ),
                 ),
                 // Divider
-                Divider(),
+                const Divider(),
 
                 // Row 5
                 Padding(
@@ -175,7 +175,7 @@ class ReportSummaryWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Table',
                         style: TextStyle(
                             color: Colors.blue,
@@ -187,8 +187,8 @@ class ReportSummaryWidget extends StatelessWidget {
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
                           child: Center(
                             child: Text(
                               '22',

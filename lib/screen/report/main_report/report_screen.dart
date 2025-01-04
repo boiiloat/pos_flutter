@@ -9,7 +9,7 @@ import 'Widget/report_sale_overview_widget.dart';
 import 'Widget/report_summary_widget.dart';
 
 class ReportScreen extends StatelessWidget {
-  ReportScreen({super.key});
+  const ReportScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class ReportScreen extends StatelessWidget {
                 ),
                 ReceiptKpiWidget(
                   label: 'Total Order',
-                  value: '\20',
+                  value: '20',
                   icon: Icon(Icons.shopping_cart, color: Colors.red),
                   color: Colors.red,
                 ),
@@ -70,7 +70,7 @@ class ReportScreen extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Container(
-                  child: Row(
+                  child: const Row(
                     children: [
                       Expanded(
                         flex: 7,
@@ -93,7 +93,7 @@ class ReportScreen extends StatelessWidget {
                         flex: 7,
                         child: ReportTotalReceiptWidget(),
                       ),
-                      Expanded(
+                      const Expanded(
                         flex: 3,
                         child: ReportSummaryWidget(),
                       )

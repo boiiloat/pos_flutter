@@ -40,7 +40,7 @@ class ReportWorkingDayMainWidget extends StatelessWidget {
                     height: 90,
                     decoration: BoxDecoration(
                       color: controller.selectedIndex.value == index
-                          ? Color.fromARGB(255, 173, 209, 236)
+                          ? const Color.fromARGB(255, 173, 209, 236)
                           : Colors.white,
                       boxShadow: [
                         BoxShadow(
@@ -72,10 +72,10 @@ class ReportWorkingDayMainWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: Colors.red,
                                     borderRadius: BorderRadius.circular(10)),
-                                child: Center(
+                                child: const Center(
                                   child: Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(5, 1, 5, 1),
+                                        EdgeInsets.fromLTRB(5, 1, 5, 1),
                                     child: Text(
                                       'Closed',
                                       style: TextStyle(
@@ -97,7 +97,7 @@ class ReportWorkingDayMainWidget extends StatelessWidget {
                                     : Colors.black,
                                 size: 11,
                               ),
-                              SizedBox(width: 5),
+                              const SizedBox(width: 5),
                               Text(
                                 shift_opened,
                                 style: TextStyle(
@@ -167,7 +167,7 @@ class ReportWorkingDayMainWidget extends StatelessWidget {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(width: 3),
+                              const SizedBox(width: 3),
                               GestureDetector(
                                 onTap: () {
                                   controller.selectSubContainer(0);
@@ -183,7 +183,7 @@ class ReportWorkingDayMainWidget extends StatelessWidget {
                                         : Colors.white,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: Column(
+                                  child: const Column(
                                     children: [
                                       Text(
                                         "10:45 AM",
@@ -213,7 +213,7 @@ class ReportWorkingDayMainWidget extends StatelessWidget {
                                         : Colors.white,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: Column(
+                                  child: const Column(
                                     children: [
                                       Text(
                                         "11:22 AM",

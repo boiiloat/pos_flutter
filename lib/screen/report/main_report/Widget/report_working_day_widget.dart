@@ -11,10 +11,10 @@ class ReportWorkingDayWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      child: Column(
+      child: const Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+            padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
             child: Row(
               children: [
                 Text(

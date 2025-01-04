@@ -113,7 +113,7 @@ class ReportTotalReceiptWidget extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Row(
+              const Row(
                 children: [
                   Text(
                     'Total Invoice',
@@ -121,7 +121,7 @@ class ReportTotalReceiptWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Column(
                 children: [
                   Container(
@@ -130,7 +130,7 @@ class ReportTotalReceiptWidget extends StatelessWidget {
                     ),
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
-                    child: Row(
+                    child: const Row(
                       children: [
                         Expanded(
                             child: Center(
@@ -199,37 +199,37 @@ class ReportTotalReceiptWidget extends StatelessWidget {
                               child: Center(
                                   child: Text(
                             receipt.invoiceNumber,
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ))),
                           Expanded(
                               child: Center(
                                   child: Text(
                             receipt.tableNumber,
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ))),
                           Expanded(
                               child: Center(
                                   child: Text(
                             receipt.dateTime,
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ))),
                           Expanded(
                               child: Center(
                                   child: Text(
                             '\$${receipt.totalAmount.toStringAsFixed(2)}',
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ))),
                           Expanded(
                               child: Center(
                                   child: Text(
                             '\$${receipt.discount.toStringAsFixed(2)}',
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ))),
                           Expanded(
                               child: Center(
                                   child: Text(
                             '\$${receipt.grandTotal.toStringAsFixed(2)}',
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ))),
                           Expanded(
                             child: Center(

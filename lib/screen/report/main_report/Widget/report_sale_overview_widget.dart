@@ -71,11 +71,11 @@ class _ReportSaleOverviewWidgetState extends State<ReportSaleOverviewWidget> {
                           },
                         ),
                       ),
-                      topTitles: AxisTitles(
+                      topTitles: const AxisTitles(
                         sideTitles:
                             SideTitles(showTitles: false), // Remove top titles
                       ),
-                      rightTitles: AxisTitles(
+                      rightTitles: const AxisTitles(
                         sideTitles: SideTitles(
                             showTitles: false), // Remove right titles
                       ),
@@ -146,14 +146,14 @@ class _ReportSaleOverviewWidgetState extends State<ReportSaleOverviewWidget> {
                       horizontalInterval: 1, // Adjust horizontal line intervals
                       verticalInterval: 1, // Adjust vertical line intervals
                       getDrawingHorizontalLine: (value) {
-                        return FlLine(
-                          color: const Color(0xffe2e2e2),
+                        return const FlLine(
+                          color: Color(0xffe2e2e2),
                           strokeWidth: 1,
                         );
                       },
                       getDrawingVerticalLine: (value) {
-                        return FlLine(
-                          color: const Color(0xffe2e2e2),
+                        return const FlLine(
+                          color: Color(0xffe2e2e2),
                           strokeWidth: 1,
                         );
                       },

@@ -110,7 +110,7 @@ class WorkingDayStartScreen extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Row(
+                                const Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
@@ -123,8 +123,8 @@ class WorkingDayStartScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10),
-                                Text(
+                                const SizedBox(height: 10),
+                                const Text(
                                   'Are you sure to start working day?',
                                   style: TextStyle(
                                       fontSize:
@@ -132,7 +132,7 @@ class WorkingDayStartScreen extends StatelessWidget {
                                   textAlign:
                                       TextAlign.center, // Center the text
                                 ),
-                                SizedBox(height: 25.0), // Optional: Add spacing
+                                const SizedBox(height: 25.0), // Optional: Add spacing
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -143,14 +143,14 @@ class WorkingDayStartScreen extends StatelessWidget {
                                         color: Colors.red,
                                         borderRadius: BorderRadius.circular(5),
                                       ),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Cancel',
                                           style: TextStyle(color: Colors.white),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Container(
                                       height: 30,
                                       width: 80,
@@ -158,7 +158,7 @@ class WorkingDayStartScreen extends StatelessWidget {
                                         color: Colors.green,
                                         borderRadius: BorderRadius.circular(5),
                                       ),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Okay',
                                           style: TextStyle(color: Colors.white),

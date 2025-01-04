@@ -49,7 +49,7 @@ class ReceiptKpiWidget extends StatelessWidget {
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold),
                               ),
-                              Text(
+                              const Text(
                                 'Current Day',
                                 style: TextStyle(fontSize: 10),
                               ),
@@ -62,11 +62,11 @@ class ReceiptKpiWidget extends StatelessWidget {
                       flex: 1,
                       child: Container(
                         child: Padding(
-                          padding: EdgeInsets.only(right: 10.0),
+                          padding: const EdgeInsets.only(right: 10.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              SizedBox(height: 2),
+                              const SizedBox(height: 2),
                               Container(
                                 height: 45,
                                 width: 45,
@@ -97,10 +97,10 @@ class ReceiptKpiWidget extends StatelessWidget {
                 color: color,
                 child: Row(
                   children: [
-                    SizedBox(width: 15),
+                    const SizedBox(width: 15),
                     Text(
                       label,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 15,
                       ),

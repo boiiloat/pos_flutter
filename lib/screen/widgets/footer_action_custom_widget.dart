@@ -50,12 +50,12 @@ class FooterActionCustomWidget extends StatelessWidget {
                 color: lightColor,
               ),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
+                backgroundColor: WidgetStateProperty.all(
                     dangerColor), // Change Colors.green to your desired background color
-                foregroundColor: MaterialStateProperty.all(Colors
+                foregroundColor: WidgetStateProperty.all(Colors
                     .white), // Change Colors.white to your desired text color
-                iconColor: MaterialStateProperty.all(Colors.white),
-                shape: MaterialStateProperty.all(
+                iconColor: WidgetStateProperty.all(Colors.white),
+                shape: WidgetStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         5.0), // Change 10.0 to your desired border radius
@@ -72,14 +72,14 @@ class FooterActionCustomWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: okProcessing ? null : onOKPressed,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(
                       successColor.withOpacity(okProcessing
                           ? 0.4
                           : 1)), // Change Colors.green to your desired background color
-                  foregroundColor: MaterialStateProperty.all(Colors
+                  foregroundColor: WidgetStateProperty.all(Colors
                       .white), // Change Colors.white to your desired text color
-                  iconColor: MaterialStateProperty.all(Colors.white),
-                  shape: MaterialStateProperty.all(
+                  iconColor: WidgetStateProperty.all(Colors.white),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                           5.0), // Change 10.0 to your desired border radius

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
-import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/working_day/widgets/footer_action_widget.dart';
 import 'package:pos_system/screen/working_day/widgets/kpi_working_day_widget.dart';

@@ -39,10 +39,10 @@ class ReportWorkingDayScreen extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Container(
-                        child: Row(
+                        child: const Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(5.0),
+                              padding: EdgeInsets.all(5.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +65,7 @@ class ReportWorkingDayScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 15,
                       child: Column(
                         children: [
@@ -141,8 +141,8 @@ class ReportWorkingDayScreen extends StatelessWidget {
                               width: 350,
                               height: 500,
                               color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                              child: const Padding(
+                                padding: EdgeInsets.all(10.0),
                                 child: Column(
                                   children: [
                                     Text(

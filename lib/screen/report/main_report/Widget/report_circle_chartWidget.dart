@@ -20,7 +20,7 @@ class ReportCircleChartWidget extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Top Sale',
                     style: TextStyle(
                       fontSize: 15,
@@ -28,7 +28,7 @@ class ReportCircleChartWidget extends StatelessWidget {
                   ),
                   IconButton(
                       onPressed: () {},
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.more_horiz,
                         size: 20,
                       )),
@@ -46,7 +46,7 @@ class ReportCircleChartWidget extends StatelessWidget {
                         color: Colors.blue,
                         title: '30%',
                         radius: 80, // Adjusted radius
-                        titleStyle: TextStyle(
+                        titleStyle: const TextStyle(
                           fontSize: 14, // Adjusted font size
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -57,7 +57,7 @@ class ReportCircleChartWidget extends StatelessWidget {
                         color: Colors.red,
                         title: '20%',
                         radius: 80, // Adjusted radius
-                        titleStyle: TextStyle(
+                        titleStyle: const TextStyle(
                           fontSize: 14, // Adjusted font size
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -68,7 +68,7 @@ class ReportCircleChartWidget extends StatelessWidget {
                         color: Colors.green,
                         title: '25%',
                         radius: 80, // Adjusted radius
-                        titleStyle: TextStyle(
+                        titleStyle: const TextStyle(
                           fontSize: 14, // Adjusted font size
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -79,7 +79,7 @@ class ReportCircleChartWidget extends StatelessWidget {
                         color: Colors.orange,
                         title: '25%',
                         radius: 80, // Adjusted radius
-                        titleStyle: TextStyle(
+                        titleStyle: const TextStyle(
                           fontSize: 14, // Adjusted font size
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -102,61 +102,61 @@ class ReportCircleChartWidget extends StatelessWidget {
                   Container(
                     width: 12, // Width of the chip
                     height: 12, // Height of the chip
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.blue, // Color of the chip
                     ),
                   ),
-                  SizedBox(width: 8), // Space between chip and text
-                  Text(
+                  const SizedBox(width: 8), // Space between chip and text
+                  const Text(
                     'ឆាក្តៅសាច់មាន់',
                     style: TextStyle(fontSize: 10),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
 
                   // Chip before second text
                   Container(
                     width: 12,
                     height: 12,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.red,
                     ),
                   ),
-                  SizedBox(width: 5),
-                  Text(
+                  const SizedBox(width: 5),
+                  const Text(
                     'អាម៉ុក',
                     style: TextStyle(fontSize: 10),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
 
                   // Chip before third text
                   Container(
                     width: 12,
                     height: 12,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.green,
                     ),
                   ),
-                  SizedBox(width: 5),
-                  Text(
+                  const SizedBox(width: 5),
+                  const Text(
                     'មាន់ដុត',
                     style: TextStyle(fontSize: 10),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
 
                   // Chip before fourth text
                   Container(
                     width: 12,
                     height: 12,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.orange,
                     ),
                   ),
-                  SizedBox(width: 5),
-                  Text(
+                  const SizedBox(width: 5),
+                  const Text(
                     'Angkor beer',
                     style: TextStyle(fontSize: 10),
                   ),
