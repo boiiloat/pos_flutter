@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:pos_system/models/api/customer_model.dart';
 import 'package:pos_system/screen/cashier_shift/cashier_shift_close_screen.dart';
 import 'package:pos_system/screen/cashier_shift/cashier_shift_start_screen.dart';
 import 'package:pos_system/screen/customer/customer_screen.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: LoginScreen(),
+      home: CustomerScreen(),
       // home: ProductScreen(),
       // home: ProductScreen(),
       // home: LoginScreen(),

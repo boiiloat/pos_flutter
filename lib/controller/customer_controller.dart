@@ -25,7 +25,8 @@ class CustomerController extends GetxController {
     if (date == null || date.isEmpty) return 'No Date Provided';
     try {
       DateTime parsedDate = DateTime.parse(date);
-      return DateFormat('dd-MM-yyyy').format(parsedDate); // Format as day-month-year
+      return DateFormat('dd-MM-yyyy')
+          .format(parsedDate); // Format as day-month-year
     } catch (e) {
       return 'Invalid Date';
     }
@@ -48,7 +49,8 @@ class CustomerController extends GetxController {
     if (dateString == null || dateString.isEmpty) return 'No Date Provided';
     try {
       DateTime parsedDate = DateTime.parse(dateString);
-      return DateFormat('dd-MM-yyyy').format(parsedDate); // Format as day-month-year
+      return DateFormat('dd-MM-yyyy')
+          .format(parsedDate); // Format as day-month-year
     } catch (e) {
       return 'Invalid Date';
     }
@@ -136,11 +138,10 @@ class CustomerController extends GetxController {
       Program.error('Error', 'Error deleting customer: $e');
     }
   }
-  
 
   // create new customer
 
-    Future<void> createCustomer(Map<String, dynamic> customerData) async {
+  Future<void> createCustomer(Map<String, dynamic> customerData) async {
     isLoading.value = true;
 
     try {
@@ -149,6 +150,8 @@ class CustomerController extends GetxController {
         Program.error('Error', 'No authentication token found.');
         return;
       }
+
+      // print("Sending request to create customer: $customerData");
 
       final response = await http.post(
         Uri.parse('http://127.0.0.1:8000/api/users'),
@@ -159,14 +162,24 @@ class CustomerController extends GetxController {
         body: json.encode(customerData),
       );
 
-      if (response.statusCode == 200) {
-        // Refresh the customer list
-        fetchCustomers();
-        Program.success('Success', 'Customer added successfully.');
+      // print("API Response: ${response.statusCode} - ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Parse the response
+        final responseData = json.decode(response.body);
+        if (responseData['message'] == 'User created successfully') {
+          // Refresh the customer list
+          await fetchCustomers();
+          Program.success('Success', 'Customer added successfully.');
+          Get.back(); // Close the dialog
+        } else {
+          Program.error('Error', 'Unexpected response: ${response.body}');
+        }
       } else {
         Program.error('Error', 'Failed to add customer: ${response.body}');
       }
     } catch (e) {
+      // print("Error creating customer: $e");
       Program.error('Error', 'Error adding customer: $e');
     } finally {
       isLoading.value = false;

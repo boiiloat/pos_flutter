@@ -80,7 +80,8 @@ class _CustomerAddNewWidgetState extends State<CustomerAddNewWidget> {
                     InkWell(
                       onTap: () {
                         // TODO: Implement image upload logic
-                        Program.success("Info", "Image upload feature not implemented yet.");
+                        Program.success("Info",
+                            "Image upload feature not implemented yet.");
                       },
                       child: Container(
                         height: 25,
@@ -183,6 +184,7 @@ class _CustomerAddNewWidgetState extends State<CustomerAddNewWidget> {
                     InkWell(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
+                          print("Form is valid. Proceeding to submit...");
                           // Prepare the data to send to the backend
                           final newCustomer = {
                             'fullname': _fullNameController.text,
@@ -195,12 +197,14 @@ class _CustomerAddNewWidgetState extends State<CustomerAddNewWidget> {
                           try {
                             // Call the API to create a new customer
                             await controller.createCustomer(newCustomer);
-                            Program.success("Success", "Customer added successfully!");
-                            Get.back(); // Close the dialog
                           } catch (e) {
-                            Program.error("Error", "Failed to add customer: $e");
+                            Program.error(
+                                "Error", "Failed to add customer: $e");
                           }
+                        } else {
+                          print("Form is invalid. Please check the fields.");
                         }
+                        
                       },
                       child: Container(
                         height: 40,
