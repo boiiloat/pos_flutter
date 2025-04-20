@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../../controller/main_controller.dart';
 import 'home_drawer_menu_item_widget.dart';
-import 'home_drawer_profile_widget copy.dart';
 import 'home_logout_button_widget.dart';
 
 class HomeScreenDrawerWidget extends StatelessWidget {
@@ -10,7 +7,6 @@ class HomeScreenDrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<MainController>();
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -19,99 +15,112 @@ class HomeScreenDrawerWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.max,
             children: [
-              const HomeDrawerProfileWidget(),
+              SizedBox(
+                height: 170,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/bg_image.jpg"),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  child: Flex(
+                    direction: Axis.vertical,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  maxRadius: 30,
+                                  backgroundImage: AssetImage(
+                                      "assets/images/logo_image.jpg"),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                            decoration: const BoxDecoration(),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Obx(() => Text(
+                                //       loginController.loggedInUser.value?.fullname ??
+                                //           'Unknown',
+                                //       style: const TextStyle(
+                                //         color: Colors.white,
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 16,
+                                //       ),
+                                //     )),
+                                // Obx(() => Text(
+                                //       'POS Profile: ${_getRoleName(loginController.loggedInUser.value?.roleId)}',
+                                //       style: const TextStyle(
+                                //           color: Colors.white, fontSize: 12),
+                                //     )),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               Expanded(
                 child: Container(
                   color: Colors.grey[200],
                   child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        HomeDrawerMenuItemWidget(
-                            icon: Icons.calendar_month,
-                            text: 'Start working',
-                            onPressed: () =>
-                                controller.onStartWorkingDayPressed),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.schedule,
-                          text: 'Start Shift',
-                          onPressed: () {},
-                        ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.shopping_cart,
-                          text: 'POS',
-                          onPressed: () {},
-                        ),
-                        // Report ExpansionTile
-                        ExpansionTile(
-                          leading: Icon(Icons.article),
-                          title: Text('Report'),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16.0), // Indent submenu items
-                              child: Column(
-                                children: [
-                                  InkWell(
-                                    onTap: () => controller.onReportPressed(),
-                                    child: ListTile(
-                                      title: Text(
-                                        'Report Screen',
-                                        style: TextStyle(fontSize: 13),
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () =>
-                                        controller.onStockReportPressed(),
-                                    child: ListTile(
-                                      title: Text(
-                                        'Stock Report',
-                                        style: TextStyle(fontSize: 13),
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () =>
-                                        controller.onWorkingDayReportPressed(),
-                                    child: ListTile(
-                                      title: Text('Working Day Report',
-                                          style: TextStyle(fontSize: 13)),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () => controller.onExpensePressed(),
-                                    child: ListTile(
-                                      title: Text('Expense',
-                                          style: TextStyle(fontSize: 13)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Other Menu Items
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.group,
-                          text: 'Customer',
-                          onPressed: () {},
-                        ),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.list,
-                          text: 'Product',
-                          onPressed: () {},
-                        ),
-                        const SizedBox(height: 30),
-                        // Only show the divider if ExpansionTile is not expanded
-                        Divider(),
-                        HomeDrawerMenuItemWidget(
-                          icon: Icons.save,
-                          text: 'Backup',
-                          onPressed: () {},
-                        ),
-                      ],
+                    child: SizedBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          HomeDrawerMenuItemWidget(
+                              icon: Icons.play_circle_fill,
+                              text: 'Start Sale',
+                              onPressed: () {}),
+
+                          HomeDrawerMenuItemWidget(
+                            icon: Icons.shopping_cart,
+                            text: 'POS',
+                            onPressed: () {},
+                          ),
+                          HomeDrawerMenuItemWidget(
+                            icon: Icons.list,
+                            text: 'Product',
+                            onPressed: () {},
+                          ),
+                          HomeDrawerMenuItemWidget(
+                            icon: Icons.receipt_outlined,
+                            text: 'Receipt',
+                            onPressed: () {},
+                          ),
+                          HomeDrawerMenuItemWidget(
+                            icon: Icons.assessment_outlined,
+                            text: 'Report',
+                            onPressed: () {},
+                          ),
+                          // Other Menu Items
+                          HomeDrawerMenuItemWidget(
+                            icon: Icons.group,
+                            text: 'Users',
+                            onPressed: () {},
+                          ),
+                          HomeDrawerMenuItemWidget(
+                            icon: Icons.save,
+                            text: 'Backup',
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

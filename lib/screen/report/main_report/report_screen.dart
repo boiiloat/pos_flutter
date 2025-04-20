@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/constans/constan.dart';
-import 'package:pos_system/screen/report/main_report/Widget/report_total_receipt_widget.dart';
-
+import 'package:pos_system/controller/receipt_controller.dart';
 import '../../receipt/Widget/report_kpi_widget.dart';
+import '../../receipt/receipt_screen.dart';
 import 'Widget/report_circle_chartWidget.dart';
 import 'Widget/report_sale_overview_widget.dart';
 import 'Widget/report_summary_widget.dart';
@@ -13,6 +13,8 @@ class ReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.put(RecieptController());
+
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
@@ -91,7 +93,12 @@ class ReportScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 7,
-                        child: ReportTotalReceiptWidget(),
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(ReceiptScreen());
+                          },
+                          child: ReceiptScreen(),
+                        ),
                       ),
                       const Expanded(
                         flex: 3,

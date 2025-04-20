@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pos_system/program.dart';
 
 class RecieptController extends GetxController {
   // Sample data for the table
@@ -16,5 +17,9 @@ class RecieptController extends GetxController {
   // Remove a row from the table
   void removeRow(int index) {
     tableData.removeAt(index);
+  }
+
+  void onReceiptPressed() {
+    print("xxx");
   }
 }

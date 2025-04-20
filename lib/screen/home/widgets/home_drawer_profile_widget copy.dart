@@ -8,7 +8,7 @@ class HomeDrawerProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginController = Get.find<LoginController>();
+    // final loginController = Get.find<LoginController>();
 
     return SizedBox(
       height: 150,

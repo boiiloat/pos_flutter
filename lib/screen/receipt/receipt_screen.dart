@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/models/api/receipt_model.dart';
-
-import 'Widget/report_kpi_widget.dart';
-import 'Widget/screen_tittle.dart';
 
 class ReceiptScreen extends StatelessWidget {
   ReceiptScreen({super.key});
@@ -107,101 +102,51 @@ class ReceiptScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: const Text(
-          'SNACK & RELAX CAFE',
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-        leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
-        backgroundColor: appColor,
-      ),
       body: Column(
         children: [
-          ScreenTittle(
-            icon: Icon(Icons.receipt_long),
-            label: 'Receipt List',
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ReceiptKpiWidget(
-                  label: 'Total Receipt',
-                  value: '07',
-                  icon: Icon(Icons.receipt_long),
-                  color: Colors.orange,
-                ),
-                ReceiptKpiWidget(
-                  label: 'Sub Total',
-                  value: '\$ 81.00',
-                  icon: Icon(Icons.paid_outlined),
-                  color: Colors.red,
-                ),
-                ReceiptKpiWidget(
-                  label: 'Total Discount',
-                  value: '\$ 3.00',
-                  icon: Icon(Icons.discount_outlined),
-                  color: Colors.purple,
-                ),
-                ReceiptKpiWidget(
-                  label: 'Grand Total',
-                  value: '\$ 78.00',
-                  icon: Icon(Icons.monetization_on),
-                  color: Colors.blue,
-                ),
-              ],
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(2),
             ),
-          ),
-          SizedBox(height: 5),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Center(
-                          child: Text('Invoice No',
-                              style: TextStyle(fontWeight: FontWeight.bold)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('Table Number',
-                              style: TextStyle(fontWeight: FontWeight.bold)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('Date & Time',
-                              style: TextStyle(fontWeight: FontWeight.bold)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('Sub Total',
-                              style: TextStyle(fontWeight: FontWeight.bold)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('Discount',
-                              style: TextStyle(fontWeight: FontWeight.bold)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('Grand Total',
-                              style: TextStyle(fontWeight: FontWeight.bold)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('Status',
-                              style: TextStyle(fontWeight: FontWeight.bold)))),
-                ],
-              ),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Invoice No',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                    child: Center(
+                        child: Text('Table Number',
+                            style: TextStyle(fontWeight: FontWeight.bold)))),
+                Expanded(
+                    child: Center(
+                        child: Text('Date & Time',
+                            style: TextStyle(fontWeight: FontWeight.bold)))),
+                Expanded(
+                    child: Center(
+                        child: Text('Sub Total',
+                            style: TextStyle(fontWeight: FontWeight.bold)))),
+                Expanded(
+                    child: Center(
+                        child: Text('Discount',
+                            style: TextStyle(fontWeight: FontWeight.bold)))),
+                Expanded(
+                    child: Center(
+                        child: Text('Grand Total',
+                            style: TextStyle(fontWeight: FontWeight.bold)))),
+                Expanded(
+                    child: Center(
+                        child: Text('Status',
+                            style: TextStyle(fontWeight: FontWeight.bold)))),
+              ],
             ),
           ),
           Expanded(
