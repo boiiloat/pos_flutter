@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/controller/main_controller.dart';
-// import '../../controller/login_controller.dart';
 import 'widgets/home_button_widget.dart';
 import 'widgets/home_drawer_profile_widget.dart';
 import 'widgets/home_profile_action_menu_widget.dart';
@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(MainController());
-    // final loginController = Get.find<LoginController>();
+    final user = GetStorage().read('user');
 
     return Obx(
       () => SafeArea(
@@ -20,9 +20,14 @@ class HomeScreen extends StatelessWidget {
           color: Colors.grey.shade300,
           child: Scaffold(
             appBar: AppBar(
-              title: const Text(
-                "SNACK & RELAX CAFE",
-                style: TextStyle(color: Colors.white, fontSize: 18),
+              title: Row(
+                children: [
+                  const Text(
+                    "SNACK & RELAX CAFE",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  Text('Welcome, ${user['full_name']}'),
+                ],
               ),
               backgroundColor: Colors.red,
               leading: Builder(
@@ -83,11 +88,6 @@ class HomeScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
-                          // Text(
-                          //   "POS Profile : ${_getRoleName(loginController.loggedInUser.value?.roleId)}  / Address: Sieam Reap, Cambodia",
-                          //   style: const TextStyle(
-                          //       color: Colors.white, fontSize: 15),
-                          // ),
                         ],
                       ),
                     ),
@@ -186,15 +186,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
-  // String _getRoleName(int? roleId) {
-  //   switch (roleId) {
-  //     case 1:
-  //       return 'Admin';
-  //     case 2:
-  //       return 'Cashier';
-  //     default:
-  //       return 'Unknown Role';
-  //   }
-  // }
 }

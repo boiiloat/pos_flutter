@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../constans/constan.dart';
+import '../../../utils/constants.dart';
+
 
 class HomeButtonWidget extends StatelessWidget {
   final String title;

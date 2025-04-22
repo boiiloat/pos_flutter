@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/customer/customer_screen.dart';
@@ -28,22 +27,6 @@ class MainController extends GetxController {
   void onBackupPressed() {
     Program.success("title", "description");
   }
-
-  // void onStartWorkingDayPressed(BuildContext context) {
-  //   Get.to(() => const WorkingDayStartScreen());
-  // }
-
-  // void onCloseWorkingDayPressed(BuildContext context) {
-  //   Get.to(() => const WorkingDayCloseScreen());
-  // }
-
-  // void onStartShiftPressed() {
-  //   Get.to(() => const ShiftStartScreen());
-  // }
-
-  // void onCloseShiftPressed() {
-  //   Get.to(() => const ShiftCloseScreen());
-  // }
 
   void onPOSPressed() {
     Get.to(() => const TablePlanScreen());

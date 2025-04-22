@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:pos_system/models/api/customer_model.dart';
-import 'package:pos_system/screen/customer/customer_screen.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import 'package:pos_system/screen/pos/sale/widgets/sale_discount_widget.dart';
-import 'package:pos_system/screen/pos/table_plan/table_plan_screen.dart';
-import 'package:pos_system/screen/pos/sale/sale_menu_screen.dart';
-import 'package:pos_system/screen/product/product_screen.dart';
-import 'package:pos_system/screen/receipt/Widget/list.dart';
-import 'package:pos_system/screen/receipt/receipt_screen.dart';
-import 'package:pos_system/screen/report/main_report/report_screen.dart';
+import 'package:pos_system/services/api_service.dart';
+import 'package:pos_system/services/auth_service.dart';
+
+import 'controller/login_controller.dart';
 
 void main() async {
-  await GetStorage.init(); // Initialize GetStorage
+  await GetStorage.init();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      // home: HomeScreen(),
-      // home: ProductScreen(),
-      // home: ProductScreen(),
-      home: LoginScreen(),
-
-      // home: Testing(),
+      title: 'POS System',
       debugShowCheckedModeBanner: false,
+      initialBinding: AppBindings(),
+      initialRoute: GetStorage().read('token') == null ? '/login' : '/home',
+      getPages: [
+        GetPage(name: '/login', page: () => const LoginScreen()),
+        GetPage(name: '/home', page: () => const HomeScreen()),
+      ],
     );
+  }
+}
+
+class AppBindings extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(ApiService());
+    Get.put(AuthService());
+    Get.put(LoginController());
   }
 }

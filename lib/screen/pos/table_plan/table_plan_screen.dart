@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/controller/table_plan_controller.dart';
 import 'package:pos_system/screen/pos/table_plan/widgets/table_plan_widget.dart';
 
+import '../../../utils/constants.dart';
 import 'widgets/table_plan_add_new.dart';
 
 class TablePlanScreen extends StatelessWidget {

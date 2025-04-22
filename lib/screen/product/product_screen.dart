@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/product_controller.dart';
-import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/receipt/Widget/screen_tittle.dart';
+
+import '../../utils/constants.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({super.key});

@@ -8,7 +8,6 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(LoginController());
     return SafeArea(
       child: Scaffold(
         body: Row(

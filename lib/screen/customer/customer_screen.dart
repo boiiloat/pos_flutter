@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/controller/customer_controller.dart';
 import 'package:pos_system/screen/receipt/Widget/screen_tittle.dart';
+import '../../utils/constants.dart';
 import '../../widgets/add_new_button_widget.dart';
 import '../../widgets/search_widget.dart';
 import 'Widgets/customer_item_widget.dart'; // Import the new widget

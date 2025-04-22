@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/constans/constan.dart';
+
+import 'utils/constants.dart';
 
 class Program {
   static SnackbarController? snackController;

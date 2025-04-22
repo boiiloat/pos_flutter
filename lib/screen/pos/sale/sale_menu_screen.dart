@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/constans/constan.dart';
 import 'package:pos_system/controller/product_controller.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/pos/sale/widgets/testing.dart';

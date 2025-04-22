@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../constans/constan.dart';
+import '../../utils/constants.dart';
 import 'text_icon_loading_widget.dart';
 
 class FooterActionCustomWidget extends StatelessWidget {

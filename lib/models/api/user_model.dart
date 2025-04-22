@@ -1,10 +1,8 @@
-// lib/models/user.dart
-
 class User {
   final int id;
   final String fullname;
   final String username;
-  final String? profile;
+  final String? profileImage;
   final int roleId;
   final DateTime? createDate;
   final String? createBy;
@@ -18,7 +16,7 @@ class User {
     required this.id,
     required this.fullname,
     required this.username,
-    this.profile,
+    this.profileImage,
     required this.roleId,
     this.createDate,
     this.createBy,
@@ -29,39 +27,29 @@ class User {
     this.updatedAt,
   });
 
-  // Factory constructor to create a User from JSON
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
       fullname: json['fullname'],
       username: json['username'],
-      profile: json['profile'],
+      profileImage: json['profile_image'],
       roleId: json['role_id'],
-      createDate: json['create_date'] != null
-          ? DateTime.parse(json['create_date'])
-          : null,
+      createDate: json['create_date'] != null ? DateTime.parse(json['create_date']) : null,
       createBy: json['create_by'],
       isDelete: json['is_delete'],
-      deleteDate: json['delete_date'] != null
-          ? DateTime.parse(json['delete_date'])
-          : null,
+      deleteDate: json['delete_date'] != null ? DateTime.parse(json['delete_date']) : null,
       deleteBy: json['delete_by'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : null,
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
     );
   }
 
-  // Method to convert User to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'fullname': fullname,
       'username': username,
-      'profile': profile,
+      'profile_image': profileImage,
       'role_id': roleId,
       'create_date': createDate?.toIso8601String(),
       'create_by': createBy,
