@@ -7,6 +7,8 @@ import 'package:pos_system/services/api_service.dart';
 import 'package:pos_system/services/auth_service.dart';
 
 import 'controller/login_controller.dart';
+import 'controller/user_controller.dart';
+import 'screen/user/user_screen.dart';
 
 void main() async {
   await GetStorage.init();
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/home', page: () => const HomeScreen()),
+        GetPage(name: '/users', page: () => UserScreen()), 
       ],
     );
   }
@@ -35,5 +38,6 @@ class AppBindings extends Bindings {
     Get.put(ApiService());
     Get.put(AuthService());
     Get.put(LoginController());
+    Get.put(UserController());
   }
 }

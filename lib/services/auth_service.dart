@@ -4,10 +4,12 @@ import 'package:pos_system/services/api_service.dart';
 class AuthService extends GetxService {
   final ApiService _apiService = Get.find<ApiService>();
 
-  // Reactive user profile
-  final Rx<Map<String, dynamic>?> _userProfile =
-      Rx<Map<String, dynamic>?>(null);
+  final Rx<Map<String, dynamic>?> _userProfile = Rx<Map<String, dynamic>?>(null);
   Map<String, dynamic>? get userProfile => _userProfile.value;
+
+  // Add this getter to easily check user role
+  bool get isAdmin => _userProfile.value?['role_id'] == 1;
+   bool get canCreateUser => _userProfile.value?['role_id'] == 1;
 
   Future<Map<String, dynamic>?> login(String username, String password) async {
     try {
@@ -18,25 +20,22 @@ class AuthService extends GetxService {
 
       if (response.statusCode == 200) {
         final responseData = response.body;
-        print('Raw API Response: $responseData');
-
+        
         if (responseData['token'] == null) {
           throw 'Invalid response: Missing token';
         }
 
-        // 1. Get the user object from response
         final userData = responseData['user'] as Map<String, dynamic>? ?? {};
-        print('Extracted User Data: $userData');
-
-        // 2. Map to your expected structure
+        
+        // Include role_id in the mapped user data
         final mappedUser = {
-          'full_name': userData['fullname'], // Note the API uses 'fullname'
+          'full_name': userData['fullname'],
           'profile_image': userData['profile_image'],
           'id': userData['id'],
+          'role_id': userData['role_id'], // Add this line
+          'username': userData['username'], // Add this line
         };
-        print('Mapped User Data: $mappedUser');
 
-        // 3. Update reactive profile
         _userProfile.value = mappedUser;
 
         return {
@@ -54,6 +53,5 @@ class AuthService extends GetxService {
 
   Future<void> logout() async {
     _userProfile.value = null;
-    // Clear storage/state as needed
   }
 }

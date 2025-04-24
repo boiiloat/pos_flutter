@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pos_system/program.dart';
-import 'package:pos_system/screen/customer/customer_screen.dart';
+import 'package:pos_system/screen/user/user_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
 import 'package:pos_system/screen/pos/table_plan/table_plan_screen.dart';
 import 'package:pos_system/screen/product/product_screen.dart';
@@ -42,8 +42,8 @@ class MainController extends GetxController {
     Get.to(() => ReceiptScreen());
   }
 
-  void onCustomerPressed() {
-    Get.to(() => const CustomerScreen());
+  void onUserPressed() {
+    Get.to(() =>  UserScreen());
   }
 
   void onProductPressed() {

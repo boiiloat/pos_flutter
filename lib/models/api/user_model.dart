@@ -29,35 +29,61 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      fullname: json['fullname'],
-      username: json['username'],
-      profileImage: json['profile_image'],
-      roleId: json['role_id'],
-      createDate: json['create_date'] != null ? DateTime.parse(json['create_date']) : null,
-      createBy: json['create_by'],
-      isDelete: json['is_delete'],
-      deleteDate: json['delete_date'] != null ? DateTime.parse(json['delete_date']) : null,
-      deleteBy: json['delete_by'],
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      id: _safeParseInt(json['id']),
+      fullname: _safeParseString(json['fullname']),
+      username: _safeParseString(json['username']),
+      profileImage: _safeParseString(json['profile_image']),
+      roleId: _safeParseInt(json['role_id']),
+      createDate: _safeParseDateTime(json['create_date']),
+      createBy: _safeParseString(json['create_by']),
+      isDelete: _safeParseInt(json['is_delete']),
+      deleteDate: _safeParseDateTime(json['delete_date']),
+      deleteBy: _safeParseString(json['delete_by']),
+      createdAt: _safeParseDateTime(json['created_at']),
+      updatedAt: _safeParseDateTime(json['updated_at']),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'fullname': fullname,
-      'username': username,
-      'profile_image': profileImage,
-      'role_id': roleId,
-      'create_date': createDate?.toIso8601String(),
-      'create_by': createBy,
-      'is_delete': isDelete,
-      'delete_date': deleteDate?.toIso8601String(),
-      'delete_by': deleteBy,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
-    };
+  // Helper methods
+  static int _safeParseInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is String) {
+      return int.tryParse(value) ?? 0;
+    }
+    return 0;
   }
+
+  static String _safeParseString(dynamic value) {
+    if (value == null) return '';
+    return value.toString();
+  }
+
+  static DateTime? _safeParseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    if (value is String) {
+      try {
+        return DateTime.parse(value);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'fullname': fullname,
+    'username': username,
+    'profile_image': profileImage,
+    'role_id': roleId,
+    'create_date': createDate?.toIso8601String(),
+    'create_by': createBy,
+    'is_delete': isDelete,
+    'delete_date': deleteDate?.toIso8601String(),
+    'delete_by': deleteBy,
+    'created_at': createdAt?.toIso8601String(),
+    'updated_at': updatedAt?.toIso8601String(),
+  };
 }

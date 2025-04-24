@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:pos_system/screen/customer/Widgets/customer_add_new_widget.dart';
+import 'package:pos_system/screen/user/Widgets/customer_add_new_widget.dart';
 import '../../models/api/customer_model.dart';
 import '../../program.dart';
 

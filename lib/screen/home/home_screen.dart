@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                                   HomeButtonWidget(
                                     title: "Users".tr,
                                     iconData: Icons.group,
-                                    onPressed: controller.onCustomerPressed,
+                                    onPressed: controller.onUserPressed,
                                   ),
 
                                   HomeButtonWidget(
