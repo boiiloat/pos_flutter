@@ -32,12 +32,10 @@ Future<void> fetchUsers() async {
 
     if (response.statusCode == 200) {
       // Add debug print to see raw response
-      print('API Response: ${response.body}');
       
       users.value = (response.body['data'] as List)
           .map((userJson) {
             // Debug print each user JSON
-            print('Parsing user: $userJson');
             return User.fromJson(userJson);
           })
           .toList();
@@ -46,7 +44,6 @@ Future<void> fetchUsers() async {
     }
   } catch (e) {
     errorMessage.value = e.toString();
-    print('Error fetching users: $e');
     Get.snackbar('Error', e.toString());
   } finally {
     loading.value = false;

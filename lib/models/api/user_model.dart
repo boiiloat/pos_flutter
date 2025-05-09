@@ -3,7 +3,7 @@ class User {
   final String fullname;
   final String username;
   final String? profileImage;
-  final int roleId;
+  final String? roleId;
   final DateTime? createDate;
   final String? createBy;
   final int isDelete;
@@ -33,7 +33,7 @@ class User {
       fullname: _safeParseString(json['fullname']),
       username: _safeParseString(json['username']),
       profileImage: _safeParseString(json['profile_image']),
-      roleId: _safeParseInt(json['role_id']),
+      roleId: _safeParseString(json['role_id']),
       createDate: _safeParseDateTime(json['create_date']),
       createBy: _safeParseString(json['create_by']),
       isDelete: _safeParseInt(json['is_delete']),
@@ -73,17 +73,17 @@ class User {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'fullname': fullname,
-    'username': username,
-    'profile_image': profileImage,
-    'role_id': roleId,
-    'create_date': createDate?.toIso8601String(),
-    'create_by': createBy,
-    'is_delete': isDelete,
-    'delete_date': deleteDate?.toIso8601String(),
-    'delete_by': deleteBy,
-    'created_at': createdAt?.toIso8601String(),
-    'updated_at': updatedAt?.toIso8601String(),
-  };
+        'id': id,
+        'fullname': fullname,
+        'username': username,
+        'profile_image': profileImage,
+        'role_id': roleId,
+        'create_date': createDate?.toIso8601String(),
+        'create_by': createBy,
+        'is_delete': isDelete,
+        'delete_date': deleteDate?.toIso8601String(),
+        'delete_by': deleteBy,
+        'created_at': createdAt?.toIso8601String(),
+        'updated_at': updatedAt?.toIso8601String(),
+      };
 }
