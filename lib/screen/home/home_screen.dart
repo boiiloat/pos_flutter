@@ -20,13 +20,12 @@ class HomeScreen extends StatelessWidget {
           color: Colors.grey.shade300,
           child: Scaffold(
             appBar: AppBar(
-              title: Row(
+              title: const Row(
                 children: [
-                  const Text(
+                   Text(
                     "SNACK & RELAX CAFE",
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
-                  Text('Welcome, ${user['full_name']}'),
                 ],
               ),
               backgroundColor: Colors.red,
@@ -88,6 +87,11 @@ class HomeScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
+                          Text(
+                            "POS Profile : ${user['full_name']} / Address: Siem Reap, Cambodia",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          // Text('Welcome, ${user['full_name']}'),
                         ],
                       ),
                     ),
@@ -112,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                                     hidden: controller.isSaleStarted.value,
                                     title: "Start Sale",
                                     iconData: Icons.play_circle_fill,
-                                    onPressed: () {},
+                                    onPressed: controller.onStartSalePressed,
                                   ),
                                   // HomeButtonWidget(
                                   //   // hidden: !cont\roller.isSaleStarted.value,
@@ -154,13 +158,25 @@ class HomeScreen extends StatelessWidget {
                                   ),
 
                                   HomeButtonWidget(
-                                    title: "Back Up".tr,
-                                    background: Colors.yellow.shade800,
-                                    foreground: Colors.white,
-                                    iconData: Icons.backup_sharp,
-                                    onPressed: controller.onBackupPressed,
-                                    foregroundIconColor: Colors.white,
+                                    title: "Exexpence".tr,
+                                    iconData: Icons.post_add,
+                                    onPressed: controller.onExpensePressed,
                                   ),
+
+                                  HomeButtonWidget(
+                                    title: "Reset Sale".tr,
+                                    iconData: Icons.refresh,
+                                    onPressed: controller.onResetSalePressed,
+                                  ),
+
+                                  // HomeButtonWidget(
+                                  //   title: "Back Up".tr,
+                                  //   background: Colors.yellow.shade800,
+                                  //   foreground: Colors.white,
+                                  //   iconData: Icons.backup_sharp,
+                                  //   onPressed: controller.onBackupPressed,
+                                  //   foregroundIconColor: Colors.white,
+                                  // ),
 
                                   HomeButtonWidget(
                                     title: "Logout".tr,

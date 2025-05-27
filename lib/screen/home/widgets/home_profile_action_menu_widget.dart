@@ -7,21 +7,41 @@ import 'package:pos_system/screen/login/login_screen.dart';
 class HomeProfileActionMenuWidget extends StatelessWidget {
   const HomeProfileActionMenuWidget({super.key});
 
+  // Helper method to get role name based on roleId
+  String _getRoleName(int? roleId) {
+    switch (roleId) {
+      case 1:
+        return 'Admin';
+      case 2:
+        return 'Cashier';
+      default:
+        return 'User';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mainController = Get.find<MainController>();
-    // final loginController = Get.find<LoginController>();
+    final loginController = Get.find<LoginController>();
 
     return Container(
       padding: const EdgeInsets.all(5),
       child: PopupMenuButton<String>(
-        child: const CircleAvatar(
-          backgroundImage: AssetImage("assets/images/logo_image.jpg"),
-        ),
+        child: Obx(() {
+          final profileImage = loginController.profileImage;
+          return CircleAvatar(
+            backgroundImage: (profileImage != null && profileImage.isNotEmpty)
+                ? NetworkImage('http://127.0.0.1:8000/storage/$profileImage')
+                    as ImageProvider
+                : const AssetImage("assets/images/logo_image.jpg")
+                    as ImageProvider,
+          );
+        }),
         onSelected: (value) {
           if (value == 'logout') {
             // Call the logout method
-            Get.to(() => const LoginScreen());
+            loginController.logout();
+            Get.offAll(() => const LoginScreen());
           } else {
             mainController.onProfileActionPressed(value);
           }
@@ -34,30 +54,42 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 80, bottom: 4.0),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.account_circle,
-                      size: 40.0,
-                      color: Colors.black,
-                    ),
+                    // Profile image in the popup menu
+                    Obx(() {
+                      final profileImage = loginController.profileImage;
+                      return CircleAvatar(
+                        radius: 20,
+                        backgroundImage: (profileImage != null &&
+                                profileImage.isNotEmpty)
+                            ? NetworkImage(
+                                    'http://127.0.0.1:8000/storage/$profileImage')
+                                as ImageProvider
+                            : const AssetImage("assets/images/logo_image.jpg")
+                                as ImageProvider,
+                      );
+                    }),
                     const SizedBox(width: 10.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Text(
-                        //   loginController.loggedInUser.value?.fullname ??
-                        //       'Unknown',
-                        //   style: const TextStyle(
-                        //     color: Colors.grey,
-                        //     fontWeight: FontWeight.bold,
-                        //     fontSize: 14,
-                        //   ),
-                        // ),
-                        // Text(
-                        //   ' ${_getRoleName(loginController.loggedInUser.value?.roleId)} Role ',
-                        //   style: const TextStyle(fontSize: 12),
-                        // ),
-                      ],
-                    ),
+                    // Use Obx to reactively update user information
+                    Obx(() => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              loginController.userFullName,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              '${_getRoleName(loginController.roleId)} Role',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        )),
                   ],
                 ),
               ),
@@ -106,16 +138,5 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
         },
       ),
     );
-  }
-
-  String _getRoleName(int? roleId) {
-    switch (roleId) {
-      case 1:
-        return 'Admin';
-      case 2:
-        return 'Cashier';
-      default:
-        return 'Unknown Role';
-    }
   }
 }

@@ -12,12 +12,26 @@ class LoginController extends GetxController {
 
   var isPasswordHidden = true.obs;
   var loading = false.obs;
+  
+  // Add observable for logged in user
+  var loggedInUser = Rxn<Map<String, dynamic>>();
 
   @override
   void onInit() {
-    // For testing: Clear storage when controller initializes
-    // _storage.erase();
+    // Load user data from storage when controller initializes
+    _loadUserFromStorage();
     super.onInit();
+  }
+
+  void _loadUserFromStorage() {
+    final userData = _storage.read('user');
+    print('Loading user data from storage: $userData'); // Debug print
+    if (userData != null) {
+      loggedInUser.value = Map<String, dynamic>.from(userData);
+      print('Loaded user: ${loggedInUser.value}'); // Debug print
+    } else {
+      print('No user data found in storage'); // Debug print
+    }
   }
 
   void togglePasswordVisibilityTemporarily() {
@@ -36,16 +50,15 @@ class LoginController extends GetxController {
 
       final response = await _authService.login(username, password);
       if (response != null) {
+        print('Login response: $response'); // Debug print
         _storage.write('token', response['token']);
         _storage.write('user', response['user']); // Store entire user object
+        
+        // Update the observable user data
+        loggedInUser.value = Map<String, dynamic>.from(response['user']);
+        print('Stored user data: ${loggedInUser.value}'); // Debug print
+        
         Get.offAllNamed('/home');
-
-        print('--- Login Success ---');
-        print('Storage User Data: ${_storage.read('user')}');
-        print('Token: ${response['token']}');
-        print('User Data: ${response['user']}');
-        print('Full Name: ${response['user']['fullname']}');
-        print('Profile Image: ${response['user']['profile_image']}');
       }
     } catch (e) {
       print('Login error: $e');
@@ -59,5 +72,43 @@ class LoginController extends GetxController {
     } finally {
       loading.value = false;
     }
+  }
+
+  // Helper methods to get user data
+  String get userFullName {
+    return loggedInUser.value?['full_name'] ?? 'Unknown User';
+  }
+  
+  String get username {
+    return loggedInUser.value?['username'] ?? 'Unknown';
+  }
+  
+  int? get roleId => loggedInUser.value?['role_id'];
+  
+  String? get profileImage => loggedInUser.value?['profile_image'];
+  
+  int? get userId => loggedInUser.value?['id'];
+  
+  // Method to clear user data on logout
+  void logout() {
+    _storage.erase();
+    loggedInUser.value = null;
+    usernameController.clear();
+    passwordController.clear();
+  }
+
+  // Debug method to check stored data
+  void checkStoredData() {
+    print('=== Storage Debug ===');
+    print('Token: ${_storage.read('token')}');
+    print('User: ${_storage.read('user')}');
+    print('LoggedInUser value: ${loggedInUser.value}');
+    print('==================');
+  }
+
+  // Alternative method to get user data directly from storage
+  Map<String, dynamic>? getUserFromStorage() {
+    final userData = _storage.read('user');
+    return userData != null ? Map<String, dynamic>.from(userData) : null;
   }
 }

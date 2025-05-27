@@ -75,11 +75,23 @@ class UserScreen extends StatelessWidget {
             rows: _userController.users.map((user) {
               return DataRow(
                 cells: [
-                  DataCell(Text(user.profileImage ?? 'N/A')),
+                  DataCell(
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: (user.profileImage != null &&
+                              user.profileImage!.isNotEmpty)
+                          ? NetworkImage(
+                                  'http://127.0.0.1:8000/storage/${user.profileImage}')
+                              as ImageProvider
+                          : AssetImage("assets/images/logo_image.jpg")
+                              as ImageProvider,
+                    ),
+                  ),
                   DataCell(Text(user.fullname ?? 'N/A')),
                   DataCell(Text(user.username ?? 'N/A')),
                   DataCell(Text(user.createBy ?? 'N/A')),
-                  DataCell(Text(user.roleId as String)),
+                  DataCell(
+                      Text(user.roleId.toString())), // Convert roleId to string
                   DataCell(
                     IconButton(
                       icon: Icon(Icons.delete, color: Colors.red),
