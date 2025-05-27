@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../controller/login_controller.dart';
 import 'home_drawer_menu_item_widget.dart';
 import 'home_logout_button_widget.dart';
 
@@ -7,6 +9,8 @@ class HomeScreenDrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loginController = Get.find<LoginController>();
+
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -24,51 +28,44 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  child: Flex(
-                    direction: Axis.vertical,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                  maxRadius: 30,
-                                  backgroundImage: AssetImage(
-                                      "assets/images/logo_image.jpg"),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                            decoration: const BoxDecoration(),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Obx(() => Text(
-                                //       loginController.loggedInUser.value?.fullname ??
-                                //           'Unknown',
-                                //       style: const TextStyle(
-                                //         color: Colors.white,
-                                //         fontWeight: FontWeight.bold,
-                                //         fontSize: 16,
-                                //       ),
-                                //     )),
-                                // Obx(() => Text(
-                                //       'POS Profile: ${_getRoleName(loginController.loggedInUser.value?.roleId)}',
-                                //       style: const TextStyle(
-                                //           color: Colors.white, fontSize: 12),
-                                //     )),
-                              ],
-                            ),
-                          ),
-                        ],
+                      Obx(() {
+                        final profileImage = loginController.profileImage;
+                        return CircleAvatar(
+                          backgroundImage: (profileImage != null &&
+                                  profileImage.isNotEmpty)
+                              ? NetworkImage(
+                                      'http://127.0.0.1:8000/storage/$profileImage')
+                                  as ImageProvider
+                              : const AssetImage("assets/images/logo_image.jpg")
+                                  as ImageProvider,
+                        );
+                      }),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        decoration: const BoxDecoration(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Obx(() => Text(
+                            //       loginController.loggedInUser.value?.fullname ??
+                            //           'Unknown',
+                            //       style: const TextStyle(
+                            //         color: Colors.white,
+                            //         fontWeight: FontWeight.bold,
+                            //         fontSize: 16,
+                            //       ),
+                            //     )),
+                            // Obx(() => Text(
+                            //       'POS Profile: ${_getRoleName(loginController.loggedInUser.value?.roleId)}',
+                            //       style: const TextStyle(
+                            //           color: Colors.white, fontSize: 12),
+                            //     )),
+                          ],
+                        ),
                       ),
                     ],
                   ),
