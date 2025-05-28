@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controller/user_controller.dart';
+import '../../models/api/user_model.dart';
 
 class UserScreen extends StatelessWidget {
   final UserController _userController = Get.find<UserController>();
@@ -66,16 +67,23 @@ class UserScreen extends StatelessWidget {
         return Center(child: Text('Error: ${_userController.errorMessage}'));
       }
 
-      if (_userController.users.isEmpty) {
-        return const Center(
-          child: Text('No users found', style: TextStyle(color: Colors.grey)),
+      if (_userController.filteredUsers.isEmpty) {
+        return Center(
+          child: Text(
+            _userController.searchQuery.isNotEmpty
+                ? 'No matching users found'
+                : 'No users found',
+            style: const TextStyle(color: Colors.grey),
+          ),
         );
       }
 
       return ListView(
         children: [
           _buildHeaderRow(),
-          ..._userController.users.map((user) => _buildDataRow(user)).toList(),
+          ..._userController.filteredUsers
+              .map((user) => _buildDataRow(user))
+              .toList(),
         ],
       );
     });
@@ -112,11 +120,11 @@ class UserScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDataRow(user) {
+  Widget _buildDataRow(User user) {
     final imageProvider =
         (user.profileImage != null && user.profileImage!.isNotEmpty)
             ? NetworkImage('http://127.0.0.1:8000/storage/${user.profileImage}')
-            : const AssetImage("assets/images/logo_image.jpg");
+            : const AssetImage("assets/images/logo_image.jpg") as ImageProvider;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -130,7 +138,7 @@ class UserScreen extends StatelessWidget {
             child: Center(
               child: CircleAvatar(
                 radius: 24,
-                backgroundImage: imageProvider as ImageProvider,
+                backgroundImage: imageProvider,
               ),
             ),
           ),
@@ -168,10 +176,18 @@ class UserScreen extends StatelessWidget {
       height: 40,
       decoration: _boxDecoration(),
       child: TextField(
+        controller: _userController.searchController,
         decoration: InputDecoration(
-          hintText: 'Search',
+          hintText: 'Search...',
           hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-          suffixIcon: const Icon(Icons.search, color: Colors.black),
+          suffixIcon: Obx(() => _userController.searchQuery.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear, size: 20),
+                  onPressed: () {
+                    _userController.searchController.clear();
+                  },
+                )
+              : const Icon(Icons.search, color: Colors.black)),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           border: _inputBorder(),
           enabledBorder: _inputBorder(),
@@ -181,8 +197,16 @@ class UserScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAddButton() {
+Widget _buildAddButton() {
+  return Obx(() {
+    print('Current admin status: ${_userController.isAdmin.value}');
+    
+    if (!_userController.isAdmin.value) {
+      return const SizedBox();
+    }
+    
     return InkWell(
+      onTap: _userController.onAddNewUserPressed,
       child: Container(
         width: 150,
         height: 38,
@@ -192,12 +216,13 @@ class UserScreen extends StatelessWidget {
           children: [
             Icon(Icons.add_circle),
             SizedBox(width: 10),
-            Text('Add Product', style: TextStyle(fontSize: 13)),
+            Text('Add User', style: TextStyle(fontSize: 13)),
           ],
         ),
       ),
     );
-  }
+  });
+}
 
   BoxDecoration _boxDecoration() {
     return BoxDecoration(

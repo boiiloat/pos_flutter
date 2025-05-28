@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:pos_system/controller/user_controller.dart';
 import 'package:pos_system/services/auth_service.dart';
 
 class LoginController extends GetxController {
@@ -52,12 +53,13 @@ class LoginController extends GetxController {
       if (response != null) {
         print('Login response: $response'); // Debug print
         _storage.write('token', response['token']);
-        _storage.write('user', response['user']); // Store entire user object
+        _storage.write('user', response['user']);
+        _storage.write('role_id', response['role_id']);  // Store entire user object
         
         // Update the observable user data
         loggedInUser.value = Map<String, dynamic>.from(response['user']);
         print('Stored user data: ${loggedInUser.value}'); // Debug print
-        
+        Get.find<UserController>().updateAdminStatus();
         Get.offAllNamed('/home');
       }
     } catch (e) {
