@@ -158,7 +158,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
 
                                   HomeButtonWidget(
-                                    title: "Exexpence".tr,
+                                    title: "Expense".tr,
                                     iconData: Icons.post_add,
                                     onPressed: controller.onExpensePressed,
                                   ),

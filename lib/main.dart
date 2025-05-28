@@ -24,9 +24,15 @@ class MyApp extends StatelessWidget {
       initialBinding: AppBindings(),
       initialRoute: GetStorage().read('token') == null ? '/login' : '/home',
       getPages: [
-        GetPage(name: '/login', page: () => const LoginScreen()),
+        GetPage(
+            name: '/login',
+            page: () => const LoginScreen(),
+            binding: BindingsBuilder.put(() => LoginController())),
         GetPage(name: '/home', page: () => const HomeScreen()),
-        GetPage(name: '/user', page: () => UserScreen()),
+        GetPage(
+            name: '/user',
+            page: () => UserScreen(),
+            binding: BindingsBuilder.put(() => UserController())),
       ],
     );
   }

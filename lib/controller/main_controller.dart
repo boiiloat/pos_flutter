@@ -49,7 +49,6 @@ class MainController extends GetxController {
     );
   }
 
- 
   void onProfileActionPressed(String value) async {}
 
   void onTesting() {
@@ -61,7 +60,7 @@ class MainController extends GetxController {
   }
 
   void onUserPressed() {
-    Get.to(() => UserScreen());
+    Get.toNamed('/user');
   }
 
   void onProductPressed() {

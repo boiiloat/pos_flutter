@@ -6,6 +6,17 @@ import 'home_logout_button_widget.dart';
 
 class HomeScreenDrawerWidget extends StatelessWidget {
   const HomeScreenDrawerWidget({super.key});
+  // Helper method to get role name based on roleId
+  String _getRoleName(int? roleId) {
+    switch (roleId) {
+      case 1:
+        return 'Admin';
+      case 2:
+        return 'Cashier';
+      default:
+        return 'User';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,54 +33,80 @@ class HomeScreenDrawerWidget extends StatelessWidget {
               SizedBox(
                 height: 170,
                 child: Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/bg_image.jpg"),
-                      fit: BoxFit.fill,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/bg_image.jpg"),
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Obx(() {
-                        final profileImage = loginController.profileImage;
-                        return CircleAvatar(
-                          backgroundImage: (profileImage != null &&
+                    child: Row(
+                      children: [
+                        Obx(() {
+                          final profileImage = loginController.profileImage;
+                          final imageProvider = (profileImage != null &&
                                   profileImage.isNotEmpty)
                               ? NetworkImage(
-                                      'http://127.0.0.1:8000/storage/$profileImage')
-                                  as ImageProvider
-                              : const AssetImage("assets/images/logo_image.jpg")
-                                  as ImageProvider,
-                        );
-                      }),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        decoration: const BoxDecoration(),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Obx(() => Text(
-                            //       loginController.loggedInUser.value?.fullname ??
-                            //           'Unknown',
-                            //       style: const TextStyle(
-                            //         color: Colors.white,
-                            //         fontWeight: FontWeight.bold,
-                            //         fontSize: 16,
-                            //       ),
-                            //     )),
-                            // Obx(() => Text(
-                            //       'POS Profile: ${_getRoleName(loginController.loggedInUser.value?.roleId)}',
-                            //       style: const TextStyle(
-                            //           color: Colors.white, fontSize: 12),
-                            //     )),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                                  'http://127.0.0.1:8000/storage/$profileImage')
+                              : const AssetImage(
+                                  "assets/images/logo_image.jpg");
+
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 60),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 70,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider as ImageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                      width: 2,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 15),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        loginController.userFullName,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${_getRoleName(loginController.roleId)} Role',
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    )),
               ),
               Expanded(
                 child: Container(
@@ -112,8 +149,8 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                             onPressed: () {},
                           ),
                           HomeDrawerMenuItemWidget(
-                            icon: Icons.save,
-                            text: 'Backup',
+                            icon: Icons.post_add,
+                            text: 'Expense',
                             onPressed: () {},
                           ),
                         ],
