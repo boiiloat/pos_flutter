@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
+import 'package:pos_system/screen/product/product_screen.dart';
 import 'package:pos_system/services/api_service.dart';
 import 'package:pos_system/services/auth_service.dart';
 
@@ -28,11 +29,13 @@ class MyApp extends StatelessWidget {
             name: '/login',
             page: () => const LoginScreen(),
             binding: BindingsBuilder.put(() => LoginController())),
-        GetPage(name: '/home', page: () => const HomeScreen()),
         GetPage(
-            name: '/user',
-            page: () => UserScreen(),
-            binding: BindingsBuilder.put(() => UserController())),
+          name: '/user',
+          page: () => UserScreen(),
+          binding: BindingsBuilder.put(() => UserController()),
+        ),
+        GetPage(name: '/home', page: () =>  HomeScreen()),
+        GetPage(name: '/product', page: () => ProductScreen()),
       ],
     );
   }

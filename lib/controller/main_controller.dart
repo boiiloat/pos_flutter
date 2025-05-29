@@ -25,7 +25,7 @@ class MainController extends GetxController {
       textConfirm: "OK",
       confirmTextColor: Colors.white,
       onConfirm: () {
-        Get.off(const HomeScreen());
+        Get.off( HomeScreen());
       },
       onCancel: () {},
     );
@@ -64,7 +64,7 @@ class MainController extends GetxController {
   }
 
   void onProductPressed() {
-    Get.to(() => const ProductScreen());
+    Get.toNamed('/product'); //ProductScreen
   }
 
   void onReportPressed() {

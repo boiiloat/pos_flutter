@@ -19,7 +19,7 @@ class AppBarSaleMenuWidget extends StatelessWidget {
               children: [
                 IconButton(
                     onPressed: () {
-                      Get.to(const HomeScreen());
+                      Get.to( HomeScreen());
                     },
                     icon: const Icon(
                       Icons.home,

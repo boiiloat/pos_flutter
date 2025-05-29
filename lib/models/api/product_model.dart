@@ -1,75 +1,88 @@
-import 'dart:convert';
-
 class Product {
   final int id;
   final String name;
-  final String price;
-  final String image;
-  final bool stockable;
+  final double price;
+  final String? image;
   final int categoryId;
-  final String? categoryName; // Add category name
-  final String? createdAt;
-  final String? updatedAt;
-  final String? createDate;
-  final String createBy;
-  final bool isDeleted;
-  final String? deletedDate;
-  final String? deletedBy;
+  final String? categoryName;
+  final String? creatorName;
+  final DateTime? createdDate;
+  final DateTime? updatedDate;
+  final String? createdBy;
 
   Product({
     required this.id,
     required this.name,
     required this.price,
-    required this.image,
-    required this.stockable,
+    this.image,
     required this.categoryId,
-    this.categoryName, // Initialize category name
-    this.createdAt,
-    this.updatedAt,
-    this.createDate,
-    required this.createBy,
-    required this.isDeleted,
-    this.deletedDate,
-    this.deletedBy,
+    this.categoryName,
+    this.creatorName,
+    this.createdDate,
+    this.updatedDate,
+    this.createdBy,
   });
 
-  // Factory method to create a Product from JSON
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'],
-      name: json['name'],
-      price: json['price'],
-      image: json['image'],
-      stockable: json['stockable'] == 1,
-      categoryId: json['category_id'],
-      categoryName: json['category_name'], // Extract category name from JSON
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      createDate: json['create_date'],
-      createBy: json['create_by'],
-      isDeleted: json['is_deleted'] == 1,
-      deletedDate: json['deleted_date'],
-      deletedBy: json['deleted_by'],
+      id: _safeParseInt(json['id']),
+      name: _safeParseString(json['name']),
+      price: _safeParseDouble(json['price']),
+      image: _safeParseString(json['image']),
+      categoryId: _safeParseInt(json['category_id']),
+      categoryName: _safeParseString(json['category_name']),
+      creatorName: _safeParseString(json['creator_name']),
+      createdDate: _safeParseDateTime(json['created_at']),
+      updatedDate: _safeParseDateTime(json['updated_at']),
+      createdBy: _safeParseString(json['created_by']),
     );
   }
 
-  // Convert a Product to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'price': price,
-      'image': image,
-      'stockable': stockable ? 1 : 0,
-      'category_id': categoryId,
-      'category_name': categoryName, // Include category name in JSON
-      'created_at': createdAt,
-      'updated_at': updatedAt,
-      'create_date': createDate,
-      'create_by': createBy,
-      'is_deleted': isDeleted ? 1 : 0,
-      'deleted_date': deletedDate,
-      'deleted_by': deletedBy,
-    };
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'price': price,
+        'image': image,
+        'category_id': categoryId,
+        'category_name': categoryName,
+        'creator_name': creatorName,
+        'created_at': createdDate?.toIso8601String(),
+        'updated_at': updatedDate?.toIso8601String(),
+        'created_by': createdBy,
+      };
+
+  // Helper methods
+  static int _safeParseInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value) ?? 0;
+    if (value is double) return value.toInt();
+    return 0;
+  }
+
+  static String _safeParseString(dynamic value) {
+    if (value == null) return '';
+    return value.toString();
+  }
+
+  static double _safeParseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
+  static DateTime? _safeParseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    if (value is String) {
+      try {
+        return DateTime.parse(value);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
   }
 }
