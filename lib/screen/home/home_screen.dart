@@ -150,11 +150,6 @@ class HomeScreen extends StatelessWidget {
                                     foregroundIconColor: Colors.white,
                                   ),
                                   HomeButtonWidget(
-                                    title: "Product".tr,
-                                    iconData: Icons.list,
-                                    onPressed: controller.onProductPressed,
-                                  ),
-                                  HomeButtonWidget(
                                       title: "Receipt".tr,
                                       iconData: Icons.receipt_outlined,
                                       onPressed: controller.onReceiptPressed),
@@ -163,10 +158,17 @@ class HomeScreen extends StatelessWidget {
                                     iconData: Icons.assessment_outlined,
                                     onPressed: controller.onReportPressed,
                                   ),
+
                                   HomeButtonWidget(
                                     title: "Users".tr,
                                     iconData: Icons.group,
                                     onPressed: controller.onUserPressed,
+                                  ),
+
+                                  HomeButtonWidget(
+                                    title: "Product".tr,
+                                    iconData: Icons.list,
+                                    onPressed: controller.onProductPressed,
                                   ),
 
                                   HomeButtonWidget(

@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
+import 'package:pos_system/program.dart';
+import 'package:pos_system/screen/product/category_screen.dart';
 import '../../controller/product_controller.dart';
 import '../../models/api/product_model.dart';
 import '../../utils/constants.dart';
@@ -16,6 +18,7 @@ class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: UniqueKey(),
       appBar: AppBar(
         title: const Text('PRODUCTS', style: TextStyle(color: Colors.white)),
         backgroundColor: appColor,
@@ -50,12 +53,24 @@ class ProductScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildSearchBox(),
-                if (controller.isAdmin.value) _buildAddButton(),
+                Row(
+                  children: [
+                    _buildSearchBox(),
+                    const SizedBox(width: 16),
+                    _buildCategoryFilter(),
+                    const SizedBox(width: 16),
+                  ],
+                ),
+                if (controller.isAdmin.value)
+                  Row(
+                    children: [
+                      _buildCategoryButton(),
+                      const SizedBox(width: 12),
+                      _buildAddButton(),
+                    ],
+                  ),
               ],
             ),
-            const SizedBox(height: 20),
-            _buildCategoryFilter(),
             const SizedBox(height: 20),
             Expanded(
               child: Container(
@@ -141,33 +156,16 @@ class ProductScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAddButton() {
-    return InkWell(
-      onTap: () => _showAddProductDialog(),
-      child: Container(
-        width: 150,
-        height: 38,
-        decoration: _boxDecoration(),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add_circle),
-            SizedBox(width: 10),
-            Text('Add Product', style: TextStyle(fontSize: 13)),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildCategoryFilter() {
     return Container(
+      width: 200,
+      height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: _boxDecoration(),
       child: Obx(() => DropdownButtonFormField<int>(
             decoration: const InputDecoration(
               border: InputBorder.none,
-              hintText: 'Filter by Category',
+              hintText: 'All Categories',
             ),
             value: controller.selectedCategoryId.value,
             items: [
@@ -187,6 +185,47 @@ class ProductScreen extends StatelessWidget {
               controller.filterByCategory(value ?? 0);
             },
           )),
+    );
+  }
+
+  Widget _buildCategoryButton() {
+    return Container(
+      width: 150,
+      height: 40,
+      decoration: _boxDecoration(),
+      child: InkWell(
+        onTap: () {
+          Get.toNamed('/category');
+          
+        },
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.category, color: Colors.black),
+            SizedBox(width: 8),
+            Text('Category', style: TextStyle(color: Colors.black)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddButton() {
+    return Container(
+      width: 150,
+      height: 40,
+      decoration: _boxDecoration(),
+      child: InkWell(
+        onTap: () => _showAddProductDialog(),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add_circle),
+            SizedBox(width: 8),
+            Text('Add Product'),
+          ],
+        ),
+      ),
     );
   }
 
@@ -221,7 +260,7 @@ class ProductScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ), // <-- Close BoxDecoration here
+      ), // ✅ Properly closed BoxDecoration here
       child: Row(
         children: [
           Expanded(
@@ -242,8 +281,9 @@ class ProductScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-              flex: 3,
-              child: Center(child: Text(product.categoryName ?? 'Unknown'))),
+            flex: 3,
+            child: Center(child: Text(product.categoryName ?? 'Unknown')),
+          ),
           Expanded(
             flex: 3,
             child: Center(

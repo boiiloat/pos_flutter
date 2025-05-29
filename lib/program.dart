@@ -16,22 +16,23 @@ class Program {
     snackController = Get.snackbar(
       title,
       description,
-      maxWidth: 400,
+      maxWidth: 500,
       padding: const EdgeInsets.symmetric(vertical: 10),
       // margin: const EdgeInsets.only(top: 3, left: 3, right: 3),
       backgroundColor: background,
-      borderRadius: 10,
+      borderRadius: 5,
       icon: icon,
       colorText: foreground,
       snackPosition: SnackPosition.TOP,
       overlayBlur: 0,
       shouldIconPulse: true,
-      barBlur: 20,
+      barBlur: 10,
       duration: const Duration(seconds: 2),
       isDismissible: true,
     );
   }
 
+  // Original methods with title and description
   static success(String title, String description) async {
     if (Get.isSnackbarOpen == false) {
       getSnackbar_(
@@ -63,10 +64,35 @@ class Program {
       getSnackbar_(
         title: title,
         description: description,
-        // background: HexColor.fromHex("#e74c3c").withOpacity(0.7),
         background: HexColor.fromHex("#e74c3c"),
         icon: const Icon(Icons.error_outline, color: Colors.white),
       );
     }
+  }
+
+  // Simplified methods with default titles
+  static showSuccess(String message) async {
+    success("Success", message);
+  }
+
+  static showError(String message) async {
+    error("Error", message);
+  }
+
+  static showWarning(String message) async {
+    warning("Warning", message);
+  }
+
+  // Even shorter aliases
+  static s(String message) async {
+    success("Success", message);
+  }
+
+  static e(String message) async {
+    error("Error", message);
+  }
+
+  static w(String message) async {
+    warning("Warning", message);
   }
 }

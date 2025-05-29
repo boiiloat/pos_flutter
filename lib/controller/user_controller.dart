@@ -95,7 +95,7 @@ class UserController extends GetxController {
       }
     } catch (e) {
       errorMessage.value = e.toString();
-      Get.snackbar('Error', e.toString());
+
     } finally {
       loading.value = false;
     }

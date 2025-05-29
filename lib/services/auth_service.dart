@@ -4,12 +4,13 @@ import 'package:pos_system/services/api_service.dart';
 class AuthService extends GetxService {
   final ApiService _apiService = Get.find<ApiService>();
 
-  final Rx<Map<String, dynamic>?> _userProfile = Rx<Map<String, dynamic>?>(null);
+  final Rx<Map<String, dynamic>?> _userProfile =
+      Rx<Map<String, dynamic>?>(null);
   Map<String, dynamic>? get userProfile => _userProfile.value;
 
   // Add this getter to easily check user role
   bool get isAdmin => _userProfile.value?['role_id'] == 1;
-   bool get canCreateUser => _userProfile.value?['role_id'] == 1;
+  bool get canCreateUser => _userProfile.value?['role_id'] == 1;
 
   Future<Map<String, dynamic>?> login(String username, String password) async {
     try {
@@ -20,13 +21,13 @@ class AuthService extends GetxService {
 
       if (response.statusCode == 200) {
         final responseData = response.body;
-        
+
         if (responseData['token'] == null) {
           throw 'Invalid response: Missing token';
         }
 
         final userData = responseData['user'] as Map<String, dynamic>? ?? {};
-        
+
         // Include role_id in the mapped user data
         final mappedUser = {
           'full_name': userData['fullname'],
@@ -46,7 +47,6 @@ class AuthService extends GetxService {
         throw response.body['message'] ?? 'Login failed';
       }
     } catch (e) {
-      print('Login error details: $e');
       throw 'Login failed: ${e.toString()}';
     }
   }

@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:http_parser/http_parser.dart';
 import '../models/api/product_model.dart';
+import '../screen/product/category_screen.dart';
 
 class WebImageInfo {
   final Uint8List bytes;
@@ -58,6 +59,10 @@ class ProductController extends GetxController {
             .contains(searchQuery.value.toLowerCase());
       }).toList());
     }
+  }
+
+  void onCategoryPressed() {
+    Get.to(CategoryScreen());
   }
 
   Future<void> fetchCategories() async {

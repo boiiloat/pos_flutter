@@ -25,7 +25,7 @@ class MainController extends GetxController {
       textConfirm: "OK",
       confirmTextColor: Colors.white,
       onConfirm: () {
-        Get.off( HomeScreen());
+        Get.off(HomeScreen());
       },
       onCancel: () {},
     );
