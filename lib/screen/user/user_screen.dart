@@ -78,45 +78,54 @@ class UserScreen extends StatelessWidget {
         );
       }
 
-      return ListView(
+      return Column(
         children: [
-          _buildHeaderRow(),
-          ..._userController.filteredUsers
-              .map((user) => _buildDataRow(user))
-              .toList(),
+          // Header stays fixed
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(5),
+                topRight: Radius.circular(5),
+              ),
+            ),
+            child: _buildHeaderRow(),
+          ),
+          // Scrollable content
+          Expanded(
+            child: ListView(
+              children: _userController.filteredUsers
+                  .map((user) => _buildDataRow(user))
+                  .toList(),
+            ),
+          ),
         ],
       );
     });
   }
 
   Widget _buildHeaderRow() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade300,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        children: const [
-          Expanded(
-              flex: 2,
-              child: Center(child: Text('Profile', style: _headerStyle))),
-          Expanded(
-              flex: 3,
-              child: Center(child: Text('Full Name', style: _headerStyle))),
-          Expanded(
-              flex: 3,
-              child: Center(child: Text('Username', style: _headerStyle))),
-          Expanded(
-              flex: 2,
-              child: Center(child: Text('Created By', style: _headerStyle))),
-          Expanded(
-              flex: 2, child: Center(child: Text('Role', style: _headerStyle))),
-          Expanded(
-              flex: 2,
-              child: Center(child: Text('Action', style: _headerStyle))),
-        ],
-      ),
+    return Row(
+      children: const [
+        Expanded(
+            flex: 2,
+            child: Center(child: Text('Profile', style: _headerStyle))),
+        Expanded(
+            flex: 3,
+            child: Center(child: Text('Full Name', style: _headerStyle))),
+        Expanded(
+            flex: 3,
+            child: Center(child: Text('Username', style: _headerStyle))),
+        Expanded(
+            flex: 2,
+            child: Center(child: Text('Created By', style: _headerStyle))),
+        Expanded(
+            flex: 2, child: Center(child: Text('Role', style: _headerStyle))),
+        Expanded(
+            flex: 2, child: Center(child: Text('Action', style: _headerStyle))),
+      ],
     );
   }
 
@@ -129,6 +138,7 @@ class UserScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
+        color: Colors.white,
         border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
       ),
       child: Row(
@@ -197,32 +207,30 @@ class UserScreen extends StatelessWidget {
     );
   }
 
-Widget _buildAddButton() {
-  return Obx(() {
-    print('Current admin status: ${_userController.isAdmin.value}');
-    
-    if (!_userController.isAdmin.value) {
-      return const SizedBox();
-    }
-    
-    return InkWell(
-      onTap: _userController.onAddNewUserPressed,
-      child: Container(
-        width: 150,
-        height: 38,
-        decoration: _boxDecoration(),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add_circle),
-            SizedBox(width: 10),
-            Text('Add User', style: TextStyle(fontSize: 13)),
-          ],
+  Widget _buildAddButton() {
+    return Obx(() {
+      if (!_userController.isAdmin.value) {
+        return const SizedBox();
+      }
+
+      return InkWell(
+        onTap: _userController.onAddNewUserPressed,
+        child: Container(
+          width: 150,
+          height: 38,
+          decoration: _boxDecoration(),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_circle),
+              SizedBox(width: 10),
+              Text('Add User', style: TextStyle(fontSize: 13)),
+            ],
+          ),
         ),
-      ),
-    );
-  });
-}
+      );
+    });
+  }
 
   BoxDecoration _boxDecoration() {
     return BoxDecoration(

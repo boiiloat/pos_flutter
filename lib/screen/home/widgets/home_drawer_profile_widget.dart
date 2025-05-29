@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../controller/login_controller.dart';
+import '../../../controller/main_controller.dart';
 import 'home_drawer_menu_item_widget.dart';
 import 'home_logout_button_widget.dart';
 
@@ -21,6 +22,7 @@ class HomeScreenDrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginController = Get.find<LoginController>();
+    final maincontroller = Get.find<MainController>();
 
     return SafeArea(
       child: Scaffold(
@@ -146,7 +148,7 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           HomeDrawerMenuItemWidget(
                             icon: Icons.group,
                             text: 'Users',
-                            onPressed: () {},
+                            onPressed: maincontroller.onUserPressed,
                           ),
                           HomeDrawerMenuItemWidget(
                             icon: Icons.post_add,
