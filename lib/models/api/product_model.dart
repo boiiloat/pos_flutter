@@ -29,8 +29,12 @@ class Product {
       name: _safeParseString(json['name']),
       price: _safeParseDouble(json['price']),
       image: _safeParseString(json['image']),
-      categoryId: _safeParseInt(json['category_id']),
-      categoryName: _safeParseString(json['category_name']),
+      categoryId: json['category'] != null 
+          ? _safeParseInt(json['category']['id'])
+          : _safeParseInt(json['category_id']),
+      categoryName: json['category'] != null
+          ? _safeParseString(json['category']['name'])
+          : _safeParseString(json['category_name']),
       creatorName: _safeParseString(json['creator_name']),
       createdDate: _safeParseDateTime(json['created_at']),
       updatedDate: _safeParseDateTime(json['updated_at']),

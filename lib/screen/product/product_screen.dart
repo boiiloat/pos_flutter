@@ -10,7 +10,6 @@ class ProductScreen extends StatelessWidget {
   final ProductController controller = Get.put(ProductController());
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
-  final TextEditingController categoryController = TextEditingController();
 
   ProductScreen({super.key});
 
@@ -27,7 +26,10 @@ class ProductScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: controller.fetchProducts,
+            onPressed: () {
+              controller.fetchCategories();
+              controller.fetchProducts();
+            },
           ),
         ],
       ),
@@ -53,7 +55,7 @@ class ProductScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            _buildFilterSortRow(),
+            _buildCategoryFilter(),
             const SizedBox(height: 20),
             Expanded(
               child: Container(
@@ -126,8 +128,7 @@ class ProductScreen extends StatelessWidget {
                   onPressed: () {
                     controller.searchController.clear();
                     controller.searchQuery.value = '';
-                    controller
-                        .filterProducts(); // Changed from controller._filterProducts()
+                    controller.filterProducts();
                   },
                 )
               : const Icon(Icons.search, color: Colors.black)),
@@ -159,86 +160,33 @@ class ProductScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterSortRow() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: _boxDecoration(),
-            child: DropdownButtonFormField<int>(
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Filter by Category',
-              ),
-              items: const [
-                DropdownMenuItem(
-                  value: 0,
-                  child: Text('All Categories'),
-                ),
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text('Category 1'),
-                ),
-                DropdownMenuItem(
-                  value: 2,
-                  child: Text('Category 2'),
-                ),
-              ],
-              onChanged: (value) => controller.filterByCategory(value ?? 0),
+  Widget _buildCategoryFilter() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: _boxDecoration(),
+      child: Obx(() => DropdownButtonFormField<int>(
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Filter by Category',
             ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          flex: 2,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: _boxDecoration(),
-            child: DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Sort By',
+            value: controller.selectedCategoryId.value,
+            items: [
+              const DropdownMenuItem<int>(
+                value: 0,
+                child: Text('All Categories'),
               ),
-              items: const [
-                DropdownMenuItem(
-                  value: 'name_asc',
-                  child: Text('Name (A-Z)'),
-                ),
-                DropdownMenuItem(
-                  value: 'name_desc',
-                  child: Text('Name (Z-A)'),
-                ),
-                DropdownMenuItem(
-                  value: 'price_asc',
-                  child: Text('Price (Low to High)'),
-                ),
-                DropdownMenuItem(
-                  value: 'price_desc',
-                  child: Text('Price (High to Low)'),
-                ),
-              ],
-              onChanged: (value) {
-                switch (value) {
-                  case 'name_asc':
-                    controller.sortByName(ascending: true);
-                    break;
-                  case 'name_desc':
-                    controller.sortByName(ascending: false);
-                    break;
-                  case 'price_asc':
-                    controller.sortByPrice(ascending: true);
-                    break;
-                  case 'price_desc':
-                    controller.sortByPrice(ascending: false);
-                    break;
-                }
-              },
-            ),
-          ),
-        ),
-      ],
+              ...controller.categories.map<DropdownMenuItem<int>>((category) {
+                return DropdownMenuItem<int>(
+                  value: category['id'] as int,
+                  child: Text(category['name']),
+                );
+              }).toList(),
+            ],
+            onChanged: (value) {
+              controller.selectedCategoryId.value = value ?? 0;
+              controller.filterByCategory(value ?? 0);
+            },
+          )),
     );
   }
 
@@ -273,7 +221,7 @@ class ProductScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
+      ), // <-- Close BoxDecoration here
       child: Row(
         children: [
           Expanded(
@@ -329,8 +277,8 @@ class ProductScreen extends StatelessWidget {
   void _showAddProductDialog() {
     nameController.clear();
     priceController.clear();
-    categoryController.clear();
     controller.selectedImage.value = null;
+    controller.selectedCategoryId.value = 0;
 
     Get.defaultDialog(
       title: 'Add New Product',
@@ -356,14 +304,27 @@ class ProductScreen extends StatelessWidget {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: categoryController,
-              decoration: const InputDecoration(
-                labelText: 'Category ID',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
+            Obx(() => DropdownButtonFormField<int>(
+                  decoration: const InputDecoration(
+                    labelText: 'Category',
+                    border: OutlineInputBorder(),
+                  ),
+                  value: controller.selectedCategoryId.value == 0
+                      ? null
+                      : controller.selectedCategoryId.value,
+                  items: controller.categories
+                      .map<DropdownMenuItem<int>>((category) {
+                    return DropdownMenuItem<int>(
+                      value: category['id'] as int,
+                      child: Text(category['name']),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    controller.selectedCategoryId.value = value ?? 0;
+                  },
+                  validator: (value) =>
+                      value == null ? 'Please select a category' : null,
+                )),
           ],
         ),
       ),
@@ -371,24 +332,23 @@ class ProductScreen extends StatelessWidget {
         onPressed: () async {
           if (nameController.text.isEmpty ||
               priceController.text.isEmpty ||
-              categoryController.text.isEmpty) {
+              controller.selectedCategoryId.value == 0) {
             Get.snackbar('Error', 'Please fill all fields');
             return;
           }
 
           final price = double.tryParse(priceController.text);
-          final categoryId = int.tryParse(categoryController.text);
 
-          if (price == null || categoryId == null) {
-            Get.snackbar('Error', 'Invalid price or category ID');
+          if (price == null) {
+            Get.snackbar('Error', 'Invalid price');
             return;
           }
 
           final success = await controller.createProduct(
             name: nameController.text,
             price: price,
-            categoryId: categoryId,
             imageInfo: controller.selectedImage.value,
+            categoryId: controller.selectedCategoryId.value,
           );
 
           if (success) {
@@ -407,7 +367,7 @@ class ProductScreen extends StatelessWidget {
   void _showEditProductDialog(Product product) {
     nameController.text = product.name ?? '';
     priceController.text = product.price?.toString() ?? '0';
-    categoryController.text = product.categoryId?.toString() ?? '';
+    controller.selectedCategoryId.value = product.categoryId ?? 0;
     controller.selectedImage.value = null;
 
     Get.defaultDialog(
@@ -434,14 +394,23 @@ class ProductScreen extends StatelessWidget {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: categoryController,
-              decoration: const InputDecoration(
-                labelText: 'Category ID',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
+            Obx(() => DropdownButtonFormField<int>(
+                  decoration: const InputDecoration(
+                    labelText: 'Category',
+                    border: OutlineInputBorder(),
+                  ),
+                  value: controller.selectedCategoryId.value,
+                  items: controller.categories
+                      .map<DropdownMenuItem<int>>((category) {
+                    return DropdownMenuItem<int>(
+                      value: category['id'] as int,
+                      child: Text(category['name']),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    controller.selectedCategoryId.value = value ?? 0;
+                  },
+                )),
           ],
         ),
       ),
@@ -449,16 +418,15 @@ class ProductScreen extends StatelessWidget {
         onPressed: () async {
           if (nameController.text.isEmpty ||
               priceController.text.isEmpty ||
-              categoryController.text.isEmpty) {
+              controller.selectedCategoryId.value == 0) {
             Get.snackbar('Error', 'Please fill all fields');
             return;
           }
 
           final price = double.tryParse(priceController.text);
-          final categoryId = int.tryParse(categoryController.text);
 
-          if (price == null || categoryId == null) {
-            Get.snackbar('Error', 'Invalid price or category ID');
+          if (price == null) {
+            Get.snackbar('Error', 'Invalid price');
             return;
           }
 
@@ -466,8 +434,8 @@ class ProductScreen extends StatelessWidget {
             productId: product.id!,
             name: nameController.text,
             price: price,
-            categoryId: categoryId,
             imageInfo: controller.selectedImage.value,
+            categoryId: controller.selectedCategoryId.value,
           );
 
           if (success) {
