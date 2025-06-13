@@ -122,83 +122,95 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             SizedBox(
                               width: 360,
-                              child: Wrap(
-                                children: [
-                                  HomeButtonWidget(
-                                    hidden: controller.isSaleStarted.value,
-                                    title: "Start Sale",
-                                    iconData: Icons.play_circle_fill,
-                                    onPressed: controller.onStartSalePressed,
-                                  ),
-                                  // HomeButtonWidget(
-                                  //   // hidden: !cont\roller.isSaleStarted.value,
-                                  //   title: "Close Working Day",
-                                  //   iconData: Icons.calendar_today,
-                                  //   background: Colors.red,
-                                  //   foreground: Colors.white,
-                                  //   foregroundIconColor: Colors.white,
-                                  //   onPressed: () => controller
-                                  //       .onCloseWorkingDayPressed(context),
-                                  // ),
+                              child: Obx(
+                                () => Wrap(
+                                  children: [
+                                    HomeButtonWidget(
+                                      title: controller.isSaleStarted.value
+                                          ? "Close Sale".tr
+                                          : "Start Sale".tr,
+                                      iconData: controller.isSaleStarted.value
+                                          ? Icons.stop_circle
+                                          : Icons.play_circle_fill,
+                                      background: controller.isSaleStarted.value
+                                          ? Colors.red
+                                          : Colors.blue,
+                                      foreground: Colors.white,
+                                      foregroundIconColor: Colors.white,
+                                      onPressed: controller.toggleSale,
+                                    ),
+                                    // HomeButtonWidget(
+                                    //   // hidden: !cont\roller.isSaleStarted.value,
+                                    //   title: "Close Working Day",
+                                    //   iconData: Icons.calendar_today,
+                                    //   background: Colors.red,
+                                    //   foreground: Colors.white,
+                                    //   foregroundIconColor: Colors.white,
+                                    //   onPressed: () => controller
+                                    //       .onCloseWorkingDayPressed(context),
+                                    // ),
 
-                                  HomeButtonWidget(
-                                    title: "POS".tr,
-                                    iconData: Icons.shopping_cart_outlined,
-                                    onPressed: controller.onPOSPressed,
-                                    background: Colors.green,
-                                    foreground: Colors.white,
-                                    foregroundIconColor: Colors.white,
-                                  ),
-                                  HomeButtonWidget(
-                                      title: "Receipt".tr,
-                                      iconData: Icons.receipt_outlined,
-                                      onPressed: controller.onReceiptPressed),
-                                  HomeButtonWidget(
-                                    title: "Report".tr,
-                                    iconData: Icons.assessment_outlined,
-                                    onPressed: controller.onReportPressed,
-                                  ),
-                                  HomeButtonWidget(
-                                    title: "Product".tr,
-                                    iconData: Icons.list,
-                                    onPressed: controller.onProductPressed,
-                                  ),
-                                  HomeButtonWidget(
-                                    title: "Users".tr,
-                                    iconData: Icons.group,
-                                    onPressed: controller.onUserPressed,
-                                  ),
+                                    HomeButtonWidget(
+                                      title: "POS".tr,
+                                      iconData: Icons.shopping_cart_outlined,
+                                      onPressed: controller.onPOSPressed,
+                                      background: controller.isSaleStarted.value
+                                          ? Colors.green
+                                          : Colors.grey,
+                                      foreground: Colors.white,
+                                      foregroundIconColor: Colors.white,
+                                    ),
+                                    HomeButtonWidget(
+                                        title: "Receipt".tr,
+                                        iconData: Icons.receipt_outlined,
+                                        onPressed: controller.onReceiptPressed),
+                                    HomeButtonWidget(
+                                      title: "Report".tr,
+                                      iconData: Icons.assessment_outlined,
+                                      onPressed: controller.onReportPressed,
+                                    ),
+                                    HomeButtonWidget(
+                                      title: "Product".tr,
+                                      iconData: Icons.list,
+                                      onPressed: controller.onProductPressed,
+                                    ),
+                                    HomeButtonWidget(
+                                      title: "Users".tr,
+                                      iconData: Icons.group,
+                                      onPressed: controller.onUserPressed,
+                                    ),
 
-                                  HomeButtonWidget(
-                                    title: "Expense".tr,
-                                    iconData: Icons.post_add,
-                                    onPressed: controller.onExpensePressed,
-                                  ),
+                                    HomeButtonWidget(
+                                      title: "Expense".tr,
+                                      iconData: Icons.post_add,
+                                      onPressed: controller.onExpensePressed,
+                                    ),
 
-                                  HomeButtonWidget(
-                                    title: "Reset Sale".tr,
-                                    iconData: Icons.refresh,
-                                    onPressed: controller.onResetSalePressed,
-                                  ),
+                                    HomeButtonWidget(
+                                      title: "Reset Sale".tr,
+                                      iconData: Icons.refresh,
+                                      onPressed: controller.onResetSalePressed,
+                                    ),
 
-                                  // HomeButtonWidget(
-                                  //   title: "Back Up".tr,
-                                  //   background: Colors.yellow.shade800,
-                                  //   foreground: Colors.white,
-                                  //   iconData: Icons.backup_sharp,
-                                  //   onPressed: controller.onBackupPressed,
-                                  //   foregroundIconColor: Colors.white,
-                                  // ),
+                                    // HomeButtonWidget(
+                                    //   title: "Back Up".tr,
+                                    //   background: Colors.yellow.shade800,
+                                    //   foreground: Colors.white,
+                                    //   iconData: Icons.backup_sharp,
+                                    //   onPressed: controller.onBackupPressed,
+                                    //   foregroundIconColor: Colors.white,
+                                    // ),
 
-                                  HomeButtonWidget(
-                                    title: "Logout".tr,
-                                    background: Colors.red,
-                                    foreground: Colors.white,
-                                    iconData: Icons.logout_outlined,
-                                    onPressed: controller.onLogoutPressed,
-                                    foregroundIconColor: Colors.white,
-                                  ),
-                                ],
+                                    HomeButtonWidget(
+                                      title: "Logout".tr,
+                                      background: Colors.red,
+                                      foreground: Colors.white,
+                                      iconData: Icons.logout_outlined,
+                                      onPressed: controller.onLogoutPressed,
+                                      foregroundIconColor: Colors.white,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
