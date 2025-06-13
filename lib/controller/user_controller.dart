@@ -1,22 +1,23 @@
-import 'dart:io' as io show File, Platform;
+import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:http_parser/http_parser.dart';
-
+import 'package:image_picker_web/image_picker_web.dart';
 import '../models/api/user_model.dart';
-import '../services/api_service.dart';
-import '../services/auth_service.dart';
-import '../screen/user/Widgets/user_add_dailog.dart';
+
+class WebImageInfo {
+  final Uint8List bytes;
+  final String filename;
+
+  WebImageInfo({required this.bytes, required this.filename});
+}
 
 class UserController extends GetxController {
-  final ApiService _apiService = Get.find<ApiService>();
-  final AuthService _authService = Get.find<AuthService>();
+  final dio.Dio _dio = dio.Dio();
   final GetStorage _storage = GetStorage();
-  late final dio.Dio _dio;
 
   var users = <User>[].obs;
   var filteredUsers = <User>[].obs;
@@ -25,26 +26,22 @@ class UserController extends GetxController {
   final searchController = TextEditingController();
   var searchQuery = ''.obs;
   final RxBool isAdmin = false.obs;
+  final Rx<WebImageInfo?> selectedImage = Rx<WebImageInfo?>(null);
+  var roles = <Map<String, dynamic>>[
+    {'id': 1, 'name': 'Admin'},
+    {'id': 2, 'name': 'Cashier'},
+  ].obs;
+  var selectedRoleId = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    _initializeDio();
+    _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
+    _dio.options.connectTimeout = const Duration(seconds: 30);
+    _dio.options.receiveTimeout = const Duration(seconds: 30);
     updateAdminStatus();
-    _initializeAdminStatus();
     fetchUsers();
-    searchController.addListener(_filterUsers);
-  }
-
-  void _initializeDio() {
-    _dio = dio.Dio();
-
-    // Configure Dio for better web compatibility
-    if (kIsWeb) {
-      _dio.options.connectTimeout = const Duration(seconds: 30);
-      _dio.options.receiveTimeout = const Duration(seconds: 30);
-      _dio.options.sendTimeout = const Duration(seconds: 30);
-    }
+    searchController.addListener(filterUsers);
   }
 
   void updateAdminStatus() {
@@ -53,13 +50,7 @@ class UserController extends GetxController {
     isAdmin.value = roleId == 1;
   }
 
-  void _initializeAdminStatus() {
-    final user = _storage.read('user') ?? {};
-    final roleId = int.tryParse(user['role_id'].toString()) ?? 0;
-    isAdmin.value = roleId == 1;
-  }
-
-  void _filterUsers() {
+  void filterUsers() {
     searchQuery.value = searchController.text;
     if (searchQuery.isEmpty) {
       filteredUsers.assignAll(users);
@@ -79,36 +70,35 @@ class UserController extends GetxController {
     try {
       loading.value = true;
       errorMessage.value = '';
-
-      final response = await _apiService.get(
+      final response = await _dio.get(
         '/users',
-        headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        options: dio.Options(
+            headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
       );
 
       if (response.statusCode == 200) {
-        users.value = (response.body['data'] as List)
+        users.value = (response.data['data'] as List)
             .map((userJson) => User.fromJson(userJson))
             .toList();
         filteredUsers.assignAll(users);
       } else {
-        throw response.body['message']?.toString() ?? 'Failed to fetch users';
+        throw response.data['message']?.toString() ?? 'Failed to fetch users';
       }
     } catch (e) {
       errorMessage.value = e.toString();
-
+      Get.snackbar('Error', e.toString());
     } finally {
       loading.value = false;
     }
   }
-
-  // Remove the separate uploadImage method since we'll include the image in the user creation request
 
   Future<bool> createUser({
     required String username,
     required String password,
     required String fullname,
     required int roleId,
-    io.File? profileImage,
+    WebImageInfo? imageInfo,
+    File? profileImage,
     Uint8List? webImageBytes,
     String? webFilename,
   }) async {
@@ -116,13 +106,6 @@ class UserController extends GetxController {
       loading.value = true;
       final token = _storage.read('token');
 
-      // Use HTTP instead of HTTPS for localhost
-      final baseUrl =
-          kIsWeb ? 'http://127.0.0.1:8000' : 'https://127.0.0.1:8000';
-
-      print('Creating user with image...'); // Debug log
-
-      // Create FormData to include both user data and image
       dio.FormData formData = dio.FormData.fromMap({
         'username': username,
         'password': password,
@@ -130,113 +113,166 @@ class UserController extends GetxController {
         'role_id': roleId.toString(),
       });
 
-      // Add image to form data if provided
-      if (kIsWeb && webImageBytes != null && webFilename != null) {
-        // Determine content type based on file extension
-        String contentType = 'image/jpeg';
-        final extension = webFilename.toLowerCase().split('.').last;
-        if (extension == 'png') contentType = 'image/png';
-        if (extension == 'gif') contentType = 'image/gif';
-        if (extension == 'webp') contentType = 'image/webp';
+      if (imageInfo != null) {
+        final extension = imageInfo.filename.toLowerCase().split('.').last;
+        final contentType = _getContentType(extension);
 
         formData.files.add(MapEntry(
-          'profile_image', // This should match your Laravel backend field name
+          'profile_image',
           dio.MultipartFile.fromBytes(
-            webImageBytes,
-            filename: webFilename,
+            imageInfo.bytes,
+            filename: imageInfo.filename,
             contentType: MediaType.parse(contentType),
           ),
         ));
-        print('Added web image to form data: $webFilename'); // Debug log
-      } else if (profileImage != null) {
-        formData.files.add(MapEntry(
-          'profile_image', // This should match your Laravel backend field name
-          await dio.MultipartFile.fromFile(
-            profileImage.path,
-            filename: profileImage.path.split('/').last,
-          ),
-        ));
-        print(
-            'Added file image to form data: ${profileImage.path}'); // Debug log
       }
 
-      print('Sending request to: $baseUrl/api/users'); // Debug log
-
       final response = await _dio.post(
-        '$baseUrl/api/users',
+        '/users',
         data: formData,
         options: dio.Options(
           headers: {
             'Authorization': 'Bearer $token',
             'Accept': 'application/json',
-            // Don't set Content-Type here, let Dio handle it for multipart
           },
-          validateStatus: (status) => status! < 500,
         ),
       );
 
-      print(
-          'Create user response: ${response.statusCode} ${response.data}'); // Debug log
-
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.snackbar(
-          'Success',
-          'User created successfully',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-        await fetchUsers(); // Refresh user list
+        Get.snackbar('Success', 'User created successfully');
+        await fetchUsers();
         return true;
       } else {
         final errorMsg = response.data['message'] ?? 'Failed to create user';
         Get.snackbar('Error', errorMsg);
-        print("Create user failed: ${response.statusCode} ${response.data}");
         return false;
       }
-    } on dio.DioException catch (e) {
-      print("Dio Create user error: ${e.type} - ${e.message}");
-      if (e.response != null) {
-        print("Response data: ${e.response?.data}");
-      }
-
-      String errorMessage = 'Failed to create user';
-
-      if (e.type == dio.DioExceptionType.connectionError) {
-        errorMessage =
-            'Cannot connect to server. Please check your connection.';
-      } else if (e.type == dio.DioExceptionType.connectionTimeout) {
-        errorMessage = 'Request timed out. Please try again.';
-      } else if (e.response != null) {
-        errorMessage = e.response?.data['message'] ?? 'Server error occurred';
-      }
-
-      Get.snackbar('Error', errorMessage);
-      return false;
     } catch (e) {
-      print("General Create user error: $e");
-      Get.snackbar('Error', 'Failed to create user: $e');
+      Get.snackbar('Error', 'Failed to create user: ${e.toString()}');
       return false;
     } finally {
       loading.value = false;
     }
   }
 
-  void onAddNewUserPressed() {
-    if (!isAdmin.value) {
-      Get.snackbar(
-        'Permission Denied',
-        'Only admin users can add new users',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
+  Future<bool> updateUser({
+    required int userId,
+    required String username,
+    required String fullname,
+    required int roleId,
+    String? password,
+    WebImageInfo? imageInfo,
+  }) async {
+    try {
+      loading.value = true;
+      final token = _storage.read('token');
 
-    Get.dialog(
-      const AddUserDialog(),
-      barrierDismissible: false,
-    );
+      dio.FormData formData = dio.FormData.fromMap({
+        'username': username,
+        'fullname': fullname,
+        'role_id': roleId.toString(),
+        '_method': 'PUT',
+      });
+
+      if (password != null && password.isNotEmpty) {
+        formData.fields.add(MapEntry('password', password));
+      }
+
+      if (imageInfo != null) {
+        final extension = imageInfo.filename.toLowerCase().split('.').last;
+        final contentType = _getContentType(extension);
+
+        formData.files.add(MapEntry(
+          'profile_image',
+          dio.MultipartFile.fromBytes(
+            imageInfo.bytes,
+            filename: imageInfo.filename,
+            contentType: MediaType.parse(contentType),
+          ),
+        ));
+      }
+
+      final response = await _dio.post(
+        '/users/$userId',
+        data: formData,
+        options: dio.Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        Get.snackbar('Success', 'User updated successfully');
+        await fetchUsers();
+        return true;
+      } else {
+        final errorMsg = response.data['message'] ?? 'Failed to update user';
+        Get.snackbar('Error', errorMsg);
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update user: ${e.toString()}');
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<bool> deleteUser(int userId) async {
+    try {
+      final targetUser = users.firstWhereOrNull((user) => user.id == userId);
+      if (targetUser == null) {
+        Get.snackbar('Error', 'User not found.');
+        return false;
+      }
+
+      if (targetUser.roleId == 1) {
+        Get.snackbar('Warning', 'You cannot delete an Admin user.');
+        return false;
+      }
+
+      loading.value = true;
+      final token = _storage.read('token');
+
+      final response = await _dio.delete(
+        '/users/$userId',
+        options: dio.Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        Get.snackbar('Success', 'User deleted successfully');
+        await fetchUsers();
+        return true;
+      } else {
+        final errorMsg = response.data['message'] ?? 'Failed to delete user';
+        Get.snackbar('Error', errorMsg);
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to delete user: ${e.toString()}');
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  String _getContentType(String extension) {
+    switch (extension) {
+      case 'png':
+        return 'image/png';
+      case 'gif':
+        return 'image/gif';
+      case 'webp':
+        return 'image/webp';
+      default:
+        return 'image/jpeg';
+    }
   }
 
   @override

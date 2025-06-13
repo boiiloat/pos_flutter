@@ -4,7 +4,7 @@ import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/user/user_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import 'package:pos_system/screen/pos/table_plan/table_plan_screen.dart';
+import 'package:pos_system/screen/pos/table/table_screen.dart';
 import 'package:pos_system/screen/product/product_screen.dart';
 import 'package:pos_system/screen/report/report_expense/report_expense_screen.dart';
 
@@ -32,7 +32,7 @@ class MainController extends GetxController {
   }
 
   void onPOSPressed() {
-    Get.to(() => const TablePlanScreen());
+    Get.toNamed('/table');
   }
 
   void onLogoutPressed() {

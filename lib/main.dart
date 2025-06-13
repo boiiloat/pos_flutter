@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
+import 'package:pos_system/screen/pos/sale/sale.dart';
+import 'package:pos_system/screen/pos/table/table_screen.dart';
 import 'package:pos_system/screen/product/category_screen.dart';
 import 'package:pos_system/screen/product/product_screen.dart';
 import 'package:pos_system/services/api_service.dart';
@@ -38,6 +40,10 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/home', page: () => HomeScreen()),
         GetPage(name: '/product', page: () => ProductScreen()),
         GetPage(name: '/category', page: () => CategoryScreen()),
+        GetPage(name: '/table', page: () => const TablePlanScreen()),
+        GetPage(name: '/sale', page: () =>  SaleScreen()),
+
+
       ],
     );
   }

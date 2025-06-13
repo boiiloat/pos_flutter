@@ -34,15 +34,15 @@ class _AddUserDialogState extends State<AddUserDialog> {
         source: ImageSource.gallery,
         imageQuality: 80,
       );
-      
+
       if (pickedFile != null) {
         setState(() {
           _isUploading = true;
           _pickedImageFile = pickedFile;
         });
-        
+
         final bytes = await pickedFile.readAsBytes();
-        
+
         setState(() {
           _webImageBytes = bytes;
           _webFilename = pickedFile.name;
@@ -88,8 +88,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           ? const Icon(Icons.add_a_photo, size: 30)
                           : null,
                     ),
-                    if (_isUploading)
-                      const CircularProgressIndicator(),
+                    if (_isUploading) const CircularProgressIndicator(),
                   ],
                 ),
               ),
@@ -158,31 +157,31 @@ class _AddUserDialogState extends State<AddUserDialog> {
           child: const Text('Cancel'),
         ),
         Obx(() => ElevatedButton(
-          onPressed: _userController.loading.value
-              ? null
-              : () async {
-                  if (_formKey.currentState!.validate()) {
-                    final success = await _userController.createUser(
-                      username: _usernameController.text,
-                      password: _passwordController.text,
-                      fullname: _fullnameController.text,
-                      roleId: _selectedRoleId,
-                      profileImage: !kIsWeb && _pickedImageFile != null
-                          ? io.File(_pickedImageFile!.path)
-                          : null,
-                      webImageBytes: kIsWeb ? _webImageBytes : null,
-                      webFilename: kIsWeb ? _webFilename : null,
-                    );
+              onPressed: _userController.loading.value
+                  ? null
+                  : () async {
+                      if (_formKey.currentState!.validate()) {
+                        final success = await _userController.createUser(
+                          username: _usernameController.text,
+                          password: _passwordController.text,
+                          fullname: _fullnameController.text,
+                          roleId: _selectedRoleId,
+                          profileImage: !kIsWeb && _pickedImageFile != null
+                              ? io.File(_pickedImageFile!.path)
+                              : null,
+                          webImageBytes: kIsWeb ? _webImageBytes : null,
+                          webFilename: kIsWeb ? _webFilename : null,
+                        );
 
-                    if (success) {
-                      Get.back();
-                    }
-                  }
-                },
-          child: _userController.loading.value
-              ? const CircularProgressIndicator()
-              : const Text('Save'),
-        )),
+                        if (success) {
+                          Get.back();
+                        }
+                      }
+                    },
+              child: _userController.loading.value
+                  ? const CircularProgressIndicator()
+                  : const Text('Save'),
+            )),
       ],
     );
   }

@@ -1,33 +1,38 @@
-// table_model.dart
-
-class TableData {
+// lib/models/table_model.dart
+class TableModel {
   final int id;
   final String name;
-  final int isDelete;
-  final String deleteDate;
-  final dynamic deleteBy; // Assuming deleteBy can be null or any type
-  final String createdAt;
-  final String updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String createdBy;
+  final int createdById;
 
-  TableData({
+  TableModel({
     required this.id,
     required this.name,
-    required this.isDelete,
-    required this.deleteDate,
-    required this.deleteBy,
     required this.createdAt,
     required this.updatedAt,
+    required this.createdBy,
+    required this.createdById,
   });
 
-  factory TableData.fromJson(Map<String, dynamic> json) {
-    return TableData(
+  factory TableModel.fromJson(Map<String, dynamic> json) {
+    return TableModel(
       id: json['id'],
       name: json['name'],
-      isDelete: json['is_delete'],
-      deleteDate: json['delete_date'],
-      deleteBy: json['delete_by'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+      createdBy: json['created_by'],
+      createdById: json['created_by_id'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'created_at': createdAt.toIso8601String(),
+        'updated_at': updatedAt.toIso8601String(),
+        'created_by': createdBy,
+        'created_by_id': createdById,
+      };
 }

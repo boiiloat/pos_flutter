@@ -85,11 +85,22 @@ class ProductScreen extends StatelessWidget {
                   }
                   if (controller.filteredProducts.isEmpty) {
                     return Center(
-                      child: Text(
-                        controller.searchQuery.value.isNotEmpty
-                            ? 'No matching products found'
-                            : 'No products found',
-                        style: const TextStyle(color: Colors.grey),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.check, // Red checkmark icon
+                            color: Colors.red,
+                            size: 48,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            controller.searchQuery.value.isNotEmpty
+                                ? 'No matching users found'
+                                : 'No users found',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
                       ),
                     );
                   }
@@ -196,7 +207,6 @@ class ProductScreen extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Get.toNamed('/category');
-          
         },
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
