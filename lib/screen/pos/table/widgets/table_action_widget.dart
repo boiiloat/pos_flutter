@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../sale/sale.dart';
+import '../../sale/sale_screen.dart';
 
 class TableActionWidget extends StatelessWidget {
   final String tableNumber;

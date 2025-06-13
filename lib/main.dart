@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/screen/home/home_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import 'package:pos_system/screen/pos/sale/sale.dart';
+import 'package:pos_system/screen/pos/sale/sale_screen.dart';
 import 'package:pos_system/screen/pos/table/table_screen.dart';
 import 'package:pos_system/screen/product/category_screen.dart';
 import 'package:pos_system/screen/product/product_screen.dart';
