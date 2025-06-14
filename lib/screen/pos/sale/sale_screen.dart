@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart'; // For formatting date/time
+import 'package:intl/intl.dart';
 import '../../../controller/sale_controller.dart';
 import '../../../utils/constants.dart';
+import '../../../models/api/category_model.dart' as category_model;
+import '../../../models/api/product_model.dart' as product_model;
 
 class SaleScreen extends StatefulWidget {
   const SaleScreen({super.key});
@@ -13,35 +15,37 @@ class SaleScreen extends StatefulWidget {
 }
 
 class _SaleScreenState extends State<SaleScreen> {
-  final SaleController controller = Get.put(SaleController());
-
-  final TextEditingController _searchController = TextEditingController();
-
+  final SaleController saleController = Get.put(SaleController());
+  final _searchController = TextEditingController();
   String _formattedDateTime = '';
-
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    _initDateTime();
+    _setupSearchListener();
+  }
+
+  void _initDateTime() {
     _updateDateTime();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _updateDateTime();
+    _timer =
+        Timer.periodic(const Duration(seconds: 1), (_) => _updateDateTime());
+  }
+
+  void _setupSearchListener() {
+    _searchController.addListener(() {
+      saleController.filterProductsByName(_searchController.text);
     });
   }
 
   void _updateDateTime() {
-    // Cambodia is UTC+7, so get current UTC time + 7 hours
     final nowUtc = DateTime.now().toUtc();
     final cambodiaTime = nowUtc.add(const Duration(hours: 7));
-    final formatted = DateFormat('dd/MM/yyyy  HH:mm:ss').format(cambodiaTime);
     setState(() {
-      _formattedDateTime = formatted;
+      _formattedDateTime =
+          DateFormat('dd/MM/yyyy  HH:mm:ss').format(cambodiaTime);
     });
-  }
-
-  void _onSearchChanged(String query) {
-    controller.filterProductsByName(query);
   }
 
   @override
@@ -54,263 +58,808 @@ class _SaleScreenState extends State<SaleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: UniqueKey(),
-      appBar: AppBar(
-        backgroundColor: appColor,
-        title: SizedBox(
-          width: 200,
-          height: 40,
-          child: TextField(
-            controller: _searchController,
-            onChanged: _onSearchChanged,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Search products...',
-              hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-              prefixIcon: const Icon(Icons.search, color: Colors.white),
-              filled: true,
-              fillColor: appColor.withOpacity(0.3),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-                borderSide: BorderSide.none,
-              ),
+      appBar: _buildAppBar(),
+      body: Row(
+        children: [
+          _buildProductGrid(),
+          _buildCartPanel(),
+        ],
+      ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      backgroundColor: appColor,
+      title: SizedBox(
+        width: 200,
+        height: 40,
+        child: TextField(
+          controller: _searchController,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: 'Search products...',
+            hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+            prefixIcon: const Icon(Icons.search, color: Colors.white),
+            filled: true,
+            fillColor: appColor.withOpacity(0.3),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(24),
+              borderSide: BorderSide.none,
             ),
           ),
         ),
-        leading: IconButton(
-          onPressed: Get.back,
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Center(
-              child: Text(
-                _formattedDateTime,
-                style: const TextStyle(fontSize: 14, color: Colors.white),
-              ),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: Get.back,
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Center(
+            child: Text(
+              _formattedDateTime,
+              style: const TextStyle(fontSize: 14, color: Colors.white),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductGrid() {
+    return Expanded(
+      flex: 6,
+      child: Column(
+        children: [
+          _buildCategoryButtons(),
+          _buildProductsGrid(),
+          _buildActionButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryButtons() {
+    return SizedBox(
+      height: 60,
+      child: Obx(() {
+        if (saleController.loading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: saleController.filteredCategories.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 8),
+          itemBuilder: (context, index) {
+            final category = saleController.filteredCategories[index];
+            final isSelected =
+                saleController.selectedCategoryId.value == category.id;
+            return _buildCategoryButton(category, isSelected);
+          },
+        );
+      }),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return SizedBox(
+      height: 60,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton.icon(
+            icon: const Icon(Icons.clear, size: 20),
+            label: const Text("Clear Cart"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red[400],
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => saleController.clearCart(),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.discount, size: 20),
+            label: const Text("Discount"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue[400],
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => _showDiscountDialog(),
           ),
         ],
       ),
-      body: Row(
-        children: [
-          // 🟥 LEFT SIDE
-          Expanded(
-            flex: 5,
+    );
+  }
+
+  void _showDiscountDialog() {
+    final discountType = 'percent'.obs;
+    final amountController = TextEditingController(text: '1.00');
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Discount'),
+        content: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // 🟦 CATEGORY BUTTONS
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Obx(() {
-                        if (controller.loading.value) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
-                        return ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: controller.filteredCategories.length,
-                          separatorBuilder: (_, __) => const SizedBox(width: 8),
-                          itemBuilder: (context, index) {
-                            final category =
-                                controller.filteredCategories[index];
-                            // Only "All" category button is red, others white
-                            final isAllCategory =
-                                category.name.toLowerCase() == 'all';
-
-                            return ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    isAllCategory ? Colors.red : Colors.white,
-                                foregroundColor:
-                                    isAllCategory ? Colors.white : Colors.black,
-                                elevation: 0,
-                              ).copyWith(
-                                overlayColor: MaterialStateProperty.all(
-                                    Colors.transparent),
-                              ),
-                              onPressed: () {
-                                controller.selectedCategoryId.value =
-                                    category.id;
-                                controller
-                                    .filterProductsByCategory(category.id);
-                                // Clear search text when category changes
-                                _searchController.clear();
-                              },
-                              child: Text(category.name),
-                            );
-                          },
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-
-                // 🟨 PRODUCTS GRID
-                Expanded(
-                  flex: 9,
-                  child: Obx(() {
-                    if (controller.loading.value) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (controller.filteredProducts.isEmpty) {
-                      return const Center(child: Text('No products found'));
-                    }
-
-                    return GridView.builder(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 7,
-                        childAspectRatio: 20 / 24,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemCount: controller.filteredProducts.length,
-                      itemBuilder: (context, index) {
-                        final product = controller.filteredProducts[index];
-                        final imageUrl = (product.image != null &&
-                                product.image!.isNotEmpty)
-                            ? 'http://127.0.0.1:8000/storage/${product.image}'
-                            : null;
-
-                        return Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              controller.onSubmitPre(); // Add to cart or order
+                Obx(() => SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          ChoiceChip(
+                            label: const Text('Percent (%)'),
+                            selected: discountType.value == 'percent',
+                            onSelected: (selected) {
+                              discountType.value = 'percent';
                             },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                // Image with Price Overlay
-                                Expanded(
-                                  flex: 4,
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                            top: Radius.circular(12),
-                                          ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                            top: Radius.circular(12),
-                                          ),
-                                          child: imageUrl != null
-                                              ? Image.network(
-                                                  imageUrl,
-                                                  fit: BoxFit.cover,
-                                                  width: double.infinity,
-                                                  errorBuilder: (_, __, ___) =>
-                                                      const Icon(
-                                                          Icons.broken_image,
-                                                          size: 32),
-                                                )
-                                              : const Icon(
-                                                  Icons.image_not_supported,
-                                                  size: 32),
-                                        ),
-                                      ),
-
-                                      // Price Overlay
-                                      Positioned(
-                                        top: 6,
-                                        right: 6,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 4),
-                                          decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Text(
-                                            '\$${product.price.toStringAsFixed(2)}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                // Product Info
-                                Expanded(
-                                  flex: 2,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 4),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          product.name,
-                                          textAlign: TextAlign.center,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
-                        );
-                      },
-                    );
-                  }),
-                ),
-
-                // 🟩 FOOTER PAY BUTTON
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    color: Colors.orange,
-                    child: const Center(child: Text("Footer / Pay Section")),
-                  ),
+                          const SizedBox(width: 8),
+                          ChoiceChip(
+                            label: const Text('Amount (\$)'),
+                            selected: discountType.value == 'amount',
+                            onSelected: (selected) {
+                              discountType.value = 'amount';
+                            },
+                          ),
+                        ],
+                      ),
+                    )),
+                const SizedBox(height: 16),
+                Obx(() => TextField(
+                      controller: amountController,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        prefixText:
+                            discountType.value == 'percent' ? '' : '\$ ',
+                        suffixText: discountType.value == 'percent' ? '%' : '',
+                        border: const OutlineInputBorder(),
+                        contentPadding: const EdgeInsets.all(12),
+                      ),
+                    )),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Get.back(),
+                        child: const Text('No'),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final value =
+                              double.tryParse(amountController.text) ?? 0;
+                          if (discountType.value == 'percent') {
+                            saleController.applyPercentDiscount(value);
+                          } else {
+                            saleController.applyAmountDiscount(value);
+                          }
+                          Get.back();
+                        },
+                        child: const Text('Yes'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
 
-          // 🟦 RIGHT SIDE (Order summary)
-          Expanded(
-            flex: 2,
-            child: Container(
-              color: Colors.green.shade100,
-              child: const Center(child: Text("Order Summary")),
+  Widget _buildCategoryButton(
+      category_model.Category category, bool isSelected) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSelected ? Colors.red : Colors.white,
+          foregroundColor: isSelected ? Colors.white : Colors.black,
+        ),
+        onPressed: () {
+          saleController.filterProductsByCategory(category.id);
+          _searchController.clear();
+        },
+        child: Text(category.name),
+      ),
+    );
+  }
+
+  Widget _buildProductsGrid() {
+    return Expanded(
+      child: Obx(() {
+        if (saleController.loading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (saleController.filteredProducts.isEmpty) {
+          return const Center(child: Text('No products found'));
+        }
+        return GridView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 0.9,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: saleController.filteredProducts.length,
+          itemBuilder: (context, index) {
+            final product = saleController.filteredProducts[index];
+            return _buildProductCard(product);
+          },
+        );
+      }),
+    );
+  }
+
+  Widget _buildProductCard(product_model.Product product) {
+    final imageUrl = (product.image?.isNotEmpty == true)
+        ? 'http://127.0.0.1:8000/storage/${product.image}'
+        : null;
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: () => saleController.addProductToCart(product),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(12)),
+                    ),
+                    child: ClipRRect(
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(12)),
+                      child: imageUrl != null
+                          ? Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              errorBuilder: (_, __, ___) =>
+                                  const Icon(Icons.broken_image, size: 32),
+                            )
+                          : const Icon(Icons.image_not_supported, size: 32),
+                    ),
+                  ),
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '\$${product.price.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      product.name,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (product.description != null)
+                      Text(
+                        product.description!,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCartPanel() {
+    return Expanded(
+      flex: 3,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Obx(() {
+          try {
+            if (saleController.cartItems.isEmpty) {
+              return _buildEmptyCart();
+            }
+
+            return Column(
+              children: [
+                const Text("Current Order", style: TextStyle(fontSize: 18)),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: saleController.cartItems.length,
+                    itemBuilder: (context, index) {
+                      final product = saleController.cartItems[index];
+                      final key = saleController.getProductKey(product);
+                      final quantity = saleController.cartQuantities[key] ?? 1;
+                      final total = product.price * quantity;
+
+                      return _buildCartItem(product, quantity, total);
+                    },
+                  ),
+                ),
+                _buildCartFooter(),
+              ],
+            );
+          } catch (e) {
+            return Center(child: Text('Error loading cart: ${e.toString()}'));
+          }
+        }),
+      ),
+    );
+  }
+
+  Widget _buildCartItem(
+      product_model.Product product, int quantity, double total) {
+    final isFree = product.price == 0;
+    final priceDisplay =
+        isFree ? 'FREE' : '\$${product.price.toStringAsFixed(2)}';
+    final totalDisplay = isFree ? 'FREE' : '\$${total.toStringAsFixed(2)}';
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: ListTile(
+        leading: product.image != null
+            ? Image.network(
+                'http://127.0.0.1:8000/storage/${product.image}',
+                width: 40,
+                height: 40,
+                fit: BoxFit.cover,
+              )
+            : const Icon(Icons.fastfood),
+        title: Row(
+          children: [
+            Text(product.name),
+            if (isFree) ...[
+              const SizedBox(width: 8),
+              const Text('FREE',
+                  style: TextStyle(
+                      color: Colors.red, fontWeight: FontWeight.bold)),
+            ],
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('$quantity x $priceDisplay'),
+            Text(
+              totalDisplay,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isFree ? Colors.red : Colors.black,
+              ),
+            ),
+          ],
+        ),
+        trailing: _buildCartItemActions(product, quantity),
+      ),
+    );
+  }
+
+  Widget _buildCartItemActions(product_model.Product product, int quantity) {
+    if (product.price == 0) {
+      return IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () => saleController.removeProductFromCartById(product.id,
+            price: product.price),
+      );
+    } else {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.remove),
+            onPressed: () => saleController.removeProductFromCart(product),
+          ),
+          Text(quantity.toString()),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => saleController.addProductToCart(product),
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'edit',
+                child: ListTile(
+                  leading: Icon(Icons.attach_money),
+                  title: Text('Change Qty & Price'),
+                ),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem(
+                value: 'delete',
+                child: ListTile(
+                  leading: Icon(Icons.delete, color: Colors.red),
+                  title: Text('Delete', style: TextStyle(color: Colors.red)),
+                ),
+              ),
+            ],
+            onSelected: (value) {
+              if (value == 'edit') {
+                _showEditItemDialog(product, quantity);
+              } else if (value == 'delete') {
+                saleController.removeProductFromCartById(product.id,
+                    price: product.price);
+              }
+            },
+          ),
+        ],
+      );
+    }
+  }
+
+  void _showEditItemDialog(product_model.Product product, int currentQuantity) {
+    final quantityController =
+        TextEditingController(text: currentQuantity.toString());
+    final priceController =
+        TextEditingController(text: product.price.toStringAsFixed(2));
+    final isFree = product.price == 0;
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Edit Item'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: quantityController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Quantity',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: priceController,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
+                  labelText: 'Price per unit',
+                  prefixText: '\$',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (!isFree)
+                // ElevatedButton(
+                //   onPressed: () {
+                //     priceController.text = '0';
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.green,
+                //   ),
+                //   child: const Text('Make Item FREE'),
+                // ),
+                InkWell(
+                  onTap: () {
+                    priceController.text = '0';
+                  },
+                  child: Container(
+                    width: 300,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Free",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                )
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newQuantity =
+                  int.tryParse(quantityController.text) ?? currentQuantity;
+              final newPrice =
+                  double.tryParse(priceController.text) ?? product.price;
+
+              if (newQuantity > 0) {
+                saleController.updateProductQuantity(product, newQuantity);
+                saleController.updateProductPrice(product, newPrice);
+              }
+              Get.back();
+            },
+            child: const Text('Save Changes'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handlePopupSelection(
+      String value, product_model.Product product, int currentQuantity) {
+    switch (value) {
+      case 'edit_quantity':
+        _showEditQuantityDialog(product, currentQuantity);
+        break;
+      case 'edit_price':
+        _showEditPriceDialog(product);
+        break;
+      case 'delete':
+        saleController.removeProductFromCartById(product.id,
+            price: product.price);
+        break;
+    }
+  }
+
+  void _showEditQuantityDialog(
+      product_model.Product product, int currentQuantity) {
+    final quantityController =
+        TextEditingController(text: currentQuantity.toString());
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Edit Quantity'),
+        content: TextField(
+          controller: quantityController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: 'Quantity',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newQuantity =
+                  int.tryParse(quantityController.text) ?? currentQuantity;
+              if (newQuantity > 0) {
+                saleController.updateProductQuantity(product, newQuantity);
+              }
+              Get.back();
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditPriceDialog(product_model.Product product) {
+    final priceController = TextEditingController(
+      text: product.price == 0 ? '' : product.price.toStringAsFixed(2),
+    );
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Edit Price'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: priceController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
+                labelText: 'Price',
+                prefixText: '\$',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                priceController.text = '0';
+              },
+              child: const Text('Make FREE'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newPrice =
+                  double.tryParse(priceController.text) ?? product.price;
+              saleController.updateProductPrice(product, newPrice);
+              Get.back();
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyCart() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.shopping_cart_outlined, size: 48, color: Colors.grey),
+          SizedBox(height: 16),
+          Text(
+            "Your cart is empty",
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCartFooter() {
+    return Column(
+      children: [
+        const Divider(),
+        _buildTotalRow("Subtotal", saleController.formattedSubtotal),
+        Obx(() {
+          if (saleController.saleDiscount.value > 0) {
+            final discountType = saleController.lastDiscountType.value;
+            final typeText =
+                discountType == 'percent' ? '(percent)' : '(amount)';
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Discount $typeText',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '${saleController.formattedDiscount}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      GestureDetector(
+                        onTap: () => saleController.clearDiscount(),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        }),
+        _buildTotalRow(
+          "Grand Total",
+          saleController.formattedTotal,
+          isTotal: true,
+        ),
+        const SizedBox(height: 16),
+        _buildPayButton(),
+      ],
+    );
+  }
+
+  Widget _buildTotalRow(String label, String value,
+      {bool isDiscount = false, bool isTotal = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: isTotal ? 18 : 16,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: isTotal ? 18 : 16,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+              color: isTotal
+                  ? Colors.green
+                  : isDiscount
+                      ? Colors.red
+                      : Colors.black,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPayButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        onPressed: saleController.onPayPressed,
+        child: Obx(() => Text(
+              "PAY (${saleController.formattedTotal})",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
       ),
     );
   }

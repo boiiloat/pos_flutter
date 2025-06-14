@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/program.dart';
-import 'package:pos_system/screen/home/home_screen.dart';
-import 'package:pos_system/screen/user/user_screen.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import 'package:pos_system/screen/pos/table/table_screen.dart';
-import 'package:pos_system/screen/product/product_screen.dart';
 import 'package:pos_system/screen/report/report_expense/report_expense_screen.dart';
 
 import '../screen/receipt/receipt_screen.dart';
@@ -65,7 +61,7 @@ class MainController extends GetxController {
     }
   }
 
- void onPOSPressed() {
+  void onPOSPressed() {
     if (!isSaleStarted.value) {
       Get.snackbar(
         "Warning".tr,
