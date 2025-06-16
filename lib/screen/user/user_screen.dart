@@ -164,13 +164,16 @@ class UserScreen extends StatelessWidget {
         Expanded(
             flex: 2, child: Center(child: Text('Image', style: _headerStyle))),
         Expanded(
-            flex: 3, child: Center(child: Text('Full Name', style: _headerStyle))),
+            flex: 3,
+            child: Center(child: Text('Full Name', style: _headerStyle))),
         Expanded(
-            flex: 3, child: Center(child: Text('Username', style: _headerStyle))),
+            flex: 3,
+            child: Center(child: Text('Username', style: _headerStyle))),
         Expanded(
             flex: 2, child: Center(child: Text('Role', style: _headerStyle))),
         Expanded(
-            flex: 2, child: Center(child: Text('Created By', style: _headerStyle))),
+            flex: 2,
+            child: Center(child: Text('Created By', style: _headerStyle))),
         Expanded(
             flex: 2, child: Center(child: Text('Action', style: _headerStyle))),
       ],
@@ -178,9 +181,10 @@ class UserScreen extends StatelessWidget {
   }
 
   Widget _buildDataRow(User user) {
-    final imageUrl = (user.profileImage != null && user.profileImage!.isNotEmpty)
-        ? 'http://127.0.0.1:8000/storage/${user.profileImage}'
-        : null;
+    final imageUrl =
+        (user.profileImage != null && user.profileImage!.isNotEmpty)
+            ? 'http://localhost:8000/storage/${user.profileImage}'
+            : null;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -194,13 +198,15 @@ class UserScreen extends StatelessWidget {
                 radius: 24,
                 backgroundImage: imageUrl != null
                     ? NetworkImage(imageUrl)
-                    : const AssetImage('assets/images/logo_image.jpg') as ImageProvider,
+                    : const AssetImage('assets/images/logo_image.jpg')
+                        as ImageProvider,
               ),
             ),
           ),
           Expanded(flex: 3, child: Center(child: Text(user.fullname ?? 'N/A'))),
           Expanded(flex: 3, child: Center(child: Text(user.username ?? 'N/A'))),
-          Expanded(flex: 2, child: Center(child: Text(user.roleName ?? 'Unknown'))),
+          Expanded(
+              flex: 2, child: Center(child: Text(user.roleName ?? 'Unknown'))),
           Expanded(flex: 2, child: Center(child: Text(user.createBy ?? 'N/A'))),
           Expanded(
             flex: 2,
@@ -274,8 +280,7 @@ class UserScreen extends StatelessWidget {
                   value: controller.selectedRoleId.value == 0
                       ? null
                       : controller.selectedRoleId.value,
-                  items: controller.roles
-                      .map<DropdownMenuItem<int>>((role) {
+                  items: controller.roles.map<DropdownMenuItem<int>>((role) {
                     return DropdownMenuItem<int>(
                       value: role['id'] as int,
                       child: Text(role['name']),
@@ -366,8 +371,7 @@ class UserScreen extends StatelessWidget {
                     border: OutlineInputBorder(),
                   ),
                   value: controller.selectedRoleId.value,
-                  items: controller.roles
-                      .map<DropdownMenuItem<int>>((role) {
+                  items: controller.roles.map<DropdownMenuItem<int>>((role) {
                     return DropdownMenuItem<int>(
                       value: role['id'] as int,
                       child: Text(role['name']),
@@ -394,8 +398,8 @@ class UserScreen extends StatelessWidget {
             username: usernameController.text,
             fullname: fullnameController.text,
             roleId: controller.selectedRoleId.value,
-            password: passwordController.text.isNotEmpty 
-                ? passwordController.text 
+            password: passwordController.text.isNotEmpty
+                ? passwordController.text
                 : null,
             imageInfo: controller.selectedImage.value,
           );
@@ -426,7 +430,7 @@ class UserScreen extends StatelessWidget {
           }
           return currentImageUrl != null && currentImageUrl.isNotEmpty
               ? Image.network(
-                  'http://127.0.0.1:8000/storage/$currentImageUrl',
+                  'http://localhost:8000/storage/$currentImageUrl',
                   height: 100,
                   fit: BoxFit.cover,
                 )

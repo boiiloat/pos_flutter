@@ -262,7 +262,7 @@ class ProductScreen extends StatelessWidget {
 
   Widget _buildDataRow(Product product) {
     final imageUrl = (product.image != null && product.image!.isNotEmpty)
-        ? 'http://127.0.0.1:8000/storage/${product.image}'
+        ? 'http://localhost:8000/storage/${product.image}'
         : 'assets/images/logo_image.jpg';
 
     return Container(
@@ -514,7 +514,7 @@ class ProductScreen extends StatelessWidget {
           }
           return currentImageUrl != null && currentImageUrl.isNotEmpty
               ? Image.network(
-                  'http://127.0.0.1:8000/storage/$currentImageUrl',
+                  'http://localhost:8000/storage/$currentImageUrl',
                   height: 100,
                   fit: BoxFit.cover,
                 )

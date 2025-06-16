@@ -89,7 +89,7 @@ class BodySaleMenuWidget extends StatelessWidget {
                                         },
                                         child: SaleProductWidget(
                                           imageUrl:
-                                              'http://127.0.0.1:8000${product.image}',
+                                              'http://localhost:8000${product.image}',
                                           productPrice: '\$${product.price}',
                                           productName: product.name,
                                         ),

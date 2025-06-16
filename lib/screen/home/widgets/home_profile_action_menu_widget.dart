@@ -31,7 +31,7 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
           final profileImage = loginController.profileImage;
           return CircleAvatar(
             backgroundImage: (profileImage != null && profileImage.isNotEmpty)
-                ? NetworkImage('http://127.0.0.1:8000/storage/$profileImage')
+                ? NetworkImage('http://localhost:8000/storage/$profileImage')
                     as ImageProvider
                 : const AssetImage("assets/images/logo_image.jpg")
                     as ImageProvider,
@@ -62,7 +62,7 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
                         backgroundImage: (profileImage != null &&
                                 profileImage.isNotEmpty)
                             ? NetworkImage(
-                                    'http://127.0.0.1:8000/storage/$profileImage')
+                                    'http://localhost:8000/storage/$profileImage')
                                 as ImageProvider
                             : const AssetImage("assets/images/logo_image.jpg")
                                 as ImageProvider,
