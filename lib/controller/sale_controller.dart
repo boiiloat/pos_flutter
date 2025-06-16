@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -8,7 +9,7 @@ import '../../models/api/category_model.dart' as category_model;
 import '../../models/api/product_model.dart' as product_model;
 import '../../models/api/sale_model.dart' as sale_model;
 
-class SaleController extends GetxController {
+class SaleControllerx extends GetxController {
   final Dio _dio = Dio();
   final GetStorage _storage = GetStorage();
   final searchController = TextEditingController();
@@ -59,18 +60,18 @@ class SaleController extends GetxController {
     super.onClose();
   }
 
-  void _configureDio() {
-    _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
-    _dio.interceptors.add(InterceptorsWrapper(
-      onError: (error, handler) {
-        final statusCode = error.response?.statusCode;
-        final message = _getErrorMessage(statusCode);
-        errorMessage.value = message;
-        Program.showError(message);
-        handler.next(error);
-      },
-    ));
-  }
+  // void _configureDio() {
+  //   _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
+  //   _dio.interceptors.add(InterceptorsWrapper(
+  //     onError: (error, handler) {
+  //       final statusCode = error.response?.statusCode;
+  //       final message = _getErrorMessage(statusCode);
+  //       errorMessage.value = message;
+  //       Program.showError(message);
+  //       handler.next(error);
+  //     },
+  //   ));
+  // }
 
   String _getErrorMessage(int? statusCode) {
     switch (statusCode) {
@@ -221,16 +222,53 @@ class SaleController extends GetxController {
     return '${product.id.toString()}_${product.price.toString()}';
   }
 
-// Update addProductToCart with type safety
-  void addProductToCart(product_model.Product product) {
+  void addProductToCart(product_model.Product product) async {
+    print('=== Adding product to cart ===');
+    print(
+        'Product: ${product.name}, ID: ${product.id}, Price: ${product.price}');
+
+    try {
+      // Add to cart immediately for better UX
+      final key = _getProductKey(product);
+      if (cartQuantities.containsKey(key)) {
+        cartQuantities[key] = (cartQuantities[key] ?? 0) + 1;
+      } else {
+        cartItems.add(product);
+        cartQuantities[key] = 1;
+      }
+      updateSaleTotals();
+
+      // Create sale if it doesn't exist
+      if (currentSale.value == null) {
+        await startNewSale();
+      }
+    } catch (e) {
+      print('Error in addProductToCart: $e');
+      // The product was already added to cart, so we just show an error
+      Program.showError(
+          'Added to cart but sale creation failed: ${e.toString()}');
+    }
+  }
+
+  void addProductToCartSimple(product_model.Product product) {
+    print('=== Adding product to cart (Simple) ===');
+    print(
+        'Product: ${product.name}, ID: ${product.id}, Price: ${product.price}');
+
     final key = _getProductKey(product);
+    print('Product key: $key');
+
     if (cartQuantities.containsKey(key)) {
       cartQuantities[key] = (cartQuantities[key] ?? 0) + 1;
+      print('Updated quantity: ${cartQuantities[key]}');
     } else {
       cartItems.add(product);
       cartQuantities[key] = 1;
+      print('Added new item');
     }
+
     updateSaleTotals();
+    print('Subtotal: ${saleSubtotal.value}, Total: ${saleTotal.value}');
   }
 
 // Update removeProductFromCart
@@ -250,7 +288,13 @@ class SaleController extends GetxController {
   void clearCart() {
     cartItems.clear();
     cartQuantities.clear();
-    clearDiscount(); // This will also clear any applied discount
+    clearDiscount();
+
+    // If there's an active sale with no items, cancel it
+    if (currentSale.value != null && cartItems.isEmpty) {
+      cancelCurrentSale();
+    }
+
     updateSaleTotals();
   }
 
@@ -341,28 +385,52 @@ class SaleController extends GetxController {
   }
 
   Future<void> startNewSale() async {
+    print('=== Starting new sale ===');
+
     try {
       loading(true);
       final token = _storage.read('token');
+      final user = _storage.read('user');
+
       if (token == null) throw Exception('No authentication token found');
+      if (user == null || user['id'] == null)
+        throw Exception('User data not found');
 
       final response = await _dio.post(
         '/sales',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'content-type': 'application/json'
+          },
+        ),
         data: {
           'status': 'pending',
           'table': selectedTable.value,
+          'sub_total': 0.0,
+          'discount': 0.0,
+          'grand_total': 0.0,
+          'sale_date': DateTime.now().toIso8601String(),
+          'is_paid': false,
+          'created_by': user['id'],
         },
       );
 
-      if (response.statusCode == 201) {
-        currentSale.value = sale_model.Sale.fromJson(response.data['data']);
-        _resetSaleTotals();
-        clearCart();
-        Program.success("Sale Started", "New sale created successfully");
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final responseData = response.data;
+        if (responseData is Map<String, dynamic>) {
+          currentSale.value =
+              sale_model.Sale.fromJson(responseData['data'] ?? responseData);
+          print('Sale created with ID: ${currentSale.value!.id}');
+        } else {
+          throw Exception('Invalid response format');
+        }
+      } else {
+        throw Exception('Failed to create sale: ${response.statusCode}');
       }
     } catch (e) {
-      Program.showError('Failed to start new sale: $e');
+      print('Error in startNewSale: $e');
+      Program.showError('Failed to create sale: ${e.toString()}');
       rethrow;
     } finally {
       loading(false);
@@ -375,31 +443,42 @@ class SaleController extends GetxController {
       return;
     }
 
+    if (cartItems.isEmpty) {
+      Program.showError('Cannot complete sale with empty cart');
+      return;
+    }
+
     try {
       loading(true);
+
+      // First save all sale products
+      await _saveSaleItems(currentSale.value!.id);
+
+      // Then update the sale status and totals
       final token = _storage.read('token');
       if (token == null) throw Exception('No authentication token found');
 
-      await _dio.put(
+      final response = await _dio.put(
         '/sales/${currentSale.value!.id}',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
         data: {
           'status': 'completed',
           'sub_total': saleSubtotal.value,
-          // 'tax': saleTax.value,
           'discount': saleDiscount.value,
           'grand_total': saleTotal.value,
-          'completed_at': DateTime.now().toIso8601String(),
+          'is_paid': true,
+          'sale_date': DateTime.now().toIso8601String(),
         },
       );
 
-      await _saveSaleItems(currentSale.value!.id);
-
-      Program.success("Sale Completed", "Transaction completed successfully");
-      _clearCurrentSale();
-      clearCart();
+      if (response.statusCode == 200) {
+        Program.success("Payment Successful", "Sale completed successfully!");
+        _clearCurrentSale();
+        clearCart();
+      }
     } catch (e) {
-      Program.showError('Failed to complete sale: $e');
+      Program.showError('Payment failed: ${e.toString()}');
+      print('Payment error: $e');
     } finally {
       loading(false);
     }
@@ -410,24 +489,56 @@ class SaleController extends GetxController {
       final token = _storage.read('token');
       if (token == null) throw Exception('No authentication token found');
 
+      // Prepare items
       final items = cartItems.map((product) {
         final key = _getProductKey(product);
+        final quantity = cartQuantities[key] ?? 1;
         return {
-          'sale_id': saleId,
           'product_id': product.id,
-          'quantity': cartQuantities[key] ?? 1,
-          'unit_price': product.price,
-          'total_price': product.price * (cartQuantities[key] ?? 1),
+          'quantity': quantity,
+          'price': product.price,
+          'is_free': product.price == 0.0,
         };
       }).toList();
 
-      await _dio.post(
-        '/sale-items',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-        data: {'items': items},
+      // Show loading
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
       );
+
+      // Make bulk API call
+      final response = await _dio.post(
+        '/sale-products/bulk',
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        }),
+        data: {
+          'sale_id': saleId,
+          'items': items,
+        },
+      );
+
+      // Close loading
+      Get.back();
+
+      if (response.statusCode != 201) {
+        throw Exception('Failed to save sale items');
+      }
     } catch (e) {
-      Program.showError('Failed to save sale items: $e');
+      Get.back(); // Close any open dialogs
+      String errorMessage = 'Failed to save sale items';
+
+      if (e is DioException) {
+        if (e.response?.statusCode == 404) {
+          errorMessage = 'Endpoint not found. Please check API configuration.';
+        } else {
+          errorMessage = e.response?.data?['message'] ?? e.message;
+        }
+      }
+
+      Program.showError(errorMessage);
       rethrow;
     }
   }
@@ -467,12 +578,125 @@ class SaleController extends GetxController {
     saleTotal.value = 0.0;
   }
 
-  void onPayPressed() {
-    if (saleTotal.value <= 0) {
+  void onPayPressed() async {
+    print('=== Pay button pressed ===');
+
+    if (cartItems.isEmpty) {
       Program.showError('No items in cart');
       return;
     }
-    completeCurrentSale();
+
+    if (saleTotal.value <= 0) {
+      Program.showError('Invalid total amount');
+      return;
+    }
+
+    try {
+      // Create sale if it doesn't exist
+      if (currentSale.value == null) {
+        print('Creating sale for payment...');
+        await startNewSale();
+      }
+
+      // Show confirmation dialog
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Confirm Payment'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Subtotal: ${formattedSubtotal}'),
+              if (saleDiscount.value > 0)
+                Text('Discount: ${formattedDiscount}',
+                    style: const TextStyle(color: Colors.red)),
+              const Divider(),
+              Text('Total: ${formattedTotal}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16)),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.back();
+                completeCurrentSale();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text('Confirm Payment',
+                  style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      print('Error in onPayPressed: $e');
+      Program.showError('Failed to process payment: ${e.toString()}');
+    }
+  }
+
+  void _configureDio() {
+    _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
+    _dio.options.connectTimeout = const Duration(seconds: 10);
+    _dio.options.receiveTimeout = const Duration(seconds: 10);
+
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        print('=== API Request ===');
+        print('URL: ${options.baseUrl}${options.path}');
+        print('Method: ${options.method}');
+        print('Data: ${options.data}');
+        print('Headers: ${options.headers}');
+        handler.next(options);
+      },
+      onResponse: (response, handler) {
+        print('=== API Response ===');
+        print('Status: ${response.statusCode}');
+        print('Data: ${response.data}');
+        handler.next(response);
+      },
+      onError: (error, handler) {
+        print('=== API Error ===');
+        print('Type: ${error.type}');
+        print('Message: ${error.message}');
+        print('Response: ${error.response?.data}');
+        print('Status Code: ${error.response?.statusCode}');
+
+        final statusCode = error.response?.statusCode;
+        String message;
+
+        switch (statusCode) {
+          case 401:
+            message = 'Authentication failed. Please login again.';
+            break;
+          case 403:
+            message = 'Access denied';
+            break;
+          case 404:
+            message = 'Resource not found';
+            break;
+          case 422:
+            message = 'Validation error: ${error.response?.data}';
+            break;
+          case 500:
+            message = 'Server error: ${error.response?.data}';
+            break;
+          default:
+            message = 'Network error: ${error.message}';
+        }
+
+        errorMessage.value = message;
+        // Only show error for critical operations, not for adding to cart
+        if (error.requestOptions.path != '/sales') {
+          Program.showError(message);
+        }
+        handler.next(error);
+      },
+    ));
   }
 
   // --- GETTERS for UI display ---

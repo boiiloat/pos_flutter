@@ -139,17 +139,6 @@ class HomeScreen extends StatelessWidget {
                                       foregroundIconColor: Colors.white,
                                       onPressed: controller.toggleSale,
                                     ),
-                                    // HomeButtonWidget(
-                                    //   // hidden: !cont\roller.isSaleStarted.value,
-                                    //   title: "Close Working Day",
-                                    //   iconData: Icons.calendar_today,
-                                    //   background: Colors.red,
-                                    //   foreground: Colors.white,
-                                    //   foregroundIconColor: Colors.white,
-                                    //   onPressed: () => controller
-                                    //       .onCloseWorkingDayPressed(context),
-                                    // ),
-
                                     HomeButtonWidget(
                                       title: "POS".tr,
                                       iconData: Icons.shopping_cart_outlined,

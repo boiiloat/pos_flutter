@@ -15,7 +15,7 @@ class SaleScreen extends StatefulWidget {
 }
 
 class _SaleScreenState extends State<SaleScreen> {
-  final SaleController saleController = Get.put(SaleController());
+  final SaleControllerx saleController = Get.put(SaleControllerx());
   final _searchController = TextEditingController();
   String _formattedDateTime = '';
   Timer? _timer;
