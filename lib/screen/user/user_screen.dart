@@ -203,8 +203,8 @@ class UserScreen extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(flex: 3, child: Center(child: Text(user.fullname ?? 'N/A'))),
-          Expanded(flex: 3, child: Center(child: Text(user.username ?? 'N/A'))),
+          Expanded(flex: 3, child: Center(child: Text(user.fullname))),
+          Expanded(flex: 3, child: Center(child: Text(user.username))),
           Expanded(
               flex: 2, child: Center(child: Text(user.roleName ?? 'Unknown'))),
           Expanded(flex: 2, child: Center(child: Text(user.createBy ?? 'N/A'))),
@@ -327,8 +327,8 @@ class UserScreen extends StatelessWidget {
   }
 
   void _showEditUserDialog(User user) {
-    usernameController.text = user.username ?? '';
-    fullnameController.text = user.fullname ?? '';
+    usernameController.text = user.username;
+    fullnameController.text = user.fullname;
     passwordController.clear();
     controller.selectedRoleId.value = user.roleId;
     controller.selectedImage.value = null;

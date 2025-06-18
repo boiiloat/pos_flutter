@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:pos_system/program.dart';
 
 class RecieptController extends GetxController {
   // Sample data for the table

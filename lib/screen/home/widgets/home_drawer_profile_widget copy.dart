@@ -1,7 +1,5 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pos_system/controller/login_controller.dart';
 
 class HomeDrawerProfileWidget extends StatelessWidget {
   const HomeDrawerProfileWidget({super.key});
@@ -71,14 +69,4 @@ class HomeDrawerProfileWidget extends StatelessWidget {
     );
   }
 
-  String _getRoleName(int? roleId) {
-    switch (roleId) {
-      case 1:
-        return 'Admin';
-      case 2:
-        return 'Cashier';
-      default:
-        return 'Unknown';
-    }
-  }
 }

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/table_controller.dart';
+import 'package:pos_system/controller/sale_controller.dart'; // Add this import
 import 'package:pos_system/utils/constants.dart';
 import 'package:pos_system/screen/pos/table/widgets/table_action_widget.dart';
 import 'package:pos_system/screen/pos/table/widgets/table_plan_add_new.dart';
@@ -20,7 +21,7 @@ class TablePlanScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-         key: UniqueKey(),
+        key: UniqueKey(),
         appBar: AppBar(
           title: const Text(
             'SNACK & RELAX CAFE',
@@ -54,52 +55,137 @@ class TablePlanScreen extends StatelessWidget {
                       : null,
                 )),
             Expanded(
-              child: Obx(() {
-                if (controller.loading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (controller.errorMessage.isNotEmpty) {
-                  return Center(child: Text(controller.errorMessage.value));
-                }
+              child: Obx(
+                () {
+                  if (controller.loading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.errorMessage.isNotEmpty) {
+                    return Center(child: Text(controller.errorMessage.value));
+                  }
 
-                final crossAxisCount = screenWidth > 600 ? 7 : 5;
+                  final crossAxisCount = screenWidth > 600 ? 7 : 5;
+                  return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 1.0,
+                        ),
+                        itemCount: controller.tableData.length,
+                        itemBuilder: (context, index) {
+                          final table = controller.tableData[index];
+                          final isTableDeleted = table['deleted_at'] != null;
 
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 1.0,
-                    ),
-                    itemCount: controller.tableData.length,
-                    itemBuilder: (context, index) {
-                      final table = controller.tableData[index];
-                      return TableActionWidget(
-                        tableNumber: table['name'],
-                        tableLabel:
-                            'Table ${table['name']}', // Customize label as needed
-                        onPressed: controller.onTablePlanPressed,
-                        onEdit: controller.isAdmin.value
-                            ? () => _showEditTableDialog(
-                                controller, table['id'], table['name'])
-                            : null,
-                        onDelete: controller.isAdmin.value
-                            ? () => controller.deleteTable(table['id'])
-                            : null,
-                        size: tableSize,
-                        fontSize: fontSize,
-                      );
-                    },
-                  ),
-                );
-              }),
+                          return TableActionWidget(
+                            tableNumber: table['name'],
+                            tableLabel: 'Table ${table['name']}',
+                            onEdit: controller.isAdmin.value && !isTableDeleted
+                                ? () => _showEditTableDialog(
+                                    controller, table['id'], table['name'])
+                                : null,
+                            onDelete:
+                                controller.isAdmin.value && !isTableDeleted
+                                    ? () {
+                                        Get.defaultDialog(
+                                          title: 'Confirm Delete',
+                                          content: const Text(
+                                              'Are you sure you want to delete this table?'),
+                                          confirm: ElevatedButton(
+                                            onPressed: () async {
+                                              Get.back();
+                                              await controller
+                                                  .deleteTable(table['id']);
+                                            },
+                                            child: const Text('Delete'),
+                                          ),
+                                          cancel: TextButton(
+                                            onPressed: () => Get.back(),
+                                            child: const Text('Cancel'),
+                                          ),
+                                        );
+                                      }
+                                    : null,
+                            size: tableSize,
+                            fontSize: fontSize,
+                            isDisabled: isTableDeleted,
+                            onPressed: () =>
+                                _handleTableSelection(controller, table),
+                          );
+                        },
+                      ));
+                },
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _handleTableSelection(
+      TableController controller, Map<String, dynamic> table) async {
+    try {
+      final tableId = table['id'];
+      final tableName = table['name'];
+
+      print('🏁 Table selected - ID: $tableId, Name: $tableName');
+
+      if (tableId == null || tableName == null) {
+        Get.snackbar('Error', 'Table information is incomplete');
+        return;
+      }
+
+      // Show loading indicator
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
+
+      // Set table in TableController first
+      controller.selectTable(tableId, tableName);
+
+      // Small delay to ensure the selection is processed
+      await Future.delayed(Duration(milliseconds: 100));
+
+      // Initialize SaleController if not already registered
+      if (!Get.isRegistered<SaleController>()) {
+        print('🔧 Registering SaleController');
+        Get.put(SaleController(), permanent: true);
+      }
+
+      // Get SaleController and set table
+      final saleController = Get.find<SaleController>();
+      saleController.setCurrentTable(tableId, tableName);
+
+      // Close loading indicator
+      Get.back();
+
+      // Navigate to sales screen with table data as arguments
+      print('🚀 Navigating to sales screen');
+      final result = await Get.toNamed('/sales', arguments: {
+        'table_id': tableId,
+        'table_name': tableName,
+      });
+
+      print('📱 Returned from sales screen');
+    } catch (e) {
+      // Close loading indicator if still open
+      if (Get.isDialogOpen == true) {
+        Get.back();
+      }
+
+      print('❌ Error in table selection: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to select table: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    }
   }
 
   void _showAddTableDialog(TableController controller) {

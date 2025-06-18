@@ -1,8 +1,9 @@
 // lib/controller/table_controller.dart
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart' as dio;
+
+import 'sale_controller.dart';
 
 class TableController extends GetxController {
   final dio.Dio _dio = dio.Dio();
@@ -12,6 +13,8 @@ class TableController extends GetxController {
   var loading = false.obs;
   var errorMessage = ''.obs;
   final RxBool isAdmin = false.obs;
+  var selectedTableId = 0.obs;
+  var selectedTableName = ''.obs;
 
   @override
   void onInit() {
@@ -48,6 +51,7 @@ class TableController extends GetxController {
                   'updated_at': _safeParseString(tableJson['updated_at']),
                   'created_by': _safeParseString(tableJson['created_by']),
                   'created_by_id': _safeParseInt(tableJson['created_by_id']),
+                  'deleted_at': tableJson['deleted_at'], // Add this line
                 })
             .toList());
       } else {
@@ -161,9 +165,33 @@ class TableController extends GetxController {
     }
   }
 
-  void onTablePlanPressed() {
-    // Handle table selection logic here
-    Get.snackbar('Table Selected', 'You selected a table');
+  void selectTable(int tableId, String tableName) {
+    selectedTableId.value = tableId;
+    selectedTableName.value = tableName;
+    print('Table selected - ID: $tableId, Name: $tableName');
+
+    // Update SaleController if it exists
+    if (Get.isRegistered<SaleController>()) {
+      final saleController = Get.find<SaleController>();
+      saleController.setCurrentTable(tableId, tableName);
+      print('Updated SaleController with table selection');
+    } else {
+      print('SaleController not registered yet');
+    }
+  }
+
+  // Add method to get current selected table info
+  Map<String, dynamic> getSelectedTableInfo() {
+    return {
+      'id': selectedTableId.value,
+      'name': selectedTableName.value,
+    };
+  }
+
+  // Add method to clear selection
+  void clearSelection() {
+    selectedTableId.value = 0;
+    selectedTableName.value = '';
   }
 
   static int _safeParseInt(dynamic value) {

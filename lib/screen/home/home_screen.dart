@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/controller/main_controller.dart';
 import '../../controller/login_controller.dart';
 import 'widgets/home_button_widget.dart';
@@ -25,8 +24,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(MainController());
-    final user = GetStorage().read('user');
-
     return Obx(
       () => SafeArea(
         child: Container(
@@ -102,7 +99,8 @@ class HomeScreen extends StatelessWidget {
                           ),
                           Text(
                             "POS Profile : ${_getRoleName(loginController.roleId)}   /  Address: Siem Reap, Cambodia",
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 15),
                           ),
                         ],
                       ),

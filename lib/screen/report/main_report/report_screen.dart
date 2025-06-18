@@ -13,7 +13,7 @@ class ReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(RecieptController());
+    Get.put(RecieptController());
 
     return Scaffold(
       backgroundColor: Colors.grey.shade200,

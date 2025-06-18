@@ -41,9 +41,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/product', page: () => ProductScreen()),
         GetPage(name: '/category', page: () => CategoryScreen()),
         GetPage(name: '/table', page: () => const TablePlanScreen()),
-        GetPage(name: '/sale', page: () =>  SaleScreen()),
-
-
+        GetPage(name: '/sales', page: () => const SaleScreen()),
       ],
     );
   }

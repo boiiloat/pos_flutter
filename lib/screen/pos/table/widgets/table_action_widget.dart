@@ -1,85 +1,38 @@
-// lib/screen/pos/table/widgets/table_plan_widget.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../sale/sale_screen.dart';
-
 class TableActionWidget extends StatelessWidget {
   final String tableNumber;
+  final String tableLabel;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final VoidCallback onPressed; // Required parameter
+  final bool isDisabled;
   final double size;
   final double fontSize;
 
   const TableActionWidget({
     super.key,
     required this.tableNumber,
+    required this.tableLabel,
     this.onEdit,
     this.onDelete,
+    required this.onPressed, // Marked as required
+    required this.isDisabled,
     this.size = 70,
     this.fontSize = 14,
-    required String tableLabel,
-    required void Function() onPressed,
   });
-
-  void _showGuestNumberDialog(BuildContext context, String tableNumber) {
-    final guestNumberController = TextEditingController();
-
-    Get.defaultDialog(
-      title: 'Table $tableNumber',
-      content: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: guestNumberController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Number of Guests',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.people),
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                if (guestNumberController.text.isNotEmpty) {
-                  Get.back();
-                  // Navigate to order screen with table info
-                  // Get.to(() => SaleScreen(
-                  //     tableNumber: tableNumber,
-                  //     guestCount: int.parse(guestNumberController.text),
-                  //     ));
-                  Get.toNamed('/sale');
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                backgroundColor: Colors.blue,
-              ),
-              child: const Text(
-                'Start Order',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _showGuestNumberDialog(context, tableNumber),
+      onTap: isDisabled ? null : onPressed, // Disable tap if table is disabled
       child: Container(
         width: size,
         height: size,
         margin: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDisabled ? Colors.grey[300] : Colors.white,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
@@ -99,14 +52,15 @@ class TableActionWidget extends StatelessWidget {
                   Icon(
                     Icons.chair,
                     size: 55,
-                    color: Colors.grey,
+                    color: isDisabled ? Colors.grey[500] : Colors.grey,
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    tableNumber,
+                    tableLabel,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: fontSize,
+                      color: isDisabled ? Colors.grey[600] : Colors.black,
                     ),
                   ),
                 ],

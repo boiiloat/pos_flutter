@@ -21,10 +21,16 @@ class PaymentMethod {
     return PaymentMethod(
       id: json['id']?.toString() ?? '',
       paymentMethodName: json['payment_method_name']?.toString() ?? '',
-      createdDate: _parseDateTime(json['created_date']),
-      createdBy: json['created_by']?['fullname']?.toString(),
-      isDeleted: _parseBool(json['is_deleted']),
-      deletedDate: _parseDateTime(json['deleted_date']),
+      createdDate: json['created_date'] != null
+          ? DateTime.tryParse(json['created_date'])
+          : null,
+      createdBy: json['created_by'] is Map
+          ? json['created_by']['fullname']?.toString()
+          : json['created_by']?.toString(),
+      isDeleted: json['is_deleted'] == 1 || json['is_deleted'] == true,
+      deletedDate: json['deleted_date'] != null
+          ? DateTime.tryParse(json['deleted_date'])
+          : null,
       deletedBy: json['deleted_by']?.toString(),
     );
   }

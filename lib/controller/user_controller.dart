@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:http_parser/http_parser.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 import '../models/api/user_model.dart';
 
 class WebImageInfo {

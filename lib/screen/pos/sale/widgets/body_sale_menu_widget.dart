@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_system/controller/sale_controller.dart';
-import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/pos/sale/widgets/sale_order_widget.dart';
 
 import '../../../../controller/product_controller.dart';
 import 'sale_item_note_widget.dart';
 import 'sale_product_widget.dart';
-import 'sale_widget.dart';
 
 class BodySaleMenuWidget extends StatelessWidget {
   const BodySaleMenuWidget({super.key});

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/user/Widgets/customer_fill_widget.dart';
 
 class CategoryAddNewWidget extends StatelessWidget {

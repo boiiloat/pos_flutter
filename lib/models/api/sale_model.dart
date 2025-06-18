@@ -11,6 +11,7 @@ class Sale {
   final DateTime createdAt;
   final DateTime updatedAt;
   final List<dynamic> products;
+  final int? tableId;
 
   Sale({
     required this.id,
@@ -25,9 +26,15 @@ class Sale {
     required this.createdAt,
     required this.updatedAt,
     required this.products,
+    this.tableId,
   });
 
   factory Sale.fromJson(Map<String, dynamic> json) {
+    // Debug print if table_id is missing
+    if (json['table_id'] == null) {
+      print('Warning: Sale created without table association');
+    }
+
     return Sale(
       id: json['id'] as int,
       subTotal: (json['sub_total'] as num).toDouble(),
@@ -35,12 +42,29 @@ class Sale {
       grandTotal: (json['grand_total'] as num).toDouble(),
       isPaid: json['is_paid'] as bool,
       status: json['status'] as String,
-      saleDate: DateTime.parse(json['sale_date']),
+      saleDate: DateTime.parse(json['sale_date'] as String),
       createdBy: json['created_by'] as int,
       invoiceNumber: json['invoice_number'] as String,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      createdAt: DateTime.parse(json['created_at'] as String),
+      updatedAt: DateTime.parse(json['updated_at'] as String),
       products: json['products'] as List<dynamic>,
+      tableId: json['table_id'] as int?,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'sub_total': subTotal,
+        'discount': discount,
+        'grand_total': grandTotal,
+        'is_paid': isPaid,
+        'status': status,
+        'sale_date': saleDate.toIso8601String(),
+        'created_by': createdBy,
+        'invoice_number': invoiceNumber,
+        'created_at': createdAt.toIso8601String(),
+        'updated_at': updatedAt.toIso8601String(),
+        'products': products,
+        'table_id': tableId,
+      };
 }

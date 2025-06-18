@@ -1,18 +1,34 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:dio/dio.dart';
 import 'package:pos_system/program.dart';
 import '../../models/api/category_model.dart' as category_model;
 import '../../models/api/product_model.dart' as product_model;
 import '../../models/api/sale_model.dart' as sale_model;
+import '../models/api/payment_method_model.dart';
+import '../models/api/sale_model.dart';
+import 'table_controller.dart';
 
-class SaleControllerx extends GetxController {
+class SaleController extends GetxController {
   final Dio _dio = Dio();
   final GetStorage _storage = GetStorage();
   final searchController = TextEditingController();
+  final TableController tableController = Get.find();
+  var exchangeRate = 37800.0.obs; // Based on your image showing 37,800 Rials
+  var dollarPayment = 0.0.obs;
+  var rialsPayment = 0.0.obs;
+  var remainingAmount = 0.0.obs;
+
+  var currentTableId = 0.obs;
+  var currentTableName = 'No Table Selected'.obs;
+
+  // Add these to your SaleControllerx
+  var paymentMethods = <PaymentMethod>[].obs;
+  var selectedPaymentMethod = Rxn<PaymentMethod>();
+  var paymentAmountController = TextEditingController();
+  var exchangeRateController = TextEditingController(text: '1.0');
 
   // UI State
   var searchQuery = ''.obs;
@@ -24,6 +40,7 @@ class SaleControllerx extends GetxController {
   var loading = false.obs;
   var errorMessage = ''.obs;
   var selectedCategoryId = 0.obs;
+  var selectedTableId = 0.obs;
 
   // Sale
   var currentSale = Rxn<sale_model.Sale>();
@@ -50,6 +67,24 @@ class SaleControllerx extends GetxController {
     _configureDio();
     _initializeData();
     _setupSearchListener();
+
+    if (Get.isRegistered<TableController>()) {
+      final tableController = Get.find<TableController>();
+      if (tableController.selectedTableId.value > 0) {
+        setCurrentTable(tableController.selectedTableId.value,
+            tableController.selectedTableName.value);
+      }
+    }
+
+    // Also check navigation arguments
+    final args = Get.arguments;
+    if (args != null && args is Map) {
+      if (args['table_id'] != null) {
+        setCurrentTable(args['table_id'] as int,
+            args['table_name'] as String? ?? 'Table ${args['table_id']}');
+      }
+    }
+    _initializeData();
   }
 
   @override
@@ -59,19 +94,6 @@ class SaleControllerx extends GetxController {
     _debounceTimer?.cancel();
     super.onClose();
   }
-
-  // void _configureDio() {
-  //   _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
-  //   _dio.interceptors.add(InterceptorsWrapper(
-  //     onError: (error, handler) {
-  //       final statusCode = error.response?.statusCode;
-  //       final message = _getErrorMessage(statusCode);
-  //       errorMessage.value = message;
-  //       Program.showError(message);
-  //       handler.next(error);
-  //     },
-  //   ));
-  // }
 
   String _getErrorMessage(int? statusCode) {
     switch (statusCode) {
@@ -92,6 +114,7 @@ class SaleControllerx extends GetxController {
     updateAdminStatus();
     fetchCategories();
     fetchProducts();
+    fetchPaymentMethods();
   }
 
   void _setupSearchListener() {
@@ -226,28 +249,97 @@ class SaleControllerx extends GetxController {
     print('=== Adding product to cart ===');
     print(
         'Product: ${product.name}, ID: ${product.id}, Price: ${product.price}');
+    print(
+        'Current table state - ID: ${currentTableId.value}, Name: ${currentTableName.value}');
 
     try {
-      // Add to cart immediately for better UX
+      // Validate table selection
+      if (!_validateTableSelection()) {
+        throw Exception('Please select a table before adding products');
+      }
+
+      print('✅ Table validation passed - Using table ${currentTableId.value}');
+
+      // Add to cart logic
       final key = _getProductKey(product);
       if (cartQuantities.containsKey(key)) {
         cartQuantities[key] = (cartQuantities[key] ?? 0) + 1;
+        print(
+            'Increased quantity for ${product.name} to ${cartQuantities[key]}');
       } else {
         cartItems.add(product);
         cartQuantities[key] = 1;
+        print('Added new item ${product.name}');
       }
+
       updateSaleTotals();
 
       // Create sale if it doesn't exist
       if (currentSale.value == null) {
+        print('🆕 Starting new sale for table ${currentTableId.value}');
         await startNewSale();
       }
+
+      // Show success feedback
+      Get.snackbar(
+        'Added to Cart',
+        '${product.name} added successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
     } catch (e) {
-      print('Error in addProductToCart: $e');
-      // The product was already added to cart, so we just show an error
-      Program.showError(
-          'Added to cart but sale creation failed: ${e.toString()}');
+      final errorMessage = 'Failed to add ${product.name}: ${e.toString()}';
+      print('❌ Error: $errorMessage');
+
+      Get.snackbar(
+        'Error',
+        errorMessage,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+
+      // If the error was due to table selection, navigate back
+      if (e.toString().contains('table')) {
+        Future.delayed(Duration(seconds: 2), () {
+          if (Get.currentRoute != '/tables') {
+            Get.offAllNamed('/tables');
+          }
+        });
+      }
     }
+  }
+
+  bool _validateTableSelection() {
+    // Check current table selection
+    if (currentTableId.value > 0) {
+      return true;
+    }
+
+    // Try to get from TableController
+    if (Get.isRegistered<TableController>()) {
+      final tableController = Get.find<TableController>();
+      if (tableController.selectedTableId.value > 0) {
+        print('📋 Using table from TableController');
+        setCurrentTable(tableController.selectedTableId.value,
+            tableController.selectedTableName.value);
+        return true;
+      }
+    }
+
+    // Try to get from navigation arguments
+    final args = Get.arguments;
+    if (args != null && args is Map && args['table_id'] != null) {
+      print('📋 Using table from navigation arguments');
+      setCurrentTable(args['table_id'] as int,
+          args['table_name'] as String? ?? 'Table ${args['table_id']}');
+      return true;
+    }
+
+    return false;
   }
 
   void addProductToCartSimple(product_model.Product product) {
@@ -386,50 +478,67 @@ class SaleControllerx extends GetxController {
 
   Future<void> startNewSale() async {
     print('=== Starting new sale ===');
+    print('Table ID for sale: ${currentTableId.value}');
 
     try {
       loading(true);
       final token = _storage.read('token');
       final user = _storage.read('user');
 
-      if (token == null) throw Exception('No authentication token found');
-      if (user == null || user['id'] == null)
-        throw Exception('User data not found');
+      // Final validation before creating sale
+      if (currentTableId.value <= 0) {
+        throw Exception('Invalid table selection');
+      }
+
+      final saleData = {
+        'status': 'pending',
+        'table_id': currentTableId.value, // This is the key fix
+        'sub_total': 0.0,
+        'discount': 0.0,
+        'grand_total': 0.0,
+        'sale_date': DateTime.now().toIso8601String(),
+        'is_paid': false,
+        'created_by': user['id'],
+      };
+
+      print('📤 Creating sale with data: $saleData');
 
       final response = await _dio.post(
         '/sales',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
-            'content-type': 'application/json'
+            'Content-Type': 'application/json'
           },
         ),
-        data: {
-          'status': 'pending',
-          'table': selectedTable.value,
-          'sub_total': 0.0,
-          'discount': 0.0,
-          'grand_total': 0.0,
-          'sale_date': DateTime.now().toIso8601String(),
-          'is_paid': false,
-          'created_by': user['id'],
-        },
+        data: saleData,
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         final responseData = response.data;
+        print('📥 Sale creation response: $responseData');
+
         if (responseData is Map<String, dynamic>) {
           currentSale.value =
               sale_model.Sale.fromJson(responseData['data'] ?? responseData);
-          print('Sale created with ID: ${currentSale.value!.id}');
-        } else {
-          throw Exception('Invalid response format');
+          print(
+              '✅ Sale created with ID: ${currentSale.value!.id} for table ${currentTableId.value}');
+
+          // Verify table_id was saved
+          if (currentSale.value!.tableId == currentTableId.value) {
+            print('✅ Table ID correctly saved in sale');
+          } else {
+            print('⚠️ Warning: Table ID mismatch in created sale');
+          }
         }
       } else {
         throw Exception('Failed to create sale: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error in startNewSale: $e');
+      print('❌ Error in startNewSale: $e');
+      if (e is DioException) {
+        print('DioException details: ${e.response?.data}');
+      }
       Program.showError('Failed to create sale: ${e.toString()}');
       rethrow;
     } finally {
@@ -438,49 +547,101 @@ class SaleControllerx extends GetxController {
   }
 
   Future<void> completeCurrentSale() async {
+    print('=== Completing current sale ===');
+
     if (currentSale.value == null) {
-      Program.showError('No active sale to complete');
-      return;
+      throw Exception('No active sale to complete');
     }
 
     if (cartItems.isEmpty) {
-      Program.showError('Cannot complete sale with empty cart');
-      return;
+      throw Exception('Cannot complete sale with empty cart');
     }
 
-    try {
-      loading(true);
+    if (selectedPaymentMethod.value == null) {
+      throw Exception('No payment method selected');
+    }
 
-      // First save all sale products
+    final token = _storage.read('token');
+    if (token == null) throw Exception('No authentication token found');
+
+    try {
+      // 1. Save sale items
       await _saveSaleItems(currentSale.value!.id);
 
-      // Then update the sale status and totals
-      final token = _storage.read('token');
-      if (token == null) throw Exception('No authentication token found');
+      // 2. Update sale status with table_id explicitly included
+      final updateData = {
+        'status': 'completed',
+        'sub_total': saleSubtotal.value,
+        'discount': saleDiscount.value,
+        'grand_total': saleTotal.value,
+        'is_paid': true,
+        'sale_date': DateTime.now().toIso8601String(),
+        'table_id': currentTableId.value, // ✅ Ensure table_id is included
+      };
 
-      final response = await _dio.put(
+      print('📤 Updating sale with data: $updateData');
+
+      final saleResponse = await _dio.put(
         '/sales/${currentSale.value!.id}',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
-        data: {
-          'status': 'completed',
-          'sub_total': saleSubtotal.value,
-          'discount': saleDiscount.value,
-          'grand_total': saleTotal.value,
-          'is_paid': true,
-          'sale_date': DateTime.now().toIso8601String(),
-        },
+        data: updateData,
       );
 
-      if (response.statusCode == 200) {
-        Program.success("Payment Successful", "Sale completed successfully!");
-        _clearCurrentSale();
-        clearCart();
+      // 3. Safely verify table_id
+      final saleData = saleResponse.data['data'];
+      if (saleData != null) {
+        if (saleData['table_id'] != null &&
+            saleData['table_id'] == currentTableId.value) {
+          print(
+              '✅ Sale successfully associated with table_id: ${saleData['table_id']}');
+        } else {
+          print('⚠️ Warning: Sale completed but table_id not properly saved');
+          print(
+              'Expected: ${currentTableId.value}, Got: ${saleData['table_id']}');
+        }
+      } else {
+        print('⚠️ Warning: saleResponse.data["data"] is null');
       }
+
+      // 4. Create payment record
+      final paymentData = {
+        'payment_amount': double.tryParse(paymentAmountController.text) ?? 0.0,
+        'exchange_rate': double.tryParse(exchangeRateController.text) ?? 1.0,
+        'payment_method_name': selectedPaymentMethod.value!.paymentMethodName,
+        'sale_id': currentSale.value!.id,
+        'payment_method_id': selectedPaymentMethod.value!.id,
+        'created_day': DateTime.now().toIso8601String(),
+        'created_by': _storage.read('user')?['id']?.toString(),
+      };
+
+      print('📤 Creating payment with data: $paymentData');
+
+      final paymentResponse = await _dio.post(
+        '/sale-payments',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        data: paymentData,
+      );
+
+      if (paymentResponse.statusCode == 201 ||
+          paymentResponse.statusCode == 200) {
+        print('✅ Payment created successfully');
+      }
+
+      // 5. Clear cart and show success
+      Get.back(); // Close loading indicator
+      Program.success("Payment Successful",
+          "Sale completed successfully for ${currentTableName.value}!");
+
+      _clearCurrentSale();
+      clearCart();
     } catch (e) {
-      Program.showError('Payment failed: ${e.toString()}');
-      print('Payment error: $e');
-    } finally {
-      loading(false);
+      Get.back(); // Close any loading dialogs
+      print('❌ Error completing sale: $e');
+      if (e is DioException) {
+        print('DioException details: ${e.response?.data}');
+      }
+      Program.showError('Failed to complete sale: ${e.toString()}');
+      rethrow;
     }
   }
 
@@ -580,62 +741,15 @@ class SaleControllerx extends GetxController {
 
   void onPayPressed() async {
     print('=== Pay button pressed ===');
-
-    if (cartItems.isEmpty) {
-      Program.showError('No items in cart');
-      return;
-    }
-
-    if (saleTotal.value <= 0) {
-      Program.showError('Invalid total amount');
-      return;
-    }
+    debugPrint('Cart items: ${cartItems.length}');
+    debugPrint('Sale total: ${saleTotal.value}');
+    debugPrint('Current sale: ${currentSale.value?.id}');
 
     try {
-      // Create sale if it doesn't exist
-      if (currentSale.value == null) {
-        print('Creating sale for payment...');
-        await startNewSale();
-      }
-
-      // Show confirmation dialog
-      Get.dialog(
-        AlertDialog(
-          title: const Text('Confirm Payment'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Subtotal: ${formattedSubtotal}'),
-              if (saleDiscount.value > 0)
-                Text('Discount: ${formattedDiscount}',
-                    style: const TextStyle(color: Colors.red)),
-              const Divider(),
-              Text('Total: ${formattedTotal}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16)),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Get.back(),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Get.back();
-                completeCurrentSale();
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: const Text('Confirm Payment',
-                  style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
-      );
+      showPaymentDialog();
     } catch (e) {
-      print('Error in onPayPressed: $e');
-      Program.showError('Failed to process payment: ${e.toString()}');
+      debugPrint('Error showing payment dialog: $e');
+      Program.showError('Failed to start payment: ${e.toString()}');
     }
   }
 
@@ -697,6 +811,248 @@ class SaleControllerx extends GetxController {
         handler.next(error);
       },
     ));
+  }
+
+  Future<void> fetchPaymentMethods() async {
+    try {
+      loading(true);
+      final token = _storage.read('token');
+      if (token == null) throw Exception('No authentication token found');
+
+      final response = await _dio.get(
+        '/payment-methods',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data as List? ?? [];
+        paymentMethods
+            .assignAll(data.map((json) => PaymentMethod.fromJson(json)));
+
+        // Auto-select the first payment method if none is selected
+        if (selectedPaymentMethod.value == null && paymentMethods.isNotEmpty) {
+          selectedPaymentMethod.value = paymentMethods.first;
+        }
+      }
+    } catch (e) {
+      errorMessage.value = 'Failed to fetch payment methods';
+      Program.showError('Payment method fetch error: $e');
+    } finally {
+      loading(false);
+    }
+  }
+// In your SaleController class
+
+  void showPaymentDialog() {
+    // Initialize payment values
+    paymentAmountController.text = saleTotal.value.toStringAsFixed(2);
+    dollarPayment.value = saleTotal.value;
+    rialsPayment.value = saleTotal.value * exchangeRate.value;
+    remainingAmount.value = 0.0;
+
+    // Ensure we have a selected payment method if available
+    if (selectedPaymentMethod.value == null && paymentMethods.isNotEmpty) {
+      selectedPaymentMethod.value = paymentMethods.first;
+    }
+
+    Get.dialog(
+      AlertDialog(
+        title: const Center(child: Text('Payment')),
+        content: SizedBox(
+          width: 400,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Total amount display
+                const Text('TOTAL:', style: TextStyle(fontSize: 16)),
+                const SizedBox(height: 8),
+                Obx(() => Text(
+                      '\$${saleTotal.value.toStringAsFixed(2)} R ${(saleTotal.value * exchangeRate.value).toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                const SizedBox(height: 20),
+
+                // Payment method dropdown
+                Obx(() {
+                  // Create a defensive copy of the selected value
+                  final selected =
+                      paymentMethods.contains(selectedPaymentMethod.value)
+                          ? selectedPaymentMethod.value
+                          : null;
+
+                  return DropdownButtonFormField<PaymentMethod>(
+                    value: selected,
+                    items: paymentMethods.map((method) {
+                      return DropdownMenuItem<PaymentMethod>(
+                        value: method,
+                        child: Text(method.paymentMethodName),
+                      );
+                    }).toList(),
+                    onChanged: (method) {
+                      selectedPaymentMethod.value = method;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Payment Method',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) =>
+                        value == null ? 'Please select a payment method' : null,
+                  );
+                }),
+                const SizedBox(height: 20),
+
+                // Dollar payment input
+                TextField(
+                  controller: paymentAmountController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Dollar Pay:',
+                    prefixText: '\$',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    final dollars = double.tryParse(value) ?? 0;
+                    updateDollarPayment(dollars);
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // Riels payment input
+                TextField(
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Riels Pay:',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    final rials = double.tryParse(value) ?? 0;
+                    updateRialsPayment(rials);
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // Remaining amount
+                Obx(() => Text(
+                      'Remaining: \$${remainingAmount.value.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: remainingAmount.value > 0
+                            ? Colors.red
+                            : Colors.green,
+                      ),
+                    )),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('CANCEL'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(150, 45),
+            ),
+            onPressed: () async {
+              if (selectedPaymentMethod.value == null) {
+                Program.showError('Please select a payment method');
+                return;
+              }
+
+              if (remainingAmount.value > 0) {
+                Program.showError('Please pay the full amount');
+                return;
+              }
+
+              Get.dialog(
+                const Center(child: CircularProgressIndicator()),
+                barrierDismissible: false,
+              );
+
+              try {
+                await completeCurrentSale();
+              } catch (e) {
+                Get.back(); // Close loading
+                Program.showError('Payment failed: ${e.toString()}');
+              }
+            },
+            child: const Text('PAY & PRINT', style: TextStyle(fontSize: 16)),
+          ),
+        ],
+      ),
+    );
+  }
+
+// Currency conversion methods
+  void updateDollarPayment(double dollars) {
+    dollarPayment.value = dollars;
+    rialsPayment.value = dollars * exchangeRate.value;
+    remainingAmount.value = saleTotal.value - dollars;
+    update();
+  }
+
+  void updateRialsPayment(double rials) {
+    rialsPayment.value = rials;
+    dollarPayment.value = rials / exchangeRate.value;
+    paymentAmountController.text = dollarPayment.value.toStringAsFixed(2);
+    remainingAmount.value = saleTotal.value - dollarPayment.value;
+    update();
+  }
+
+
+  Future<void> loadExistingSale(int saleId) async {
+    try {
+      final response = await _dio.get('/sales/$saleId');
+      final sale = Sale.fromJson(response.data['data']);
+
+      if (sale.tableId != null) {
+        print('📊 Loaded sale ${sale.id} for table ${sale.tableId}');
+        // Set the table context
+        final tableController = Get.put(TableController());
+        tableController.selectedTableId.value = sale.tableId!;
+        tableController.selectedTableName.value = 'Table ${sale.tableId}';
+        selectedTable.value = 'Table ${sale.tableId}';
+      }
+
+      currentSale.value = sale;
+    } catch (e) {
+      // Handle error
+    }
+  }
+
+  void setCurrentTable(int tableId, String tableName) {
+    print(
+        '🏁 SaleController.setCurrentTable called - ID: $tableId, Name: $tableName');
+
+    currentTableId.value = tableId;
+    currentTableName.value = tableName;
+    selectedTableId.value = tableId; // Make sure this is also set
+
+    print(
+        '✅ Table set in SaleController - currentTableId: ${currentTableId.value}');
+    print(
+        '✅ Table set in SaleController - selectedTableId: ${selectedTableId.value}');
+
+    update(); // Trigger UI update
+  }
+
+  void addProductToCartById(int productId, {int quantity = 1}) {
+    final product = products.firstWhere(
+      (p) => p.id == productId,
+      orElse: () => throw Exception('Product not found'),
+    );
+
+    for (int i = 0; i < quantity; i++) {
+      addProductToCart(product);
+    }
   }
 
   // --- GETTERS for UI display ---

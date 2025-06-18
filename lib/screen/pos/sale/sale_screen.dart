@@ -15,16 +15,32 @@ class SaleScreen extends StatefulWidget {
 }
 
 class _SaleScreenState extends State<SaleScreen> {
-  final SaleControllerx saleController = Get.put(SaleControllerx());
+  final SaleController saleController = Get.put(SaleController());
   final _searchController = TextEditingController();
   String _formattedDateTime = '';
   Timer? _timer;
+  late int tableId;
+  late String tableName;
 
   @override
   void initState() {
     super.initState();
     _initDateTime();
     _setupSearchListener();
+    _getTableInfo();
+  }
+
+  void _getTableInfo() {
+    final arguments = Get.arguments;
+    if (arguments != null) {
+      tableId = arguments['table_id'];
+      tableName = arguments['table_name'];
+      saleController.setCurrentTable(tableId, tableName);
+      print('Table set in sale screen: $tableId, $tableName');
+    } else {
+      Get.snackbar('Error', 'No table selected');
+      Future.delayed(Duration(seconds: 1), () => Get.back());
+    }
   }
 
   void _initDateTime() {
@@ -71,26 +87,35 @@ class _SaleScreenState extends State<SaleScreen> {
   AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: appColor,
-      title: SizedBox(
-        width: 200,
-        height: 40,
-        child: TextField(
-          controller: _searchController,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: 'Search products...',
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-            prefixIcon: const Icon(Icons.search, color: Colors.white),
-            filled: true,
-            fillColor: appColor.withOpacity(0.3),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(24),
-              borderSide: BorderSide.none,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 200,
+            height: 40,
+            child: TextField(
+              controller: _searchController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: 'Search products...',
+                hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
+                filled: true,
+                fillColor: appColor.withOpacity(0.3),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
           ),
-        ),
+          Text(
+            'Table: $tableName',
+            style: const TextStyle(fontSize: 12, color: Colors.white),
+          ),
+        ],
       ),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -840,27 +865,38 @@ class _SaleScreenState extends State<SaleScreen> {
     );
   }
 
-  Widget _buildPayButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+// In your SaleScreen widget, update the _buildPayButton method:
+Widget _buildPayButton() {
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
-        onPressed: saleController.onPayPressed,
-        child: Obx(() => Text(
-              "PAY (${saleController.formattedTotal})",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            )),
       ),
-    );
-  }
+      onPressed: () {
+        if (saleController.cartItems.isEmpty) {
+          Get.snackbar(
+            'Empty Cart',
+            'Please add items to cart before payment',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+          return;
+        }
+        saleController.showPaymentDialog();
+      },
+      child: Obx(() => Text(
+            "PAY (${saleController.formattedTotal})",
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          )),
+    ),
+  );
+}
 }
