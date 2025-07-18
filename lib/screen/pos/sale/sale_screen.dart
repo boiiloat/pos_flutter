@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../controller/sale_controller.dart';
+import '../../../controller/table_controller.dart';
 import '../../../utils/constants.dart';
 import '../../../models/api/category_model.dart' as category_model;
 import '../../../models/api/product_model.dart' as product_model;
@@ -119,7 +120,13 @@ class _SaleScreenState extends State<SaleScreen> {
       ),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: Get.back,
+        onPressed: () {
+          // Reset loading state in table controller
+          if (Get.isRegistered<TableController>()) {
+            Get.find<TableController>().loading.value = false;
+          }
+          Get.back();
+        },
       ),
       actions: [
         Padding(
@@ -866,37 +873,37 @@ class _SaleScreenState extends State<SaleScreen> {
   }
 
 // In your SaleScreen widget, update the _buildPayButton method:
-Widget _buildPayButton() {
-  return SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+  Widget _buildPayButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
+        onPressed: () {
+          if (saleController.cartItems.isEmpty) {
+            Get.snackbar(
+              'Empty Cart',
+              'Please add items to cart before payment',
+              snackPosition: SnackPosition.BOTTOM,
+            );
+            return;
+          }
+          saleController.showPaymentDialog();
+        },
+        child: Obx(() => Text(
+              "PAY (${saleController.formattedTotal})",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
       ),
-      onPressed: () {
-        if (saleController.cartItems.isEmpty) {
-          Get.snackbar(
-            'Empty Cart',
-            'Please add items to cart before payment',
-            snackPosition: SnackPosition.BOTTOM,
-          );
-          return;
-        }
-        saleController.showPaymentDialog();
-      },
-      child: Obx(() => Text(
-            "PAY (${saleController.formattedTotal})",
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          )),
-    ),
-  );
-}
+    );
+  }
 }

@@ -131,28 +131,19 @@ class TablePlanScreen extends StatelessWidget {
       final tableId = table['id'];
       final tableName = table['name'];
 
-      print('🏁 Table selected - ID: $tableId, Name: $tableName');
-
       if (tableId == null || tableName == null) {
         Get.snackbar('Error', 'Table information is incomplete');
         return;
       }
 
       // Show loading indicator
-      Get.dialog(
-        const Center(child: CircularProgressIndicator()),
-        barrierDismissible: false,
-      );
+      controller.loading.value = true;
 
-      // Set table in TableController first
+      // Set table in TableController
       controller.selectTable(tableId, tableName);
-
-      // Small delay to ensure the selection is processed
-      await Future.delayed(Duration(milliseconds: 100));
 
       // Initialize SaleController if not already registered
       if (!Get.isRegistered<SaleController>()) {
-        print('🔧 Registering SaleController');
         Get.put(SaleController(), permanent: true);
       }
 
@@ -160,31 +151,20 @@ class TablePlanScreen extends StatelessWidget {
       final saleController = Get.find<SaleController>();
       saleController.setCurrentTable(tableId, tableName);
 
-      // Close loading indicator
-      Get.back();
-
-      // Navigate to sales screen with table data as arguments
-      print('🚀 Navigating to sales screen');
-      final result = await Get.toNamed('/sales', arguments: {
+      // Navigate to sales screen
+      await Get.toNamed('/sales', arguments: {
         'table_id': tableId,
         'table_name': tableName,
       });
-
-      print('📱 Returned from sales screen');
     } catch (e) {
-      // Close loading indicator if still open
-      if (Get.isDialogOpen == true) {
-        Get.back();
-      }
-
-      print('❌ Error in table selection: $e');
       Get.snackbar(
         'Error',
         'Failed to select table: ${e.toString()}',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
       );
+    } finally {
+      // Always reset loading when done
+      controller.loading.value = false;
     }
   }
 

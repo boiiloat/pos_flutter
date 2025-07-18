@@ -26,6 +26,12 @@ class TableController extends GetxController {
     fetchTables();
   }
 
+  @override
+  void onClose() {
+    loading.value = false; // Reset loading state when controller is closed
+    super.onClose();
+  }
+
   void updateAdminStatus() {
     final user = _storage.read('user') ?? {};
     final roleId = int.tryParse(user['role_id'].toString()) ?? 0;
