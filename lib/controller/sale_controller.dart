@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/program.dart';
+import 'package:pos_system/screen/receipt/web_receipt_screen.dart';
 import '../../models/api/category_model.dart' as category_model;
 import '../../models/api/product_model.dart' as product_model;
 import '../../models/api/sale_model.dart' as sale_model;
@@ -547,28 +548,17 @@ class SaleController extends GetxController {
   }
 
   Future<void> completeCurrentSale() async {
-    print('=== Completing current sale ===');
-
-    if (currentSale.value == null) {
-      throw Exception('No active sale to complete');
-    }
-
-    if (cartItems.isEmpty) {
-      throw Exception('Cannot complete sale with empty cart');
-    }
-
-    if (selectedPaymentMethod.value == null) {
-      throw Exception('No payment method selected');
-    }
-
-    final token = _storage.read('token');
-    if (token == null) throw Exception('No authentication token found');
-
     try {
+      // Convert payment amount safely
+      final paymentAmount =
+          double.tryParse(paymentAmountController.text) ?? saleTotal.value;
+      final exchangeRateValue =
+          double.tryParse(exchangeRateController.text) ?? 1.0;
+
       // 1. Save sale items
       await _saveSaleItems(currentSale.value!.id);
 
-      // 2. Update sale status with table_id explicitly included
+      // 2. Update sale status
       final updateData = {
         'status': 'completed',
         'sub_total': saleSubtotal.value,
@@ -576,37 +566,20 @@ class SaleController extends GetxController {
         'grand_total': saleTotal.value,
         'is_paid': true,
         'sale_date': DateTime.now().toIso8601String(),
-        'table_id': currentTableId.value, // ✅ Ensure table_id is included
+        'table_id': currentTableId.value,
       };
-
-      print('📤 Updating sale with data: $updateData');
 
       final saleResponse = await _dio.put(
         '/sales/${currentSale.value!.id}',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        options: Options(
+            headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
         data: updateData,
       );
 
-      // 3. Safely verify table_id
-      final saleData = saleResponse.data['data'];
-      if (saleData != null) {
-        if (saleData['table_id'] != null &&
-            saleData['table_id'] == currentTableId.value) {
-          print(
-              '✅ Sale successfully associated with table_id: ${saleData['table_id']}');
-        } else {
-          print('⚠️ Warning: Sale completed but table_id not properly saved');
-          print(
-              'Expected: ${currentTableId.value}, Got: ${saleData['table_id']}');
-        }
-      } else {
-        print('⚠️ Warning: saleResponse.data["data"] is null');
-      }
-
-      // 4. Create payment record
+      // 3. Create payment record with properly typed values
       final paymentData = {
-        'payment_amount': double.tryParse(paymentAmountController.text) ?? 0.0,
-        'exchange_rate': double.tryParse(exchangeRateController.text) ?? 1.0,
+        'payment_amount': paymentAmount, // Now properly typed as double
+        'exchange_rate': exchangeRateValue, // Now properly typed as double
         'payment_method_name': selectedPaymentMethod.value!.paymentMethodName,
         'sale_id': currentSale.value!.id,
         'payment_method_id': selectedPaymentMethod.value!.id,
@@ -614,33 +587,23 @@ class SaleController extends GetxController {
         'created_by': _storage.read('user')?['id']?.toString(),
       };
 
-      print('📤 Creating payment with data: $paymentData');
-
-      final paymentResponse = await _dio.post(
+      await _dio.post(
         '/sale-payments',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        options: Options(
+            headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
         data: paymentData,
       );
 
-      if (paymentResponse.statusCode == 201 ||
-          paymentResponse.statusCode == 200) {
-        print('✅ Payment created successfully');
-      }
+      // 4. Clear cart
+      cartItems.clear();
+      cartQuantities.clear();
 
-      // 5. Clear cart and show success
-      Get.back(); // Close loading indicator
-      Program.success("Payment Successful",
-          "Sale completed successfully for ${currentTableName.value}!");
-
-      _clearCurrentSale();
-      clearCart();
+      // 5. Navigate to receipt
+      Get.back(); // Close loading
+      Get.toNamed('/web_receipt_screen');
     } catch (e) {
-      Get.back(); // Close any loading dialogs
-      print('❌ Error completing sale: $e');
-      if (e is DioException) {
-        print('DioException details: ${e.response?.data}');
-      }
-      Program.showError('Failed to complete sale: ${e.toString()}');
+      Get.back();
+      Program.showError('Payment failed: ${e.toString()}');
       rethrow;
     }
   }
@@ -841,8 +804,8 @@ class SaleController extends GetxController {
       loading(false);
     }
   }
-// In your SaleController class
 
+// In your SaleController class
   void showPaymentDialog() {
     // Initialize payment values
     paymentAmountController.text = saleTotal.value.toStringAsFixed(2);
@@ -850,9 +813,12 @@ class SaleController extends GetxController {
     rialsPayment.value = saleTotal.value * exchangeRate.value;
     remainingAmount.value = 0.0;
 
-    // Ensure we have a selected payment method if available
-    if (selectedPaymentMethod.value == null && paymentMethods.isNotEmpty) {
-      selectedPaymentMethod.value = paymentMethods.first;
+    // Ensure selected payment method exists in available methods
+    if (selectedPaymentMethod.value == null ||
+        !paymentMethods.any((m) => m.id == selectedPaymentMethod.value?.id)) {
+      if (paymentMethods.isNotEmpty) {
+        selectedPaymentMethod.value = paymentMethods.first;
+      }
     }
 
     Get.dialog(
@@ -864,7 +830,6 @@ class SaleController extends GetxController {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Total amount display
                 const Text('TOTAL:', style: TextStyle(fontSize: 16)),
                 const SizedBox(height: 8),
                 Obx(() => Text(
@@ -876,13 +841,11 @@ class SaleController extends GetxController {
                     )),
                 const SizedBox(height: 20),
 
-                // Payment method dropdown
+                // Payment method dropdown - Fixed version
                 Obx(() {
-                  // Create a defensive copy of the selected value
-                  final selected =
-                      paymentMethods.contains(selectedPaymentMethod.value)
-                          ? selectedPaymentMethod.value
-                          : null;
+                  // Find the selected method in available methods
+                  final selected = paymentMethods.firstWhereOrNull(
+                      (method) => method.id == selectedPaymentMethod.value?.id);
 
                   return DropdownButtonFormField<PaymentMethod>(
                     value: selected,
@@ -892,8 +855,10 @@ class SaleController extends GetxController {
                         child: Text(method.paymentMethodName),
                       );
                     }).toList(),
-                    onChanged: (method) {
-                      selectedPaymentMethod.value = method;
+                    onChanged: (PaymentMethod? method) {
+                      if (method != null) {
+                        selectedPaymentMethod.value = method;
+                      }
                     },
                     decoration: const InputDecoration(
                       labelText: 'Payment Method',
@@ -972,6 +937,10 @@ class SaleController extends GetxController {
                 return;
               }
 
+              // Close payment dialog first
+              Get.back();
+
+              // Show loading indicator
               Get.dialog(
                 const Center(child: CircularProgressIndicator()),
                 barrierDismissible: false,
@@ -979,15 +948,21 @@ class SaleController extends GetxController {
 
               try {
                 await completeCurrentSale();
+                // Close loading and navigate to receipt
+                Get.back();
+                Get.toNamed('/web_receipt_screen');
               } catch (e) {
-                Get.back(); // Close loading
+                Get.back();
                 Program.showError('Payment failed: ${e.toString()}');
+                // Re-open payment dialog to retry
+                showPaymentDialog();
               }
             },
-            child: const Text('PAY & PRINT', style: TextStyle(fontSize: 16)),
+            child: const Text('PAY & PRINT'),
           ),
         ],
       ),
+      barrierDismissible: false,
     );
   }
 
@@ -996,17 +971,19 @@ class SaleController extends GetxController {
     dollarPayment.value = dollars;
     rialsPayment.value = dollars * exchangeRate.value;
     remainingAmount.value = saleTotal.value - dollars;
+    paymentAmountController.text =
+        dollars.toStringAsFixed(2); // Ensure proper format
     update();
   }
 
   void updateRialsPayment(double rials) {
     rialsPayment.value = rials;
     dollarPayment.value = rials / exchangeRate.value;
-    paymentAmountController.text = dollarPayment.value.toStringAsFixed(2);
     remainingAmount.value = saleTotal.value - dollarPayment.value;
+    paymentAmountController.text =
+        dollarPayment.value.toStringAsFixed(2); // Ensure proper format
     update();
   }
-
 
   Future<void> loadExistingSale(int saleId) async {
     try {

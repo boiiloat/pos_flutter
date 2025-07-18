@@ -7,6 +7,7 @@ import 'package:pos_system/screen/pos/sale/sale_screen.dart';
 import 'package:pos_system/screen/pos/table/table_screen.dart';
 import 'package:pos_system/screen/product/category_screen.dart';
 import 'package:pos_system/screen/product/product_screen.dart';
+import 'package:pos_system/screen/receipt/web_receipt_screen.dart';
 import 'package:pos_system/services/api_service.dart';
 import 'package:pos_system/services/auth_service.dart';
 
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/category', page: () => CategoryScreen()),
         GetPage(name: '/table', page: () => const TablePlanScreen()),
         GetPage(name: '/sales', page: () => const SaleScreen()),
+        GetPage(name: '/web_receipt_screen', page: () => WebReceiptScreen()),
       ],
     );
   }

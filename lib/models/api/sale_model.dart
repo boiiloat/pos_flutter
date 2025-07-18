@@ -34,12 +34,17 @@ class Sale {
     if (json['table_id'] == null) {
       print('Warning: Sale created without table association');
     }
-
     return Sale(
       id: json['id'] as int,
-      subTotal: (json['sub_total'] as num).toDouble(),
-      discount: (json['discount'] as num).toDouble(),
-      grandTotal: (json['grand_total'] as num).toDouble(),
+      subTotal: (json['sub_total'] is String)
+          ? double.parse(json['sub_total'])
+          : (json['sub_total'] as num).toDouble(),
+      discount: (json['discount'] is String)
+          ? double.parse(json['discount'])
+          : (json['discount'] as num).toDouble(),
+      grandTotal: (json['grand_total'] is String)
+          ? double.parse(json['grand_total'])
+          : (json['grand_total'] as num).toDouble(),
       isPaid: json['is_paid'] as bool,
       status: json['status'] as String,
       saleDate: DateTime.parse(json['sale_date'] as String),
@@ -47,7 +52,17 @@ class Sale {
       invoiceNumber: json['invoice_number'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
-      products: json['products'] as List<dynamic>,
+      products: json['products'] != null
+          ? (json['products'] as List)
+              .map((p) => {
+                    'product_name': p['product_name'] ?? 'Unknown',
+                    'quantity': p['quantity'],
+                    'price': (p['price'] is String)
+                        ? double.parse(p['price'])
+                        : (p['price'] as num).toDouble(),
+                  })
+              .toList()
+          : [],
       tableId: json['table_id'] as int?,
     );
   }
