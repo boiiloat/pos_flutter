@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_system/controller/login_controller.dart';
 import 'package:pos_system/controller/main_controller.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
+import 'package:pos_system/program.dart'; // Add this import
 
 class HomeProfileActionMenuWidget extends StatelessWidget {
   const HomeProfileActionMenuWidget({super.key});
@@ -39,9 +40,8 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
         }),
         onSelected: (value) {
           if (value == 'logout') {
-            // Call the logout method
-            loginController.logout();
-            Get.offAll(() => const LoginScreen());
+            // Use the same logout logic as main logout button
+            _handleLogout(mainController, loginController);
           } else {
             mainController.onProfileActionPressed(value);
           }
@@ -137,6 +137,30 @@ class HomeProfileActionMenuWidget extends StatelessWidget {
           ];
         },
       ),
+    );
+  }
+
+  void _handleLogout(MainController mainController, LoginController loginController) {
+    // Check if sale is started - same logic as main logout button
+    if (mainController.isSaleStarted.value) {
+      // Use Program.error instead of Get.snackbar
+      Program.error("Logout", "Please close the sale first before logging out");
+      return; // Stop here - don't proceed to logout
+    }
+
+    // If sale is closed, show normal logout confirmation
+    Get.defaultDialog(
+      title: "Logout",
+      middleText: "Are you sure you want to logout?",
+      textCancel: "Cancel",
+      textConfirm: "OK",
+      confirmTextColor: Colors.white,
+      onConfirm: () {
+        // Call the original logout method
+        loginController.logout();
+        Get.offAll(() => const LoginScreen());
+      },
+      onCancel: () {},
     );
   }
 }

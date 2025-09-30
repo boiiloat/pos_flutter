@@ -30,6 +30,7 @@ class MainController extends GetxController {
         confirmTextColor: Colors.white,
         onConfirm: () {
           isSaleStarted.value = false;
+          _storage.write('isSaleStarted', false);
           Get.back();
           Get.snackbar(
             "Success".tr,
@@ -49,6 +50,7 @@ class MainController extends GetxController {
         confirmTextColor: Colors.white,
         onConfirm: () {
           isSaleStarted.value = true;
+          _storage.write('isSaleStarted', true);
           Get.back();
           Get.snackbar(
             "Success".tr,
@@ -74,7 +76,16 @@ class MainController extends GetxController {
     }
   }
 
+  // In MainController - Update the onLogoutPressed method
   void onLogoutPressed() {
+    // Check if sale is started
+    if (isSaleStarted.value) {
+      // Use Program.error instead of Get.snackbar
+      Program.error("Logout", "Please close the sale first before logging out");
+      return; // Stop here - don't proceed to logout
+    }
+
+    // If sale is closed, show normal logout confirmation
     Get.defaultDialog(
       title: "Logout",
       middleText: "Are you sure you want to logout?",
@@ -103,7 +114,7 @@ class MainController extends GetxController {
   }
 
   void onProductPressed() {
-    Get.toNamed('/product'); //ProductScreen
+    Get.toNamed('/product');
   }
 
   void onReportPressed() {
@@ -111,7 +122,7 @@ class MainController extends GetxController {
   }
 
   void onExpensePressed() {
-    Get.to(() => ReportExpanseScreen());
+    Get.to(() => const ReportExpanseScreen());
   }
 
   void onResetSalePressed() {

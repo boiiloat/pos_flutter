@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/table_controller.dart';
-import 'package:pos_system/controller/sale_controller.dart'; // Add this import
+import 'package:pos_system/controller/sale_controller.dart';
 import 'package:pos_system/utils/constants.dart';
 import 'package:pos_system/screen/pos/table/widgets/table_action_widget.dart';
 import 'package:pos_system/screen/pos/table/widgets/table_plan_add_new.dart';
@@ -28,7 +28,7 @@ class TablePlanScreen extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           leading: IconButton(
-            onPressed: () => Get.back(),
+            onPressed: () => _navigateBackToHome(),
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
           backgroundColor: appColor,
@@ -125,6 +125,16 @@ class TablePlanScreen extends StatelessWidget {
     );
   }
 
+  void _navigateBackToHome() {
+    print('🏠 Navigating back to home screen (preserving sale state)...');
+
+    // Simply navigate back to home without clearing any data
+    Get.offAllNamed('/home');
+
+    print('✅ Navigated to home - Sale state preserved');
+  }
+
+  // In TablePlanScreen - Update _handleTableSelection
   void _handleTableSelection(
       TableController controller, Map<String, dynamic> table) async {
     try {
@@ -138,6 +148,17 @@ class TablePlanScreen extends StatelessWidget {
 
       // Show loading indicator
       controller.loading.value = true;
+
+      // Clear any existing sale data before starting new sale
+      if (Get.isRegistered<SaleController>()) {
+        final saleController = Get.find<SaleController>();
+        print('🧹 Clearing existing sale data before new sale...');
+        saleController.cartItems.clear();
+        saleController.cartQuantities.clear();
+        saleController.saleSubtotal.value = 0.0;
+        saleController.saleDiscount.value = 0.0;
+        saleController.saleTotal.value = 0.0;
+      }
 
       // Set table in TableController
       controller.selectTable(tableId, tableName);

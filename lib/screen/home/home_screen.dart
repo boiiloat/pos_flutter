@@ -179,21 +179,14 @@ class HomeScreen extends StatelessWidget {
                                       onPressed: controller.onResetSalePressed,
                                     ),
 
-                                    // HomeButtonWidget(
-                                    //   title: "Back Up".tr,
-                                    //   background: Colors.yellow.shade800,
-                                    //   foreground: Colors.white,
-                                    //   iconData: Icons.backup_sharp,
-                                    //   onPressed: controller.onBackupPressed,
-                                    //   foregroundIconColor: Colors.white,
-                                    // ),
-
+                                    // In HomeScreen build method, update the Logout button:
                                     HomeButtonWidget(
                                       title: "Logout".tr,
                                       background: Colors.red,
                                       foreground: Colors.white,
                                       iconData: Icons.logout_outlined,
-                                      onPressed: controller.onLogoutPressed,
+                                      onPressed: controller
+                                          .onLogoutPressed, // No changes here
                                       foregroundIconColor: Colors.white,
                                     ),
                                   ],

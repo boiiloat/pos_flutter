@@ -30,6 +30,22 @@ class SaleController extends GetxController {
   var selectedPaymentMethod = Rxn<PaymentMethod>();
   var paymentAmountController = TextEditingController();
   var exchangeRateController = TextEditingController(text: '1.0');
+  var receiptProducts = <Map<String, dynamic>>[].obs;
+  var receiptSaleData = Rxn<Map<String, dynamic>>();
+  bool get hasActiveSale {
+    return currentSale.value != null || cartItems.isNotEmpty;
+  }
+
+  void preserveSaleState() {
+    print('💾 Preserving sale state for navigation...');
+    // This method intentionally does nothing - just preserves the current state
+    // The sale data remains in the controller for when we return
+  }
+
+  void resetSaleState() {
+    print('🔄 Resetting sale state (manual reset)...');
+    safeClearAllData();
+  }
 
   // UI State
   var searchQuery = ''.obs;
@@ -526,7 +542,7 @@ class SaleController extends GetxController {
     }
   }
 
-// Update your completeCurrentSale method - REMOVE data clearing
+// Update the completeCurrentSale method to preserve data
   Future<void> completeCurrentSale() async {
     try {
       // Convert payment amount safely
@@ -543,74 +559,82 @@ class SaleController extends GetxController {
 
       print('💰 Starting sale completion process...');
 
-      // 1. Save sale items FIRST (this is working based on your logs)
-      await _saveSaleItems(currentSale.value!.id);
-      print('✅ Sale items saved successfully');
+      // 1. Prepare receipt data FIRST (before any API calls)
+      prepareReceiptData();
+      print('✅ Receipt data prepared successfully');
 
-      // 2. Update sale status - but don't fail if this has network issues
-      bool saleUpdated = false;
+      // 2. Save sale items (try API, but don't fail completely)
+      bool itemsSaved = false;
       try {
-        final updateData = {
-          'status': 'completed',
-          'sub_total': saleSubtotal.value,
-          'discount': saleDiscount.value,
-          'grand_total': saleTotal.value,
-          'is_paid': true,
-        };
+        if (currentSale.value != null) {
+          await _saveSaleItems(currentSale.value!.id);
+          itemsSaved = true;
+          print('✅ Sale items saved to API');
+        }
+      } catch (e) {
+        print('⚠️ Sale items API save failed: $e');
+        // CONTINUE - we have offline data
+      }
 
-        final token = _storage.read('token');
-        final saleResponse = await _dio.patch(
-          '/sales/${currentSale.value!.id}',
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Content-Type': 'application/json'
-            },
-          ),
-          data: updateData,
-        );
+      // 3. Update sale status (optional)
+      try {
+        if (currentSale.value != null && itemsSaved) {
+          final updateData = {
+            'status': 'completed',
+            'sub_total': saleSubtotal.value,
+            'discount': saleDiscount.value,
+            'grand_total': saleTotal.value,
+            'is_paid': true,
+          };
 
-        if (saleResponse.statusCode == 200) {
-          saleUpdated = true;
-          print('✅ Sale status updated successfully');
+          final token = _storage.read('token');
+          await _dio.patch(
+            '/sales/${currentSale.value!.id}',
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+                'Content-Type': 'application/json'
+              },
+            ),
+            data: updateData,
+          );
+          print('✅ Sale status updated in API');
         }
       } catch (saleError) {
-        print(
-            '⚠️ Sale status update failed (but items were saved): $saleError');
-        // CONTINUE - items are already saved, this is less critical
+        print('⚠️ Sale status update failed: $saleError');
       }
 
-      // 3. Create payment record - also optional for receipt display
+      // 4. Create payment record (optional)
       try {
-        final paymentData = {
-          'payment_amount': paymentAmount,
-          'exchange_rate': exchangeRateValue,
-          'payment_method_name': selectedPaymentMethod.value!.paymentMethodName,
-          'sale_id': currentSale.value!.id,
-          'payment_method_id': selectedPaymentMethod.value!.id,
-          'created_day': DateTime.now().toIso8601String(),
-          'created_by': _storage.read('user')?['id']?.toString(),
-        };
+        if (currentSale.value != null && itemsSaved) {
+          final paymentData = {
+            'payment_amount': paymentAmount,
+            'exchange_rate': exchangeRateValue,
+            'payment_method_name':
+                selectedPaymentMethod.value!.paymentMethodName,
+            'sale_id': currentSale.value!.id,
+            'payment_method_id': selectedPaymentMethod.value!.id,
+            'created_day': DateTime.now().toIso8601String(),
+            'created_by': _storage.read('user')?['id']?.toString(),
+          };
 
-        await _dio.post(
-          '/sale-payments',
-          options: Options(
-              headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
-          data: paymentData,
-        );
-        print('✅ Payment record created successfully');
+          await _dio.post(
+            '/sale-payments',
+            options: Options(
+                headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
+            data: paymentData,
+          );
+          print('✅ Payment record created in API');
+        }
       } catch (paymentError) {
         print('⚠️ Payment record creation failed: $paymentError');
-        // CONTINUE - receipt can still be shown without payment record
       }
 
-      // 4. Close loading dialog
+      // 5. Close loading dialog
       Get.back();
 
-      // 5. DO NOT CLEAR DATA HERE - keep it for receipt screen
-      print('🎯 Navigating to receipt screen with sale data...');
-
-      // 6. Navigate to receipt - data is still available
+      // 6. Navigate to receipt - data is preserved in receiptSaleData
+      print('🎯 Navigating to receipt screen with preserved data...');
       Get.offAllNamed('/web_receipt_screen');
     } catch (e) {
       print('❌ Critical error in completeCurrentSale: $e');
@@ -618,9 +642,10 @@ class SaleController extends GetxController {
       // Close loading dialog
       if (Get.isDialogOpen!) Get.back();
 
-      Program.showError('Payment processing error: ${e.toString()}');
+      Program.showError('Payment completed with minor issues: ${e.toString()}');
 
-      // Don't navigate to receipt on critical errors
+      // Still navigate to receipt with preserved data
+      Get.offAllNamed('/web_receipt_screen');
     }
   }
 
@@ -689,7 +714,7 @@ class SaleController extends GetxController {
     print('✅ All sale data cleared successfully');
   }
 
-  // Add this method to your SaleController
+// In SaleController - Make sure safeClearAllData clears everything
   void safeClearAllData() {
     print('🧹 SAFE Clearing all sale data...');
 
@@ -708,32 +733,34 @@ class SaleController extends GetxController {
       // Clear non-reactive data
       cartItems.clear();
       cartQuantities.clear();
+      receiptProducts.clear();
+      receiptSaleData.value = null;
 
       // Clear controllers
       paymentAmountController.clear();
       exchangeRateController.text = '1.0';
       searchController.clear();
 
-      // Clear current sale last
+      // Clear current sale
       currentSale.value = null;
 
-      print('✅ All sale data cleared safely');
+      print('✅ All sale data cleared safely - Ready for fresh start');
     } catch (e) {
       print('⚠️ Error during data clearing: $e');
       // Even if there's an error, try to clear the most important data
       cartItems.clear();
       cartQuantities.clear();
       currentSale.value = null;
+      receiptSaleData.value = null;
     }
   }
 
-// In your SaleController, update the data clearing methods:
-
+  // In SaleController, update the safeClearSaleDataOnly method:
   void safeClearSaleDataOnly() {
-    print('🧹 SAFE Clearing only sale-related data (preserving table)...');
+    print('🧹 SAFE Clearing only sale-related data (preserving sale state)...');
 
     try {
-      // Clear only sale-specific data
+      // Clear only cart data and totals, but keep the sale active
       saleSubtotal.value = 0.0;
       saleDiscount.value = 0.0;
       saleTotal.value = 0.0;
@@ -750,20 +777,15 @@ class SaleController extends GetxController {
       exchangeRateController.text = '1.0';
       searchController.clear();
 
-      // Clear current sale
-      currentSale.value = null;
+      // DO NOT clear currentSale - keep the sale active
+      // currentSale.value = null;
 
-      // DO NOT clear table data - preserve table selection for next sale
-      // currentTableId and currentTableName should remain
-
-      print(
-          '✅ Sale data cleared (table preserved) - Table: ${currentTableId.value}');
+      print('✅ Cart cleared but sale remains active');
     } catch (e) {
       print('⚠️ Error during sale data clearing: $e');
-      // Even if there's an error, try to clear the most important data but keep table
       cartItems.clear();
       cartQuantities.clear();
-      currentSale.value = null;
+      // Still don't clear currentSale
     }
   }
 
@@ -1277,6 +1299,47 @@ class SaleController extends GetxController {
     saleDiscount.value = 0.0;
     saleTotal.value = 0.0;
     // Reset any other sale-related state
+  }
+
+// Add this method to preserve sale data for receipt
+  void prepareReceiptData() {
+    print('📋 Preparing receipt data...');
+
+    // Convert cart items to receipt format
+    receiptProducts.clear();
+
+    for (var product in cartItems) {
+      final key = _getProductKey(product);
+      final quantity = cartQuantities[key] ?? 1;
+
+      receiptProducts.add({
+        'product_id': product.id,
+        'product_name': product.name,
+        'price': product.price,
+        'quantity': quantity,
+        'amount': product.price * quantity,
+      });
+    }
+
+    // Store complete sale data for receipt
+    receiptSaleData.value = {
+      'id': currentSale.value?.id,
+      'invoice_number': currentSale.value?.invoiceNumber ??
+          'OFFLINE-${DateTime.now().millisecondsSinceEpoch}',
+      'sale_date': currentSale.value?.saleDate ?? DateTime.now(),
+      'table_id': currentTableId.value,
+      'table_name': currentTableName.value,
+      'sub_total': saleSubtotal.value,
+      'discount': saleDiscount.value,
+      'grand_total': saleTotal.value,
+      'is_paid': true,
+      'status': 'completed',
+      'payment_method':
+          selectedPaymentMethod.value?.paymentMethodName ?? 'Unknown',
+      'products': receiptProducts.toList(),
+    };
+
+    print('✅ Receipt data prepared with ${receiptProducts.length} products');
   }
 
   // --- GETTERS for UI display ---

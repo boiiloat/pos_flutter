@@ -120,29 +120,42 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           HomeDrawerMenuItemWidget(
-                              icon: Icons.play_circle_fill,
-                              text: 'Start Sale',
-                              onPressed: () {}),
+                            icon: Icons
+                                .play_circle_fill, // This will be dynamically changed
+                            text:
+                                'Start Sale', // This identifies it as the sale toggle
+                            onPressed: () {
+                              maincontroller.toggleSale();
+                            },
+                          ),
 
                           HomeDrawerMenuItemWidget(
                             icon: Icons.shopping_cart,
                             text: 'POS',
-                            onPressed: () {},
+                            onPressed: () {
+                              maincontroller.onPOSPressed();
+                            },
                           ),
                           HomeDrawerMenuItemWidget(
                             icon: Icons.list,
                             text: 'Product',
-                            onPressed: () {},
+                            onPressed: () {
+                              maincontroller.onProductPressed();
+                            },
                           ),
                           HomeDrawerMenuItemWidget(
                             icon: Icons.receipt_outlined,
                             text: 'Receipt',
-                            onPressed: () {},
+                            onPressed: () {
+                              maincontroller.onReceiptPressed();
+                            },
                           ),
                           HomeDrawerMenuItemWidget(
                             icon: Icons.assessment_outlined,
                             text: 'Report',
-                            onPressed: () {},
+                            onPressed: () {
+                              maincontroller.onReportPressed();
+                            },
                           ),
                           // Other Menu Items
                           HomeDrawerMenuItemWidget(
@@ -161,7 +174,12 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              const HomeLogoutButtonWidget(),
+              InkWell(
+                child: const HomeLogoutButtonWidget(),
+                onTap: () {
+                  maincontroller.onLogoutPressed();
+                },
+              ),
             ],
           ),
         ),

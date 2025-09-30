@@ -74,6 +74,49 @@ class _SaleScreenState extends State<SaleScreen> {
     });
   }
 
+  // Refresh method - CHANGED TO Future<void>
+  Future<void> _refreshData() async {
+    print('🔄 Refreshing products and categories...');
+
+    // Show loading indicator
+    saleController.loading.value = true;
+
+    try {
+      // Refresh both products and categories
+      await Future.wait([
+        saleController.fetchProducts(),
+        saleController.fetchCategories(),
+      ]);
+
+      // Clear search to show all products
+      _searchController.clear();
+      saleController.clearSearch();
+
+      Get.snackbar(
+        'Success',
+        'Products and categories refreshed successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+
+      print('✅ Products and categories refreshed successfully');
+    } catch (e) {
+      print('❌ Error refreshing data: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to refresh data: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    } finally {
+      saleController.loading.value = false;
+    }
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -121,7 +164,6 @@ class _SaleScreenState extends State<SaleScreen> {
               ),
             ),
           ),
-          // Use table from controller instead of local variable
           Obx(() => Text(
                 'Table: ${tableController.selectedTableName.value.isNotEmpty ? tableController.selectedTableName.value : 'No Table'}',
                 style: const TextStyle(fontSize: 12, color: Colors.white),
@@ -131,12 +173,17 @@ class _SaleScreenState extends State<SaleScreen> {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () {
-          // Reset loading state in table controller
           tableController.loading.value = false;
           Get.back();
         },
       ),
       actions: [
+        // Refresh Button
+        IconButton(
+          icon: const Icon(Icons.refresh, color: Colors.white),
+          onPressed: _refreshData,
+          tooltip: 'Refresh Products & Categories',
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Center(
@@ -317,6 +364,7 @@ class _SaleScreenState extends State<SaleScreen> {
     );
   }
 
+  // Update _buildProductsGrid method to support pull-to-refresh
   Widget _buildProductsGrid() {
     return Expanded(
       child: Obx(() {
@@ -326,19 +374,23 @@ class _SaleScreenState extends State<SaleScreen> {
         if (saleController.filteredProducts.isEmpty) {
           return const Center(child: Text('No products found'));
         }
-        return GridView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 0.9,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+
+        return RefreshIndicator(
+          onRefresh: _refreshData, // FIXED: Now returns Future<void>
+          child: GridView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 0.9,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+            itemCount: saleController.filteredProducts.length,
+            itemBuilder: (context, index) {
+              final product = saleController.filteredProducts[index];
+              return _buildProductCard(product);
+            },
           ),
-          itemCount: saleController.filteredProducts.length,
-          itemBuilder: (context, index) {
-            final product = saleController.filteredProducts[index];
-            return _buildProductCard(product);
-          },
         );
       }),
     );

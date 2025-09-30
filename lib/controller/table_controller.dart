@@ -203,10 +203,14 @@ class TableController extends GetxController {
     };
   }
 
-  // Add method to clear selection
+  // In TableController - Update the clearSelection method
   void clearSelection() {
+    print('🗂️ Clearing table selection for fresh start...');
     selectedTableId.value = 0;
     selectedTableName.value = '';
+    loading.value = false; // Reset loading state
+
+    print('✅ Table selection cleared - Ready for fresh table selection');
   }
 
   static int _safeParseInt(dynamic value) {
