@@ -28,20 +28,7 @@ class WebReceiptScreen extends StatelessWidget {
     return invoiceNumber;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final receiptData = saleController.receiptSaleData.value;
-    final currentSale = saleController.currentSale.value;
-
-    if (receiptData != null) {
-      return _buildReceiptFromPreservedData(receiptData);
-    } else if (currentSale != null) {
-      return _buildReceiptFromSale(currentSale);
-    } else {
-      return _buildReceiptFromCartData();
-    }
-  }
-
+  // Method to get current user full name
   String _getCurrentUserFullName() {
     try {
       final GetStorage storage = GetStorage();
@@ -64,6 +51,20 @@ class WebReceiptScreen extends StatelessWidget {
     } catch (e) {
       print('Error getting user full name: $e');
       return 'Cashier';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final receiptData = saleController.receiptSaleData.value;
+    final currentSale = saleController.currentSale.value;
+
+    if (receiptData != null) {
+      return _buildReceiptFromPreservedData(receiptData);
+    } else if (currentSale != null) {
+      return _buildReceiptFromSale(currentSale);
+    } else {
+      return _buildReceiptFromCartData();
     }
   }
 
@@ -738,6 +739,7 @@ class MobileReceiptScreen extends StatelessWidget {
   final NumberFormat currencyFormat = NumberFormat.currency(symbol: '\$');
   final NumberFormat khrFormat =
       NumberFormat.currency(symbol: '៛', decimalDigits: 0);
+  final UserController userController = Get.find();
 
   MobileReceiptScreen({
     required this.invoiceNumber,
@@ -752,8 +754,64 @@ class MobileReceiptScreen extends StatelessWidget {
     this.isOffline = false,
   });
 
+  // Method to get current user full name for MobileReceiptScreen
+  String _getCurrentUserFullName() {
+    try {
+      final GetStorage storage = GetStorage();
+      final userData = storage.read('user');
+
+      if (userData != null && userData is Map) {
+        final fullname = userData['fullname']?.toString();
+        if (fullname != null && fullname.isNotEmpty) {
+          return fullname;
+        }
+      }
+
+      final currentUser = userController.users
+          .firstWhereOrNull((user) => user.id == (userData?['id'] ?? 0));
+      if (currentUser != null) {
+        return currentUser.fullname;
+      }
+
+      return 'Cashier';
+    } catch (e) {
+      print('Error getting user full name: $e');
+      return 'Cashier';
+    }
+  }
+
+  // Add Riel formatting methods from SaleController
+  String formatRielAmount(double amount) {
+    int intAmount = amount.toInt();
+
+    // Round to nearest hundred (419960 -> 420000)
+    int roundedAmount = ((intAmount / 100).round() * 100).toInt();
+
+    // Add comma formatting
+    return _formatNumberWithCommas(roundedAmount);
+  }
+
+  String _formatNumberWithCommas(int number) {
+    String numberStr = number.toString();
+    String result = '';
+    int count = 0;
+
+    for (int i = numberStr.length - 1; i >= 0; i--) {
+      if (count > 0 && count % 3 == 0) {
+        result = ',$result';
+      }
+      result = numberStr[i] + result;
+      count++;
+    }
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Use the method to get the actual cashier name
+    final currentUserFullName = _getCurrentUserFullName();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -774,8 +832,8 @@ class MobileReceiptScreen extends StatelessWidget {
                     _buildInvoiceTitle(),
                     const SizedBox(height: 12),
 
-                    // Sale Info
-                    _buildSaleInfo(),
+                    // Sale Info - Use the actual cashier name
+                    _buildSaleInfo(currentUserFullName),
                     const SizedBox(height: 12),
 
                     // Products
@@ -794,23 +852,29 @@ class MobileReceiptScreen extends StatelessWidget {
             ),
 
             // Done Button
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Get.back(); // Go back to web receipt
-                },
-                icon: const Icon(Icons.done_all),
-                label: const Text('Done'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  textStyle: const TextStyle(fontSize: 16),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 100,
+                  height: 40,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Get.back(); // Go back to web receipt
+                    },
+                    icon: const Icon(Icons.done_all),
+                    label: const Text('Done'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
+            SizedBox(height: 30),
           ],
         ),
       ),
@@ -846,7 +910,7 @@ class MobileReceiptScreen extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          'Tel: (+865) 76 58 89 898',
+          'Tel: (+885) 76 58 89 898',
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey.shade600,
@@ -872,7 +936,7 @@ class MobileReceiptScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSaleInfo() {
+  Widget _buildSaleInfo(String currentUserFullName) {
     return Column(
       children: [
         // First row: Date and Cashier
@@ -1105,7 +1169,7 @@ class MobileReceiptScreen extends StatelessWidget {
                   ),
                   SizedBox(width: 35),
                   Text(
-                    khrFormat.format(grandTotal * 4000),
+                    '៛${formatRielAmount(grandTotal * 4000)}', // Use the same formatting as SaleController
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
@@ -1129,7 +1193,7 @@ class MobileReceiptScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           Text(
-            '*អរគុណ! សូមអញ្ចើញមកម្តងទៀត*',
+            '*សូមអរគុណ! សូមអញ្ចើញមកម្តងទៀត*',
             style: TextStyle(
               fontSize: 10,
               fontStyle: FontStyle.italic,
