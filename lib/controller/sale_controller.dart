@@ -17,7 +17,7 @@ class SaleController extends GetxController {
   final GetStorage _storage = GetStorage();
   final searchController = TextEditingController();
   final TableController tableController = Get.put(TableController());
-  var exchangeRate = 37800.0.obs; // Based on your image showing 37,800 Rials
+  var exchangeRate = 4000.0.obs; // Based on your image showing 4,000 Rials
   var dollarPayment = 0.0.obs;
   var rialsPayment = 0.0.obs;
   var remainingAmount = 0.0.obs;
@@ -295,16 +295,6 @@ class SaleController extends GetxController {
       }
 
       updateSaleTotals();
-
-      // Show success feedback
-      Get.snackbar(
-        'Added to Cart',
-        '${product.name} added successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 1),
-        backgroundColor: Colors.green.withOpacity(0.8),
-        colorText: Colors.white,
-      );
     } catch (e) {
       // Your existing error handling...
     }
@@ -378,12 +368,6 @@ class SaleController extends GetxController {
     cartItems.clear();
     cartQuantities.clear();
     clearDiscount();
-
-    // If there's an active sale with no items, cancel it
-    if (currentSale.value != null && cartItems.isEmpty) {
-      cancelCurrentSale();
-    }
-
     updateSaleTotals();
   }
 
@@ -1093,7 +1077,7 @@ class SaleController extends GetxController {
                 const Text('TOTAL:', style: TextStyle(fontSize: 16)),
                 const SizedBox(height: 8),
                 Obx(() => Text(
-                      '\$${saleTotal.value.toStringAsFixed(2)} R ${(saleTotal.value * exchangeRate.value).toStringAsFixed(0)}',
+                      '\$${saleTotal.value.toStringAsFixed(2)} R ${formatRielAmount(saleTotal.value * exchangeRate.value)}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -1340,6 +1324,32 @@ class SaleController extends GetxController {
     };
 
     print('✅ Receipt data prepared with ${receiptProducts.length} products');
+  }
+
+  String formatRielAmount(double amount) {
+    int intAmount = amount.toInt();
+
+    // Round to nearest hundred (419960 -> 420000)
+    int roundedAmount = ((intAmount / 100).round() * 100).toInt();
+
+    // Add comma formatting
+    return _formatNumberWithCommas(roundedAmount);
+  }
+
+  String _formatNumberWithCommas(int number) {
+    String numberStr = number.toString();
+    String result = '';
+    int count = 0;
+
+    for (int i = numberStr.length - 1; i >= 0; i--) {
+      if (count > 0 && count % 3 == 0) {
+        result = ',$result';
+      }
+      result = numberStr[i] + result;
+      count++;
+    }
+
+    return result;
   }
 
   // --- GETTERS for UI display ---

@@ -92,15 +92,6 @@ class _SaleScreenState extends State<SaleScreen> {
       _searchController.clear();
       saleController.clearSearch();
 
-      Get.snackbar(
-        'Success',
-        'Products and categories refreshed successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
-
       print('✅ Products and categories refreshed successfully');
     } catch (e) {
       print('❌ Error refreshing data: $e');
@@ -178,12 +169,7 @@ class _SaleScreenState extends State<SaleScreen> {
         },
       ),
       actions: [
-        // Refresh Button
-        IconButton(
-          icon: const Icon(Icons.refresh, color: Colors.white),
-          onPressed: _refreshData,
-          tooltip: 'Refresh Products & Categories',
-        ),
+        // Date Time first
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Center(
@@ -192,6 +178,12 @@ class _SaleScreenState extends State<SaleScreen> {
               style: const TextStyle(fontSize: 14, color: Colors.white),
             ),
           ),
+        ),
+        // Refresh Button on the right of date time
+        IconButton(
+          icon: const Icon(Icons.refresh, color: Colors.white),
+          onPressed: _refreshData,
+          tooltip: 'Refresh Products & Categories',
         ),
       ],
     );
@@ -845,12 +837,23 @@ class _SaleScreenState extends State<SaleScreen> {
           }
           saleController.showPaymentDialog();
         },
-        child: Obx(() => Text(
-              "PAY (${saleController.formattedTotal})",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+        child: Obx(() => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('PAY',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  '\$${saleController.saleTotal.value.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             )),
       ),
     );
