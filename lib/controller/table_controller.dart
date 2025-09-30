@@ -186,6 +186,15 @@ class TableController extends GetxController {
     }
   }
 
+  // In TableController, add this method:
+  void resetForNewSale() {
+    print('🔄 Resetting table controller for new sale...');
+    loading.value = false;
+    // Keep the table selection for the next sale
+    print(
+        '✅ Table controller reset - Current table: ${selectedTableName.value}');
+  }
+
   // Add method to get current selected table info
   Map<String, dynamic> getSelectedTableInfo() {
     return {

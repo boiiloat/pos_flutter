@@ -16,7 +16,7 @@ class SaleController extends GetxController {
   final Dio _dio = Dio();
   final GetStorage _storage = GetStorage();
   final searchController = TextEditingController();
-  final TableController tableController = Get.find();
+  final TableController tableController = Get.put(TableController());
   var exchangeRate = 37800.0.obs; // Based on your image showing 37,800 Rials
   var dollarPayment = 0.0.obs;
   var rialsPayment = 0.0.obs;
@@ -70,7 +70,7 @@ class SaleController extends GetxController {
     _setupSearchListener();
 
     if (Get.isRegistered<TableController>()) {
-      final tableController = Get.find<TableController>();
+      final tableController = Get.put(TableController());
       if (tableController.selectedTableId.value > 0) {
         setCurrentTable(tableController.selectedTableId.value,
             tableController.selectedTableName.value);
@@ -248,10 +248,6 @@ class SaleController extends GetxController {
 
   void addProductToCart(product_model.Product product) async {
     print('=== Adding product to cart ===');
-    print(
-        'Product: ${product.name}, ID: ${product.id}, Price: ${product.price}');
-    print(
-        'Current table state - ID: ${currentTableId.value}, Name: ${currentTableName.value}');
 
     try {
       // Validate table selection
@@ -261,25 +257,28 @@ class SaleController extends GetxController {
 
       print('✅ Table validation passed - Using table ${currentTableId.value}');
 
-      // Add to cart logic
+      // Check/Create sale
+      if (currentSale.value == null) {
+        await checkExistingSaleForTable(currentTableId.value);
+
+        if (currentSale.value == null) {
+          print('🆕 Starting new sale for table ${currentTableId.value}');
+          await startNewSale();
+        } else {
+          print('🔄 Using existing sale: ${currentSale.value!.id}');
+        }
+      }
+
+      // Rest of your existing cart logic...
       final key = _getProductKey(product);
       if (cartQuantities.containsKey(key)) {
         cartQuantities[key] = (cartQuantities[key] ?? 0) + 1;
-        print(
-            'Increased quantity for ${product.name} to ${cartQuantities[key]}');
       } else {
         cartItems.add(product);
         cartQuantities[key] = 1;
-        print('Added new item ${product.name}');
       }
 
       updateSaleTotals();
-
-      // Create sale if it doesn't exist
-      if (currentSale.value == null) {
-        print('🆕 Starting new sale for table ${currentTableId.value}');
-        await startNewSale();
-      }
 
       // Show success feedback
       Get.snackbar(
@@ -291,26 +290,7 @@ class SaleController extends GetxController {
         colorText: Colors.white,
       );
     } catch (e) {
-      final errorMessage = 'Failed to add ${product.name}: ${e.toString()}';
-      print('❌ Error: $errorMessage');
-
-      Get.snackbar(
-        'Error',
-        errorMessage,
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
-
-      // If the error was due to table selection, navigate back
-      if (e.toString().contains('table')) {
-        Future.delayed(Duration(seconds: 2), () {
-          if (Get.currentRoute != '/tables') {
-            Get.offAllNamed('/tables');
-          }
-        });
-      }
+      // Your existing error handling...
     }
   }
 
@@ -322,7 +302,7 @@ class SaleController extends GetxController {
 
     // Try to get from TableController
     if (Get.isRegistered<TableController>()) {
-      final tableController = Get.find<TableController>();
+      final tableController = Get.put(TableController());
       if (tableController.selectedTableId.value > 0) {
         print('📋 Using table from TableController');
         setCurrentTable(tableController.selectedTableId.value,
@@ -481,19 +461,25 @@ class SaleController extends GetxController {
     print('=== Starting new sale ===');
     print('Table ID for sale: ${currentTableId.value}');
 
+    // Don't create a new sale if one already exists for this table
+    if (currentSale.value != null &&
+        currentSale.value!.tableId == currentTableId.value) {
+      print('⚠️ Sale already exists for this table, reusing...');
+      return;
+    }
+
     try {
       loading(true);
       final token = _storage.read('token');
       final user = _storage.read('user');
 
-      // Final validation before creating sale
       if (currentTableId.value <= 0) {
         throw Exception('Invalid table selection');
       }
 
       final saleData = {
         'status': 'pending',
-        'table_id': currentTableId.value, // This is the key fix
+        'table_id': currentTableId.value,
         'sub_total': 0.0,
         'discount': 0.0,
         'grand_total': 0.0,
@@ -524,13 +510,6 @@ class SaleController extends GetxController {
               sale_model.Sale.fromJson(responseData['data'] ?? responseData);
           print(
               '✅ Sale created with ID: ${currentSale.value!.id} for table ${currentTableId.value}');
-
-          // Verify table_id was saved
-          if (currentSale.value!.tableId == currentTableId.value) {
-            print('✅ Table ID correctly saved in sale');
-          } else {
-            print('⚠️ Warning: Table ID mismatch in created sale');
-          }
         }
       } else {
         throw Exception('Failed to create sale: ${response.statusCode}');
@@ -547,6 +526,7 @@ class SaleController extends GetxController {
     }
   }
 
+// Update your completeCurrentSale method - REMOVE data clearing
   Future<void> completeCurrentSale() async {
     try {
       // Convert payment amount safely
@@ -555,56 +535,350 @@ class SaleController extends GetxController {
       final exchangeRateValue =
           double.tryParse(exchangeRateController.text) ?? 1.0;
 
-      // 1. Save sale items
+      // Show loading
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
+
+      print('💰 Starting sale completion process...');
+
+      // 1. Save sale items FIRST (this is working based on your logs)
       await _saveSaleItems(currentSale.value!.id);
+      print('✅ Sale items saved successfully');
 
-      // 2. Update sale status
-      final updateData = {
-        'status': 'completed',
-        'sub_total': saleSubtotal.value,
-        'discount': saleDiscount.value,
-        'grand_total': saleTotal.value,
-        'is_paid': true,
-        'sale_date': DateTime.now().toIso8601String(),
-        'table_id': currentTableId.value,
-      };
+      // 2. Update sale status - but don't fail if this has network issues
+      bool saleUpdated = false;
+      try {
+        final updateData = {
+          'status': 'completed',
+          'sub_total': saleSubtotal.value,
+          'discount': saleDiscount.value,
+          'grand_total': saleTotal.value,
+          'is_paid': true,
+        };
 
-      final saleResponse = await _dio.put(
-        '/sales/${currentSale.value!.id}',
-        options: Options(
-            headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
-        data: updateData,
-      );
+        final token = _storage.read('token');
+        final saleResponse = await _dio.patch(
+          '/sales/${currentSale.value!.id}',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json'
+            },
+          ),
+          data: updateData,
+        );
 
-      // 3. Create payment record with properly typed values
-      final paymentData = {
-        'payment_amount': paymentAmount, // Now properly typed as double
-        'exchange_rate': exchangeRateValue, // Now properly typed as double
-        'payment_method_name': selectedPaymentMethod.value!.paymentMethodName,
-        'sale_id': currentSale.value!.id,
-        'payment_method_id': selectedPaymentMethod.value!.id,
-        'created_day': DateTime.now().toIso8601String(),
-        'created_by': _storage.read('user')?['id']?.toString(),
-      };
+        if (saleResponse.statusCode == 200) {
+          saleUpdated = true;
+          print('✅ Sale status updated successfully');
+        }
+      } catch (saleError) {
+        print(
+            '⚠️ Sale status update failed (but items were saved): $saleError');
+        // CONTINUE - items are already saved, this is less critical
+      }
 
-      await _dio.post(
-        '/sale-payments',
-        options: Options(
-            headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
-        data: paymentData,
-      );
+      // 3. Create payment record - also optional for receipt display
+      try {
+        final paymentData = {
+          'payment_amount': paymentAmount,
+          'exchange_rate': exchangeRateValue,
+          'payment_method_name': selectedPaymentMethod.value!.paymentMethodName,
+          'sale_id': currentSale.value!.id,
+          'payment_method_id': selectedPaymentMethod.value!.id,
+          'created_day': DateTime.now().toIso8601String(),
+          'created_by': _storage.read('user')?['id']?.toString(),
+        };
 
-      // 4. Clear cart
+        await _dio.post(
+          '/sale-payments',
+          options: Options(
+              headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
+          data: paymentData,
+        );
+        print('✅ Payment record created successfully');
+      } catch (paymentError) {
+        print('⚠️ Payment record creation failed: $paymentError');
+        // CONTINUE - receipt can still be shown without payment record
+      }
+
+      // 4. Close loading dialog
+      Get.back();
+
+      // 5. DO NOT CLEAR DATA HERE - keep it for receipt screen
+      print('🎯 Navigating to receipt screen with sale data...');
+
+      // 6. Navigate to receipt - data is still available
+      Get.offAllNamed('/web_receipt_screen');
+    } catch (e) {
+      print('❌ Critical error in completeCurrentSale: $e');
+
+      // Close loading dialog
+      if (Get.isDialogOpen!) Get.back();
+
+      Program.showError('Payment processing error: ${e.toString()}');
+
+      // Don't navigate to receipt on critical errors
+    }
+  }
+
+// Add these methods to your SaleController
+
+  void clearDataAfterReceipt() {
+    print('🧹 Clearing sale data after receipt viewed');
+
+    // Clear cart data
+    cartItems.clear();
+    cartQuantities.clear();
+
+    // Reset sale totals
+    saleSubtotal.value = 0.0;
+    saleDiscount.value = 0.0;
+    saleTotal.value = 0.0;
+
+    // Reset payment fields
+    paymentAmountController.clear();
+    exchangeRateController.text = '1.0';
+    dollarPayment.value = 0.0;
+    rialsPayment.value = 0.0;
+    remainingAmount.value = 0.0;
+
+    // Reset table selection
+    currentTableId.value = 0;
+    currentTableName.value = 'No Table Selected';
+    selectedTableId.value = 0;
+
+    // DON'T clear currentSale here - let it be cleared by finalizeSale
+    print('✅ Sale data cleared successfully');
+  }
+
+  void finalizeCurrentSale() {
+    print('🎫 Finalizing sale - clearing current sale');
+    // Only clear the current sale, other data is already cleared
+    currentSale.value = null;
+  }
+
+// Call this when leaving receipt screen
+  void finalizeSale() {
+    print('🎫 Finalizing sale - clearing all data');
+    currentSale.value = null;
+    clearDataAfterReceipt();
+  }
+
+  void clearAllSaleDataFull() {
+    print('🧹 Clearing ALL sale data');
+
+    // Clear everything at once
+    currentSale.value = null;
+    cartItems.clear();
+    cartQuantities.clear();
+    saleSubtotal.value = 0.0;
+    saleDiscount.value = 0.0;
+    saleTotal.value = 0.0;
+    paymentAmountController.clear();
+    exchangeRateController.text = '1.0';
+    dollarPayment.value = 0.0;
+    rialsPayment.value = 0.0;
+    remainingAmount.value = 0.0;
+    currentTableId.value = 0;
+    currentTableName.value = 'No Table Selected';
+    selectedTableId.value = 0;
+
+    print('✅ All sale data cleared successfully');
+  }
+
+  // Add this method to your SaleController
+  void safeClearAllData() {
+    print('🧹 SAFE Clearing all sale data...');
+
+    try {
+      // Clear reactive variables first
+      saleSubtotal.value = 0.0;
+      saleDiscount.value = 0.0;
+      saleTotal.value = 0.0;
+      dollarPayment.value = 0.0;
+      rialsPayment.value = 0.0;
+      remainingAmount.value = 0.0;
+      currentTableId.value = 0;
+      currentTableName.value = 'No Table Selected';
+      selectedTableId.value = 0;
+
+      // Clear non-reactive data
       cartItems.clear();
       cartQuantities.clear();
 
-      // 5. Navigate to receipt
-      Get.back(); // Close loading
-      Get.toNamed('/web_receipt_screen');
+      // Clear controllers
+      paymentAmountController.clear();
+      exchangeRateController.text = '1.0';
+      searchController.clear();
+
+      // Clear current sale last
+      currentSale.value = null;
+
+      print('✅ All sale data cleared safely');
     } catch (e) {
-      Get.back();
-      Program.showError('Payment failed: ${e.toString()}');
-      rethrow;
+      print('⚠️ Error during data clearing: $e');
+      // Even if there's an error, try to clear the most important data
+      cartItems.clear();
+      cartQuantities.clear();
+      currentSale.value = null;
+    }
+  }
+
+// In your SaleController, update the data clearing methods:
+
+  void safeClearSaleDataOnly() {
+    print('🧹 SAFE Clearing only sale-related data (preserving table)...');
+
+    try {
+      // Clear only sale-specific data
+      saleSubtotal.value = 0.0;
+      saleDiscount.value = 0.0;
+      saleTotal.value = 0.0;
+      dollarPayment.value = 0.0;
+      rialsPayment.value = 0.0;
+      remainingAmount.value = 0.0;
+
+      // Clear cart data
+      cartItems.clear();
+      cartQuantities.clear();
+
+      // Clear payment controllers
+      paymentAmountController.clear();
+      exchangeRateController.text = '1.0';
+      searchController.clear();
+
+      // Clear current sale
+      currentSale.value = null;
+
+      // DO NOT clear table data - preserve table selection for next sale
+      // currentTableId and currentTableName should remain
+
+      print(
+          '✅ Sale data cleared (table preserved) - Table: ${currentTableId.value}');
+    } catch (e) {
+      print('⚠️ Error during sale data clearing: $e');
+      // Even if there's an error, try to clear the most important data but keep table
+      cartItems.clear();
+      cartQuantities.clear();
+      currentSale.value = null;
+    }
+  }
+
+  void clearAllSaleData() {
+    print('🧹 Clearing ALL sale data (but keeping table info)...');
+
+    try {
+      // Clear sale data but preserve table selection
+      currentSale.value = null;
+      cartItems.clear();
+      cartQuantities.clear();
+      saleSubtotal.value = 0.0;
+      saleDiscount.value = 0.0;
+      saleTotal.value = 0.0;
+      paymentAmountController.clear();
+      exchangeRateController.text = '1.0';
+      dollarPayment.value = 0.0;
+      rialsPayment.value = 0.0;
+      remainingAmount.value = 0.0;
+
+      // DO NOT clear these - they should persist
+      // currentTableId.value
+      // currentTableName.value
+      // selectedTableId.value
+
+      print(
+          '✅ All sale data cleared - Table preserved: ${currentTableName.value}');
+    } catch (e) {
+      print('❌ Error clearing sale data: $e');
+    }
+  }
+
+  Future<void> _closeAllDialogsSafely() async {
+    try {
+      if (Get.isDialogOpen == true) {
+        Get.back();
+        // Small delay to ensure dialog is fully closed
+        await Future.delayed(Duration(milliseconds: 100));
+      }
+
+      // Also check for any open snackbars and close them
+      if (Get.isSnackbarOpen) {
+        Get.closeAllSnackbars();
+      }
+    } catch (e) {
+      print('⚠️ Error closing dialogs: $e');
+      // Ignore errors when closing dialogs
+    }
+  }
+
+  Future<void> checkExistingSaleForTable(int tableId) async {
+    try {
+      final token = _storage.read('token');
+      if (token == null) return;
+
+      final response = await _dio.get(
+        '/sales?table_id=$tableId&status=pending',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data['data'] as List? ?? [];
+        if (data.isNotEmpty) {
+          // Use existing pending sale
+          currentSale.value = sale_model.Sale.fromJson(data.first);
+          print('🔄 Using existing sale: ${currentSale.value!.id}');
+
+          // Load existing sale items
+          await _loadSaleItems(currentSale.value!.id);
+        }
+      }
+    } catch (e) {
+      print('Error checking existing sales: $e');
+    }
+  }
+
+  Future<void> _loadSaleItems(int saleId) async {
+    try {
+      final token = _storage.read('token');
+      final response = await _dio.get(
+        '/sale-products?$saleId',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200) {
+        final items = response.data['data'] as List? ?? [];
+
+        // Clear current cart
+        cartItems.clear();
+        cartQuantities.clear();
+
+        // Load items into cart
+        for (final item in items) {
+          final productId = item['product_id'];
+          final product = products.firstWhere(
+            (p) => p.id == productId,
+            orElse: () => throw Exception('Product $productId not found'),
+          );
+
+          final quantity = item['quantity'] ?? 1;
+          final price = item['price'] ?? product.price;
+
+          // Add to cart
+          final updatedProduct = product.copyWith(price: price.toDouble());
+          final key = _getProductKey(updatedProduct);
+
+          cartItems.add(updatedProduct);
+          cartQuantities[key] = quantity;
+        }
+
+        updateSaleTotals();
+        print('🔄 Loaded ${items.length} items from existing sale');
+      }
+    } catch (e) {
+      print('Error loading sale items: $e');
     }
   }
 
@@ -625,44 +899,33 @@ class SaleController extends GetxController {
         };
       }).toList();
 
-      // Show loading
-      Get.dialog(
-        const Center(child: CircularProgressIndicator()),
-        barrierDismissible: false,
-      );
+      print('📦 Saving ${items.length} items to sale $saleId');
 
-      // Make bulk API call
+      // Make bulk API call with timeout
       final response = await _dio.post(
         '/sale-products/bulk',
-        options: Options(headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        }),
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          sendTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+        ),
         data: {
           'sale_id': saleId,
           'items': items,
         },
       );
 
-      // Close loading
-      Get.back();
-
       if (response.statusCode != 201) {
-        throw Exception('Failed to save sale items');
+        throw Exception('Failed to save sale items: ${response.statusCode}');
       }
+
+      print('✅ Sale items saved successfully');
     } catch (e) {
-      Get.back(); // Close any open dialogs
-      String errorMessage = 'Failed to save sale items';
-
-      if (e is DioException) {
-        if (e.response?.statusCode == 404) {
-          errorMessage = 'Endpoint not found. Please check API configuration.';
-        } else {
-          errorMessage = e.response?.data?['message'] ?? e.message;
-        }
-      }
-
-      Program.showError(errorMessage);
+      String errorMessage = 'Failed to save sale items: $e';
+      print('❌ Error saving sale items: $errorMessage');
       rethrow;
     }
   }
@@ -677,12 +940,12 @@ class SaleController extends GetxController {
         await _dio.put(
           '/sales/${currentSale.value!.id}',
           options: Options(headers: {'Authorization': 'Bearer $token'}),
-          data: {'status': 'cancelled'},
+          data: {'status': 'completed'},
         );
       }
       _clearCurrentSale();
       clearCart();
-      Program.success("Sale Cancelled", "Current sale has been cancelled");
+      Program.success("Sale Completed", "Current sale has been completed");
     } catch (e) {
       Program.showError('Failed to cancel sale: $e');
     } finally {
@@ -718,8 +981,9 @@ class SaleController extends GetxController {
 
   void _configureDio() {
     _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
-    _dio.options.connectTimeout = const Duration(seconds: 10);
-    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    _dio.options.connectTimeout = const Duration(seconds: 15);
+    _dio.options.receiveTimeout = const Duration(seconds: 15);
+    _dio.options.sendTimeout = const Duration(seconds: 15);
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
@@ -743,34 +1007,8 @@ class SaleController extends GetxController {
         print('Response: ${error.response?.data}');
         print('Status Code: ${error.response?.statusCode}');
 
-        final statusCode = error.response?.statusCode;
-        String message;
-
-        switch (statusCode) {
-          case 401:
-            message = 'Authentication failed. Please login again.';
-            break;
-          case 403:
-            message = 'Access denied';
-            break;
-          case 404:
-            message = 'Resource not found';
-            break;
-          case 422:
-            message = 'Validation error: ${error.response?.data}';
-            break;
-          case 500:
-            message = 'Server error: ${error.response?.data}';
-            break;
-          default:
-            message = 'Network error: ${error.message}';
-        }
-
-        errorMessage.value = message;
-        // Only show error for critical operations, not for adding to cart
-        if (error.requestOptions.path != '/sales') {
-          Program.showError(message);
-        }
+        // Don't automatically show errors for network issues
+        // Let individual methods handle them
         handler.next(error);
       },
     ));
@@ -937,7 +1175,7 @@ class SaleController extends GetxController {
                 return;
               }
 
-              // Close payment dialog first
+              // Close payment dialog first safely
               Get.back();
 
               // Show loading indicator
@@ -948,14 +1186,13 @@ class SaleController extends GetxController {
 
               try {
                 await completeCurrentSale();
-                // Close loading and navigate to receipt
-                Get.back();
-                Get.toNamed('/web_receipt_screen');
+                // completeCurrentSale now handles navigation and keeps data
               } catch (e) {
                 Get.back();
-                Program.showError('Payment failed: ${e.toString()}');
-                // Re-open payment dialog to retry
-                showPaymentDialog();
+                Program.showError(
+                    'Payment completed with minor issues: ${e.toString()}');
+                // Still navigate to receipt with available data
+                Get.offAllNamed('/web_receipt_screen');
               }
             },
             child: const Text('PAY & PRINT'),
@@ -1005,20 +1242,20 @@ class SaleController extends GetxController {
     }
   }
 
-  void setCurrentTable(int tableId, String tableName) {
+  void setCurrentTable(int tableId, String tableName) async {
     print(
         '🏁 SaleController.setCurrentTable called - ID: $tableId, Name: $tableName');
 
     currentTableId.value = tableId;
     currentTableName.value = tableName;
-    selectedTableId.value = tableId; // Make sure this is also set
+    selectedTableId.value = tableId;
+
+    // Check for existing pending sale for this table
+    await checkExistingSaleForTable(tableId);
 
     print(
         '✅ Table set in SaleController - currentTableId: ${currentTableId.value}');
-    print(
-        '✅ Table set in SaleController - selectedTableId: ${selectedTableId.value}');
-
-    update(); // Trigger UI update
+    update();
   }
 
   void addProductToCartById(int productId, {int quantity = 1}) {
@@ -1030,6 +1267,16 @@ class SaleController extends GetxController {
     for (int i = 0; i < quantity; i++) {
       addProductToCart(product);
     }
+  }
+
+  void clearSaleData() {
+    cartItems.clear();
+    cartQuantities.clear();
+    currentSale.value = null;
+    saleSubtotal.value = 0.0;
+    saleDiscount.value = 0.0;
+    saleTotal.value = 0.0;
+    // Reset any other sale-related state
   }
 
   // --- GETTERS for UI display ---

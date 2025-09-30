@@ -16,12 +16,11 @@ class SaleScreen extends StatefulWidget {
 }
 
 class _SaleScreenState extends State<SaleScreen> {
-  final SaleController saleController = Get.put(SaleController());
+  final SaleController saleController = Get.find<SaleController>();
+  final TableController tableController = Get.find<TableController>();
   final _searchController = TextEditingController();
   String _formattedDateTime = '';
   Timer? _timer;
-  late int tableId;
-  late String tableName;
 
   @override
   void initState() {
@@ -34,13 +33,23 @@ class _SaleScreenState extends State<SaleScreen> {
   void _getTableInfo() {
     final arguments = Get.arguments;
     if (arguments != null) {
-      tableId = arguments['table_id'];
-      tableName = arguments['table_name'];
+      final tableId = arguments['table_id'];
+      final tableName = arguments['table_name'];
+
+      // Set table in both controllers
+      tableController.selectTable(tableId, tableName);
       saleController.setCurrentTable(tableId, tableName);
+
       print('Table set in sale screen: $tableId, $tableName');
     } else {
-      Get.snackbar('Error', 'No table selected');
-      Future.delayed(Duration(seconds: 1), () => Get.back());
+      // If no arguments, check if we have table data in controllers
+      if (tableController.selectedTableId.value > 0) {
+        print(
+            'Using table from controller: ${tableController.selectedTableName.value}');
+      } else {
+        Get.snackbar('Error', 'No table selected');
+        Future.delayed(const Duration(seconds: 1), () => Get.back());
+      }
     }
   }
 
@@ -112,19 +121,18 @@ class _SaleScreenState extends State<SaleScreen> {
               ),
             ),
           ),
-          Text(
-            'Table: $tableName',
-            style: const TextStyle(fontSize: 12, color: Colors.white),
-          ),
+          // Use table from controller instead of local variable
+          Obx(() => Text(
+                'Table: ${tableController.selectedTableName.value.isNotEmpty ? tableController.selectedTableName.value : 'No Table'}',
+                style: const TextStyle(fontSize: 12, color: Colors.white),
+              )),
         ],
       ),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () {
           // Reset loading state in table controller
-          if (Get.isRegistered<TableController>()) {
-            Get.find<TableController>().loading.value = false;
-          }
+          tableController.loading.value = false;
           Get.back();
         },
       ),
@@ -607,15 +615,6 @@ class _SaleScreenState extends State<SaleScreen> {
               ),
               const SizedBox(height: 16),
               if (!isFree)
-                // ElevatedButton(
-                //   onPressed: () {
-                //     priceController.text = '0';
-                //   },
-                //   style: ElevatedButton.styleFrom(
-                //     backgroundColor: Colors.green,
-                //   ),
-                //   child: const Text('Make Item FREE'),
-                // ),
                 InkWell(
                   onTap: () {
                     priceController.text = '0';
@@ -627,7 +626,7 @@ class _SaleScreenState extends State<SaleScreen> {
                       color: Colors.orange,
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         "Free",
                         style: TextStyle(
@@ -658,107 +657,6 @@ class _SaleScreenState extends State<SaleScreen> {
               Get.back();
             },
             child: const Text('Save Changes'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handlePopupSelection(
-      String value, product_model.Product product, int currentQuantity) {
-    switch (value) {
-      case 'edit_quantity':
-        _showEditQuantityDialog(product, currentQuantity);
-        break;
-      case 'edit_price':
-        _showEditPriceDialog(product);
-        break;
-      case 'delete':
-        saleController.removeProductFromCartById(product.id,
-            price: product.price);
-        break;
-    }
-  }
-
-  void _showEditQuantityDialog(
-      product_model.Product product, int currentQuantity) {
-    final quantityController =
-        TextEditingController(text: currentQuantity.toString());
-
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Edit Quantity'),
-        content: TextField(
-          controller: quantityController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Quantity',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final newQuantity =
-                  int.tryParse(quantityController.text) ?? currentQuantity;
-              if (newQuantity > 0) {
-                saleController.updateProductQuantity(product, newQuantity);
-              }
-              Get.back();
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showEditPriceDialog(product_model.Product product) {
-    final priceController = TextEditingController(
-      text: product.price == 0 ? '' : product.price.toStringAsFixed(2),
-    );
-
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Edit Price'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: priceController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(
-                labelText: 'Price',
-                prefixText: '\$',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                priceController.text = '0';
-              },
-              child: const Text('Make FREE'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final newPrice =
-                  double.tryParse(priceController.text) ?? product.price;
-              saleController.updateProductPrice(product, newPrice);
-              Get.back();
-            },
-            child: const Text('Save'),
           ),
         ],
       ),
@@ -813,7 +711,7 @@ class _SaleScreenState extends State<SaleScreen> {
                       const SizedBox(width: 12),
                       GestureDetector(
                         onTap: () => saleController.clearDiscount(),
-                        child: Text(
+                        child: const Text(
                           'Cancel',
                           style: TextStyle(
                             fontSize: 15,
@@ -872,7 +770,6 @@ class _SaleScreenState extends State<SaleScreen> {
     );
   }
 
-// In your SaleScreen widget, update the _buildPayButton method:
   Widget _buildPayButton() {
     return SizedBox(
       width: double.infinity,
