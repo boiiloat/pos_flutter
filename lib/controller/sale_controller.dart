@@ -1074,15 +1074,6 @@ class SaleController extends GetxController {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('TOTAL:', style: TextStyle(fontSize: 16)),
-                const SizedBox(height: 8),
-                Obx(() => Text(
-                      '\$${saleTotal.value.toStringAsFixed(2)} R ${formatRielAmount(saleTotal.value * exchangeRate.value)}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
                 const SizedBox(height: 20),
 
                 // Payment method dropdown - Fixed version
@@ -1145,16 +1136,43 @@ class SaleController extends GetxController {
                 const SizedBox(height: 10),
 
                 // Remaining amount
-                Obx(() => Text(
-                      'Remaining: \$${remainingAmount.value.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: remainingAmount.value > 0
-                            ? Colors.red
-                            : Colors.green,
+
+                Row(
+                  children: [
+                    const Text('TOTAL:', style: TextStyle(fontSize: 16)),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Obx(
+                      () => Text(
+                        '\$${saleTotal.value.toStringAsFixed(2)}      R ${formatRielAmount(saleTotal.value * exchangeRate.value)}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    )),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
+                Obx(() => Row(
+                      children: [
+                        Text(
+                          'Remaining: \$${remainingAmount.value.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: remainingAmount.value > 0
+                                ? Colors.red
+                                : Colors.green,
+                          ),
+                        ),
+                      ],
+                    )),
               ],
             ),
           ),
