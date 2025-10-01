@@ -63,6 +63,18 @@ class MainController extends GetxController {
     }
   }
 
+  void onResetSalePressed() {
+    if (!isSaleStarted.value) {
+      // If sale is not open, show simple message
+      Program.error("Reset Sale", "The sale is not currently open");
+    } else {
+      // If sale is open, close it automatically without confirmation
+      isSaleStarted.value = false;
+      _storage.write('isSaleStarted', false);
+      Program.success("Sale Reset", "Sale has been closed successfully");
+    }
+  }
+
   void onPOSPressed() {
     if (!isSaleStarted.value) {
       Get.snackbar(
@@ -123,9 +135,5 @@ class MainController extends GetxController {
 
   void onExpensePressed() {
     Get.to(() => ExpenseScreen());
-  }
-
-  void onResetSalePressed() {
-    Program.success("title", "description");
   }
 }

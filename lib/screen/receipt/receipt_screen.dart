@@ -86,6 +86,13 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   title: Text('Debug Info'),
                 ),
               ),
+              const PopupMenuItem<String>(
+                value: 'debug_dates',
+                child: ListTile(
+                  leading: Icon(Icons.calendar_today),
+                  title: Text('Debug Dates'),
+                ),
+              ),
             ],
           ),
         ],
@@ -119,6 +126,9 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
         break;
       case 'debug':
         _showDebugInfo();
+        break;
+      case 'debug_dates':
+        receiptController.debugDateFiltering();
         break;
     }
   }

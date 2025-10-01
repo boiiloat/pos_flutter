@@ -11,7 +11,7 @@ class ReceiptController extends GetxController {
   var filteredSales = <Sale>[].obs;
   var loading = false.obs;
   var errorMessage = ''.obs;
-  var pieChartFilter = 'today'.obs; // 'today' or 'month'
+  var pieChartFilter = 'today'.obs;
 
   // KPI data
   var totalSale = 0.obs;
@@ -20,7 +20,7 @@ class ReceiptController extends GetxController {
   var totalProfit = 0.0.obs;
 
   // Date filtering
-  var currentFilter = 'all'.obs; // 'all', 'today', 'month', 'year'
+  var currentFilter = 'all'.obs;
 
   @override
   void onInit() {
@@ -87,9 +87,8 @@ class ReceiptController extends GetxController {
 
         // Debug: Print dates to verify
         for (var sale in paidSales.take(3)) {
-          print('📅 Sale Date - Original: ${sale.saleDate}');
-          print('📅 Sale Date - Local: ${sale.saleDate.toLocal()}');
-          print('📅 Sale Date - UTC: ${sale.saleDate.toUtc()}');
+          print('📅 Sale Date: ${sale.saleDate}');
+          print('📅 Formatted: ${formatDateTime(sale.saleDate)}');
         }
         print('================================');
       } else {
@@ -115,44 +114,109 @@ class ReceiptController extends GetxController {
 
     if (sales.isEmpty) return;
 
-    final now = DateTime.now().toUtc(); // Use UTC for comparison
+    // Get CURRENT SYSTEM DATE (today's actual date)
+    final now = DateTime.now();
+    final currentYear = now.year;
+    final currentMonth = now.month;
+    final currentDay = now.day;
+
     List<Sale> filtered = [];
 
     switch (filterType) {
       case 'today':
         filtered = sales.where((sale) {
-          final saleDate = sale.saleDate; // Already UTC from model
-          return saleDate.year == now.year &&
-              saleDate.month == now.month &&
-              saleDate.day == now.day;
+          final saleDate = sale.saleDate;
+          return saleDate.year == currentYear &&
+              saleDate.month == currentMonth &&
+              saleDate.day == currentDay;
         }).toList();
+
+        print(
+            '📅 Today filter: Showing sales from $currentDay/$currentMonth/$currentYear');
+        print('📊 Found ${filtered.length} sales for today');
         break;
 
       case 'month':
         filtered = sales.where((sale) {
-          final saleDate = sale.saleDate; // Already UTC from model
-          return saleDate.year == now.year && saleDate.month == now.month;
+          final saleDate = sale.saleDate;
+          return saleDate.year == currentYear && saleDate.month == currentMonth;
         }).toList();
+
+        print(
+            '📅 Month filter: Showing sales from month $currentMonth/$currentYear');
+        print('📊 Found ${filtered.length} sales for this month');
         break;
 
       case 'year':
         filtered = sales.where((sale) {
-          final saleDate = sale.saleDate; // Already UTC from model
-          return saleDate.year == now.year;
+          final saleDate = sale.saleDate;
+          return saleDate.year == currentYear;
         }).toList();
+
+        print('📅 Year filter: Showing sales from year $currentYear');
+        print('📊 Found ${filtered.length} sales for this year');
         break;
 
       case 'all':
       default:
         filtered = List.from(sales);
+        print('📅 All filter: Showing all ${filtered.length} sales');
         break;
     }
 
     filteredSales.value = filtered;
     calculateKPIs(filteredSales);
+  }
 
-    print('🔍 Applied filter: $filterType');
-    print('📊 Filtered sales count: ${filtered.length}');
+  void debugDateFiltering() {
+    final now = DateTime.now();
+    final currentYear = now.year;
+    final currentMonth = now.month;
+    final currentDay = now.day;
+
+    print('🔄 DEBUG DATE FILTERING =================');
+    print('📅 CURRENT SYSTEM DATE: $currentDay/$currentMonth/$currentYear');
+    print('📅 Current Filter: ${currentFilter.value}');
+
+    if (sales.isNotEmpty) {
+      print('📊 Total sales: ${sales.length}');
+
+      // Group sales by date to see what dates we have
+      final dateGroups = <String, List<Sale>>{};
+      for (var sale in sales) {
+        final dateKey =
+            '${sale.saleDate.year}-${sale.saleDate.month.toString().padLeft(2, '0')}-${sale.saleDate.day.toString().padLeft(2, '0')}';
+        if (!dateGroups.containsKey(dateKey)) {
+          dateGroups[dateKey] = [];
+        }
+        dateGroups[dateKey]!.add(sale);
+      }
+
+      print('📅 Available dates in database:');
+      dateGroups.keys
+          .toList()
+          .sort((a, b) => b.compareTo(a)); // Sort descending
+      for (var dateKey in dateGroups.keys.take(10)) {
+        final parts = dateKey.split('-');
+        final year = parts[0];
+        final month = parts[1];
+        final day = parts[2];
+        print('   $day/$month/$year: ${dateGroups[dateKey]!.length} sales');
+      }
+
+      // Show today's expected filter results
+      final todaySales = sales.where((sale) {
+        return sale.saleDate.year == currentYear &&
+            sale.saleDate.month == currentMonth &&
+            sale.saleDate.day == currentDay;
+      }).toList();
+
+      print(
+          '📅 Expected Today filter results: $currentDay/$currentMonth/$currentYear');
+      print('📊 Expected sales count: ${todaySales.length}');
+    }
+
+    print('================================');
   }
 
   List<Sale> _filterPaidSales(List<Sale> allSales) {
@@ -215,25 +279,16 @@ class ReceiptController extends GetxController {
     pieChartFilter.value = filter;
   }
 
-// In ReceiptController - update the formatDateTime method
   String formatDateTime(DateTime dateTime) {
-    // Since dates are now stored as UTC in the model, display them as-is
-    // This will match exactly what's in the database
     final timeFormat =
         '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
     final dateFormat =
-        '${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year}';
+        '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}';
     return '$timeFormat / $dateFormat';
   }
 
-  // Alternative: If you want to display local time but filter correctly
-  String formatDateTimeLocal(DateTime dateTime) {
-    final localDate = dateTime.toLocal();
-    final timeFormat =
-        '${localDate.hour.toString().padLeft(2, '0')}:${localDate.minute.toString().padLeft(2, '0')}';
-    final dateFormat =
-        '${localDate.day.toString().padLeft(2, '0')}-${localDate.month.toString().padLeft(2, '0')}-${localDate.year}';
-    return '$timeFormat / $dateFormat';
+  String formatDate(DateTime dateTime) {
+    return '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}';
   }
 
   int get totalSalesCount => sales.length;
@@ -246,6 +301,7 @@ class ReceiptController extends GetxController {
   }
 
   Map<String, dynamic> get debugInfo {
+    final now = DateTime.now();
     return {
       'totalSalesInMemory': sales.length,
       'filteredSales': filteredSales.length,
@@ -253,6 +309,7 @@ class ReceiptController extends GetxController {
       'loading': loading.value,
       'error': errorMessage.value,
       'dateRange': salesDateRange,
+      'currentSystemDate': '${now.day}/${now.month}/${now.year}',
       'kpis': {
         'totalOrder': totalOrder.value,
         'totalSale': totalSale.value,
@@ -261,7 +318,8 @@ class ReceiptController extends GetxController {
       },
       'recentSales': sales
           .take(5)
-          .map((sale) => 'ID: ${sale.id}, Date: ${sale.saleDate}')
+          .map((sale) =>
+              'ID: ${sale.id}, Date: ${formatDateTime(sale.saleDate)}')
           .toList(),
     };
   }
