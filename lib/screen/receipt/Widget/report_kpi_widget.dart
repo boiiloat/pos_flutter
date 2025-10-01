@@ -49,10 +49,6 @@ class ReceiptKpiWidget extends StatelessWidget {
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold),
                               ),
-                              const Text(
-                                'Current Day',
-                                style: TextStyle(fontSize: 10),
-                              ),
                             ],
                           ),
                         ),

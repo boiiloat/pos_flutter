@@ -30,7 +30,7 @@ class ProductScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: () {
-              controller.fetchCategories();
+              controller.fetchCategories(); // Ensure this is called
               controller.fetchProducts();
             },
           ),
@@ -193,7 +193,8 @@ class ProductScreen extends StatelessWidget {
             ],
             onChanged: (value) {
               controller.selectedCategoryId.value = value ?? 0;
-              controller.filterByCategory(value ?? 0);
+              controller.filterByCategory(
+                  value ?? 0); // This line ensures filtering works
             },
           )),
     );
@@ -240,24 +241,33 @@ class ProductScreen extends StatelessWidget {
   }
 
   Widget _buildHeaderRow() {
-    return Row(
-      children: const [
-        Expanded(
-            flex: 2, child: Center(child: Text('Image', style: _headerStyle))),
-        Expanded(
-            flex: 3, child: Center(child: Text('Name', style: _headerStyle))),
-        Expanded(
-            flex: 2, child: Center(child: Text('Price', style: _headerStyle))),
-        Expanded(
-            flex: 3,
-            child: Center(child: Text('Category', style: _headerStyle))),
-        Expanded(
-            flex: 3,
-            child: Center(child: Text('Created By', style: _headerStyle))),
-        Expanded(
-            flex: 2, child: Center(child: Text('Action', style: _headerStyle))),
-      ],
-    );
+    return Obx(() {
+      final isAdmin = controller.isAdmin.value;
+      final columnCount = isAdmin ? 6 : 5; // Number of visible columns
+
+      return Row(
+        children: [
+          Expanded(
+              flex: 1,
+              child: Center(child: Text('Image', style: _headerStyle))),
+          Expanded(
+              flex: 1, child: Center(child: Text('Name', style: _headerStyle))),
+          Expanded(
+              flex: 1,
+              child: Center(child: Text('Price', style: _headerStyle))),
+          Expanded(
+              flex: 1,
+              child: Center(child: Text('Category', style: _headerStyle))),
+          Expanded(
+              flex: 1,
+              child: Center(child: Text('Created By', style: _headerStyle))),
+          if (isAdmin)
+            Expanded(
+                flex: 1,
+                child: Center(child: Text('Action', style: _headerStyle))),
+        ],
+      );
+    });
   }
 
   Widget _buildDataRow(Product product) {
@@ -265,63 +275,68 @@ class ProductScreen extends StatelessWidget {
         ? 'http://localhost:8000/storage/${product.image}'
         : 'assets/images/logo_image.jpg';
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ), // ✅ Properly closed BoxDecoration here
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: CircleAvatar(
-                radius: 24,
-                backgroundImage: NetworkImage(imageUrl),
-                backgroundColor: Colors.grey.shade200,
+    return Obx(() {
+      final isAdmin = controller.isAdmin.value;
+
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundImage: NetworkImage(imageUrl),
+                  backgroundColor: Colors.grey.shade200,
+                ),
               ),
             ),
-          ),
-          Expanded(flex: 3, child: Center(child: Text(product.name ?? 'N/A'))),
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text('\$${product.price?.toStringAsFixed(2) ?? '0.00'}'),
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Center(child: Text(product.categoryName ?? 'Unknown')),
-          ),
-          Expanded(
-            flex: 3,
-            child: Center(
-                child: Text(product.creatorName ?? product.createdBy ?? 'N/A')),
-          ),
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (controller.isAdmin.value)
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () => _showEditProductDialog(product),
-                    ),
-                  if (controller.isAdmin.value)
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _showDeleteConfirmation(product.id!),
-                    ),
-                ],
+            Expanded(
+                flex: 1, child: Center(child: Text(product.name ?? 'N/A'))),
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: Text('\$${product.price?.toStringAsFixed(2) ?? '0.00'}'),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            Expanded(
+              flex: 1,
+              child: Center(child: Text(product.categoryName ?? 'Unknown')),
+            ),
+            Expanded(
+              flex: 1,
+              child: Center(
+                  child:
+                      Text(product.creatorName ?? product.createdBy ?? 'N/A')),
+            ),
+            if (isAdmin)
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () => _showEditProductDialog(product),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _showDeleteConfirmation(product.id!),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    });
   }
 
   void _showAddProductDialog() {

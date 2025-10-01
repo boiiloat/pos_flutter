@@ -47,7 +47,7 @@ class _SaleScreenState extends State<SaleScreen> {
         print(
             'Using table from controller: ${tableController.selectedTableName.value}');
       } else {
-        Get.snackbar('Error', 'No table selected');
+        _showSnackbar('Error', 'No table selected');
         Future.delayed(const Duration(seconds: 1), () => Get.back());
       }
     }
@@ -74,35 +74,40 @@ class _SaleScreenState extends State<SaleScreen> {
     });
   }
 
-  // Refresh method - CHANGED TO Future<void>
+  // Safe snackbar method to avoid GetX errors
+  void _showSnackbar(String title, String message) {
+    try {
+      Get.snackbar(
+        title,
+        message,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    } catch (e) {
+      print('Error showing snackbar: $e');
+    }
+  }
+
   Future<void> _refreshData() async {
     print('🔄 Refreshing products and categories...');
 
-    // Show loading indicator
     saleController.loading.value = true;
 
     try {
-      // Refresh both products and categories
       await Future.wait([
         saleController.fetchProducts(),
         saleController.fetchCategories(),
       ]);
 
-      // Clear search to show all products
       _searchController.clear();
       saleController.clearSearch();
 
       print('✅ Products and categories refreshed successfully');
     } catch (e) {
       print('❌ Error refreshing data: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to refresh data: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 3),
-      );
+      _showSnackbar('Error', 'Failed to refresh data: ${e.toString()}');
     } finally {
       saleController.loading.value = false;
     }
@@ -169,7 +174,6 @@ class _SaleScreenState extends State<SaleScreen> {
         },
       ),
       actions: [
-        // Date Time first
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Center(
@@ -179,7 +183,6 @@ class _SaleScreenState extends State<SaleScreen> {
             ),
           ),
         ),
-        // Refresh Button on the right of date time
         IconButton(
           icon: const Icon(Icons.refresh, color: Colors.white),
           onPressed: _refreshData,
@@ -308,7 +311,12 @@ class _SaleScreenState extends State<SaleScreen> {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () => Get.back(),
+                        onPressed: () {
+                          // Safe dialog closing
+                          if (Get.isDialogOpen == true) {
+                            Get.back();
+                          }
+                        },
                         child: const Text('No'),
                       ),
                     ),
@@ -318,12 +326,18 @@ class _SaleScreenState extends State<SaleScreen> {
                         onPressed: () {
                           final value =
                               double.tryParse(amountController.text) ?? 0;
+
+                          // Apply discount first
                           if (discountType.value == 'percent') {
                             saleController.applyPercentDiscount(value);
                           } else {
                             saleController.applyAmountDiscount(value);
                           }
-                          Get.back();
+
+                          // Safe dialog closing
+                          if (Get.isDialogOpen == true) {
+                            Get.back();
+                          }
                         },
                         child: const Text('Yes'),
                       ),
@@ -335,6 +349,7 @@ class _SaleScreenState extends State<SaleScreen> {
           ),
         ),
       ),
+      barrierDismissible: true, // Allow dismissing by tapping outside
     );
   }
 
@@ -356,7 +371,6 @@ class _SaleScreenState extends State<SaleScreen> {
     );
   }
 
-  // Update _buildProductsGrid method to support pull-to-refresh
   Widget _buildProductsGrid() {
     return Expanded(
       child: Obx(() {
@@ -368,7 +382,7 @@ class _SaleScreenState extends State<SaleScreen> {
         }
 
         return RefreshIndicator(
-          onRefresh: _refreshData, // FIXED: Now returns Future<void>
+          onRefresh: _refreshData,
           child: GridView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -684,7 +698,11 @@ class _SaleScreenState extends State<SaleScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Get.back(),
+            onPressed: () {
+              if (Get.isDialogOpen == true) {
+                Get.back();
+              }
+            },
             child: const Text('Cancel'),
           ),
           ElevatedButton(
@@ -698,12 +716,16 @@ class _SaleScreenState extends State<SaleScreen> {
                 saleController.updateProductQuantity(product, newQuantity);
                 saleController.updateProductPrice(product, newPrice);
               }
-              Get.back();
+
+              if (Get.isDialogOpen == true) {
+                Get.back();
+              }
             },
             child: const Text('Save Changes'),
           ),
         ],
       ),
+      barrierDismissible: true,
     );
   }
 
@@ -828,11 +850,8 @@ class _SaleScreenState extends State<SaleScreen> {
         ),
         onPressed: () {
           if (saleController.cartItems.isEmpty) {
-            Get.snackbar(
-              'Empty Cart',
-              'Please add items to cart before payment',
-              snackPosition: SnackPosition.BOTTOM,
-            );
+            _showSnackbar(
+                'Empty Cart', 'Please add items to cart before payment');
             return;
           }
           saleController.showPaymentDialog();

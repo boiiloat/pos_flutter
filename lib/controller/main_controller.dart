@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/program.dart';
 import 'package:pos_system/screen/login/login_screen.dart';
-import 'package:pos_system/screen/report/report_expense/report_expense_screen.dart';
+import 'package:pos_system/screen/expanse/exspanse_screen.dart';
 
 import '../screen/receipt/receipt_screen.dart';
 import '../screen/report/main_report/report_screen.dart';
@@ -122,7 +122,7 @@ class MainController extends GetxController {
   }
 
   void onExpensePressed() {
-    Get.to(() => const ReportExpanseScreen());
+    Get.to(() => ExpenseScreen());
   }
 
   void onResetSalePressed() {

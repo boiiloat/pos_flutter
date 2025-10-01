@@ -13,10 +13,12 @@ import 'package:pos_system/services/auth_service.dart';
 
 import 'controller/login_controller.dart';
 import 'controller/user_controller.dart';
+import 'screen/expanse/exspanse_screen.dart';
 import 'screen/user/user_screen.dart';
 
 void main() async {
   await GetStorage.init();
+
   runApp(MyApp());
 }
 
@@ -44,6 +46,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/table', page: () => const TablePlanScreen()),
         GetPage(name: '/sales', page: () => const SaleScreen()),
         GetPage(name: '/web_receipt_screen', page: () => WebReceiptScreen()),
+        GetPage(name: '/expenses', page: () => ExpenseScreen()),
       ],
     );
   }

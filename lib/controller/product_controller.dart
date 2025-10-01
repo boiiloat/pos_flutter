@@ -26,6 +26,7 @@ class ProductController extends GetxController {
   final searchController = TextEditingController();
   var searchQuery = ''.obs;
   final RxBool isAdmin = false.obs;
+  final RxBool isCashier = false.obs;
   final Rx<WebImageInfo?> selectedImage = Rx<WebImageInfo?>(null);
   var categories = <Map<String, dynamic>>[].obs;
   var selectedCategoryId = 0.obs;
@@ -36,27 +37,55 @@ class ProductController extends GetxController {
     _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
     _dio.options.connectTimeout = const Duration(seconds: 30);
     _dio.options.receiveTimeout = const Duration(seconds: 30);
-    updateAdminStatus();
-    fetchCategories();
-    fetchProducts();
+    updateUserStatus();
+
+    // Load categories first, then products
+    fetchCategories().then((_) {
+      fetchProducts();
+    }).catchError((error) {
+      debugPrint('Error in initialization: $error');
+      fetchProducts(); // Still try to fetch products even if categories fail
+    });
+
     searchController.addListener(filterProducts);
   }
 
-  void updateAdminStatus() {
+  Future<void> retryFetchCategories() async {
+    try {
+      loading.value = true;
+      await fetchCategories();
+    } catch (e) {
+      debugPrint('Retry failed: $e');
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  void updateUserStatus() {
     final user = _storage.read('user') ?? {};
     final roleId = int.tryParse(user['role_id'].toString()) ?? 0;
     isAdmin.value = roleId == 1;
+    isCashier.value =
+        roleId == 2 || roleId == 3; // Adjust based on your cashier role IDs
   }
 
   void filterProducts() {
     searchQuery.value = searchController.text;
-    if (searchQuery.isEmpty) {
+
+    // Apply both search and category filters
+    if (searchQuery.isEmpty && selectedCategoryId.value == 0) {
+      // No filters - show all products
       filteredProducts.assignAll(products);
     } else {
       filteredProducts.assignAll(products.where((product) {
-        return product.name
-            .toLowerCase()
-            .contains(searchQuery.value.toLowerCase());
+        final searchMatch = searchQuery.isEmpty ||
+            product.name
+                .toLowerCase()
+                .contains(searchQuery.value.toLowerCase());
+        final categoryMatch = selectedCategoryId.value == 0 ||
+            product.categoryId == selectedCategoryId.value;
+
+        return searchMatch && categoryMatch;
       }).toList());
     }
   }
@@ -67,23 +96,59 @@ class ProductController extends GetxController {
 
   Future<void> fetchCategories() async {
     try {
+      final token = _storage.read('token');
+      if (token == null) {
+        debugPrint('No token found');
+        return;
+      }
+
       final response = await _dio.get(
         '/categories',
-        options: dio.Options(
-            headers: {'Authorization': 'Bearer ${_storage.read('token')}'}),
+        options: dio.Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
-        categories.assignAll((response.data['data'] as List)
-            .map((category) => {
-                  'id': _safeParseInt(category['id']),
-                  'name': _safeParseString(category['name']),
-                })
-            .toList());
+        // Handle different response formats
+        if (response.data is Map && response.data.containsKey('data')) {
+          // Format: { "data": [ ... ] }
+          final data = response.data['data'] as List;
+          categories.assignAll(data
+              .map((category) => {
+                    'id': _safeParseInt(category['id']),
+                    'name': _safeParseString(category['name']),
+                  })
+              .toList());
+        } else if (response.data is List) {
+          // Format: [ ... ]
+          categories.assignAll((response.data as List)
+              .map((category) => {
+                    'id': _safeParseInt(category['id']),
+                    'name': _safeParseString(category['name']),
+                  })
+              .toList());
+        } else {
+          debugPrint('Unexpected categories response format: ${response.data}');
+        }
+
+        debugPrint('Fetched ${categories.length} categories for user');
+      } else {
+        debugPrint('Failed to fetch categories: ${response.statusCode}');
       }
     } catch (e) {
       debugPrint('Error fetching categories: $e');
+      // Add fallback categories for testing
+      _addFallbackCategories();
     }
+  }
+
+// Fallback method in case API fails
+  void _addFallbackCategories() {
+    categories.assignAll([
+      {'id': 1, 'name': 'Food'},
+      {'id': 2, 'name': 'Drinks'},
+      {'id': 3, 'name': 'Snacks'},
+    ]);
+    debugPrint('Using fallback categories');
   }
 
   Future<void> fetchProducts() async {
@@ -126,7 +191,7 @@ class ProductController extends GetxController {
       dio.FormData formData = dio.FormData.fromMap({
         'name': name,
         'price': price.toString(),
-        'category_id': selectedCategoryId.value.toString(),
+        'category_id': categoryId.toString(),
       });
 
       if (imageInfo != null) {
@@ -185,7 +250,7 @@ class ProductController extends GetxController {
       dio.FormData formData = dio.FormData.fromMap({
         'name': name,
         'price': price.toString(),
-        'category_id': selectedCategoryId.value.toString(),
+        'category_id': categoryId.toString(),
         '_method': 'PUT',
       });
 
@@ -247,8 +312,7 @@ class ProductController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         Get.snackbar('Success', 'Product deleted successfully');
-        // Optional small delay if needed
-        await Future.delayed(Duration(milliseconds: 300));
+        await Future.delayed(const Duration(milliseconds: 300));
         await fetchProducts();
         return true;
       } else {

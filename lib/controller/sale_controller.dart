@@ -17,34 +17,26 @@ class SaleController extends GetxController {
   final GetStorage _storage = GetStorage();
   final searchController = TextEditingController();
   final TableController tableController = Get.put(TableController());
-  var exchangeRate = 4000.0.obs; // Based on your image showing 4,000 Rials
+  var exchangeRate = 4000.0.obs;
   var dollarPayment = 0.0.obs;
   var rialsPayment = 0.0.obs;
   var remainingAmount = 0.0.obs;
 
+  var discountType = 'fixed'.obs; // 'fixed' or 'percentage'
+  var discountValue = 0.0.obs;
+
   var currentTableId = 0.obs;
   var currentTableName = 'No Table Selected'.obs;
 
-  // Add these to your SaleControllerx
   var paymentMethods = <PaymentMethod>[].obs;
   var selectedPaymentMethod = Rxn<PaymentMethod>();
   var paymentAmountController = TextEditingController();
   var exchangeRateController = TextEditingController(text: '1.0');
   var receiptProducts = <Map<String, dynamic>>[].obs;
   var receiptSaleData = Rxn<Map<String, dynamic>>();
+
   bool get hasActiveSale {
     return currentSale.value != null || cartItems.isNotEmpty;
-  }
-
-  void preserveSaleState() {
-    print('💾 Preserving sale state for navigation...');
-    // This method intentionally does nothing - just preserves the current state
-    // The sale data remains in the controller for when we return
-  }
-
-  void resetSaleState() {
-    print('🔄 Resetting sale state (manual reset)...');
-    safeClearAllData();
   }
 
   // UI State
@@ -62,21 +54,16 @@ class SaleController extends GetxController {
   // Sale
   var currentSale = Rxn<sale_model.Sale>();
   var saleSubtotal = 0.0.obs;
-  // var saleTax = 0.0.obs;
   var saleDiscount = 0.0.obs;
   var saleTotal = 0.0.obs;
   var selectedTable = 'None'.obs;
   var lastDiscountType = 'percent'.obs;
 
-  Timer? _debounceTimer;
-
-  String getProductKey(product_model.Product product) {
-    return '${product.id}_${product.price.toString()}';
-  }
-
   // Cart Management
   var cartItems = <product_model.Product>[].obs;
-  var cartQuantities = <String, int>{}.obs; // Key format: "id_price"
+  var cartQuantities = <String, int>{}.obs;
+
+  Timer? _debounceTimer;
 
   @override
   void onInit() {
@@ -93,7 +80,6 @@ class SaleController extends GetxController {
       }
     }
 
-    // Also check navigation arguments
     final args = Get.arguments;
     if (args != null && args is Map) {
       if (args['table_id'] != null) {
@@ -101,7 +87,6 @@ class SaleController extends GetxController {
             args['table_name'] as String? ?? 'Table ${args['table_id']}');
       }
     }
-    _initializeData();
   }
 
   @override
@@ -112,19 +97,23 @@ class SaleController extends GetxController {
     super.onClose();
   }
 
-  String _getErrorMessage(int? statusCode) {
-    switch (statusCode) {
-      case 401:
-        return 'Authentication failed. Please login again.';
-      case 403:
-        return 'Access denied';
-      case 404:
-        return 'Resource not found';
-      case 500:
-        return 'Server error. Please try again later.';
-      default:
-        return 'Network error occurred';
-    }
+  void _configureDio() {
+    _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
+    _dio.options.connectTimeout = const Duration(seconds: 10);
+    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    _dio.options.sendTimeout = const Duration(seconds: 10);
+
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        handler.next(options);
+      },
+      onResponse: (response, handler) {
+        handler.next(response);
+      },
+      onError: (error, handler) {
+        handler.next(error);
+      },
+    ));
   }
 
   void _initializeData() {
@@ -218,6 +207,34 @@ class SaleController extends GetxController {
     }
   }
 
+  Future<void> fetchPaymentMethods() async {
+    try {
+      loading(true);
+      final token = _storage.read('token');
+      if (token == null) throw Exception('No authentication token found');
+
+      final response = await _dio.get(
+        '/payment-methods',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data as List? ?? [];
+        paymentMethods
+            .assignAll(data.map((json) => PaymentMethod.fromJson(json)));
+
+        if (selectedPaymentMethod.value == null && paymentMethods.isNotEmpty) {
+          selectedPaymentMethod.value = paymentMethods.first;
+        }
+      }
+    } catch (e) {
+      errorMessage.value = 'Failed to fetch payment methods';
+      Program.showError('Payment method fetch error: $e');
+    } finally {
+      loading(false);
+    }
+  }
+
   void filterProducts() {
     final query = searchQuery.value.toLowerCase();
     var filtered = products.toList();
@@ -255,10 +272,11 @@ class SaleController extends GetxController {
     filterProducts();
   }
 
-  // --- CART MANAGEMENT ---
-// Modify the product key generation
+  String getProductKey(product_model.Product product) {
+    return '${product.id}_${product.price.toString()}';
+  }
+
   String _getProductKey(product_model.Product product) {
-    // Ensure both id and price are converted to strings
     return '${product.id.toString()}_${product.price.toString()}';
   }
 
@@ -266,14 +284,12 @@ class SaleController extends GetxController {
     print('=== Adding product to cart ===');
 
     try {
-      // Validate table selection
       if (!_validateTableSelection()) {
         throw Exception('Please select a table before adding products');
       }
 
       print('✅ Table validation passed - Using table ${currentTableId.value}');
 
-      // Check/Create sale
       if (currentSale.value == null) {
         await checkExistingSaleForTable(currentTableId.value);
 
@@ -285,7 +301,6 @@ class SaleController extends GetxController {
         }
       }
 
-      // Rest of your existing cart logic...
       final key = _getProductKey(product);
       if (cartQuantities.containsKey(key)) {
         cartQuantities[key] = (cartQuantities[key] ?? 0) + 1;
@@ -296,17 +311,16 @@ class SaleController extends GetxController {
 
       updateSaleTotals();
     } catch (e) {
-      // Your existing error handling...
+      print('❌ Error adding product to cart: $e');
+      Program.showError('Failed to add product: ${e.toString()}');
     }
   }
 
   bool _validateTableSelection() {
-    // Check current table selection
     if (currentTableId.value > 0) {
       return true;
     }
 
-    // Try to get from TableController
     if (Get.isRegistered<TableController>()) {
       final tableController = Get.put(TableController());
       if (tableController.selectedTableId.value > 0) {
@@ -317,7 +331,6 @@ class SaleController extends GetxController {
       }
     }
 
-    // Try to get from navigation arguments
     final args = Get.arguments;
     if (args != null && args is Map && args['table_id'] != null) {
       print('📋 Using table from navigation arguments');
@@ -350,7 +363,6 @@ class SaleController extends GetxController {
     print('Subtotal: ${saleSubtotal.value}, Total: ${saleTotal.value}');
   }
 
-// Update removeProductFromCart
   void removeProductFromCart(product_model.Product product) {
     final key = _getProductKey(product);
     final currentQty = cartQuantities[key] ?? 0;
@@ -407,12 +419,10 @@ class SaleController extends GetxController {
 
   void removeProductFromCartById(int productId, {double? price}) {
     if (price != null) {
-      // Remove specific price variant
       final key = '${productId}_${price.toString()}';
       cartQuantities.remove(key);
       cartItems.removeWhere((p) => p.id == productId && p.price == price);
     } else {
-      // Remove all variants (if price not specified)
       final keysToRemove =
           cartQuantities.keys.where((key) => key.startsWith('${productId}_'));
       for (final key in keysToRemove) {
@@ -424,7 +434,6 @@ class SaleController extends GetxController {
     updateSaleTotals();
   }
 
-  // --- DISCOUNT MANAGEMENT ---
   void applyDiscount(double amount) {
     saleDiscount.value = amount;
     updateSaleTotals();
@@ -452,7 +461,6 @@ class SaleController extends GetxController {
     updateSaleTotals();
   }
 
-  // --- SALE MANAGEMENT ---
   void setTable(String table) {
     selectedTable.value = table;
   }
@@ -461,7 +469,6 @@ class SaleController extends GetxController {
     print('=== Starting new sale ===');
     print('Table ID for sale: ${currentTableId.value}');
 
-    // Don't create a new sale if one already exists for this table
     if (currentSale.value != null &&
         currentSale.value!.tableId == currentTableId.value) {
       print('⚠️ Sale already exists for this table, reusing...');
@@ -526,71 +533,59 @@ class SaleController extends GetxController {
     }
   }
 
-// Update the completeCurrentSale method to preserve data
   Future<void> completeCurrentSale() async {
     try {
-      // Convert payment amount safely
       final paymentAmount =
           double.tryParse(paymentAmountController.text) ?? saleTotal.value;
       final exchangeRateValue =
           double.tryParse(exchangeRateController.text) ?? 1.0;
 
-      // Show loading
       Get.dialog(
         const Center(child: CircularProgressIndicator()),
         barrierDismissible: false,
       );
 
       print('💰 Starting sale completion process...');
+      print(
+          '📊 Sale totals - Subtotal: ${saleSubtotal.value}, Discount: ${saleDiscount.value}, Total: ${saleTotal.value}');
 
-      // 1. Prepare receipt data FIRST (before any API calls)
-      prepareReceiptData();
-      print('✅ Receipt data prepared successfully');
+      // 1. FIRST and MOST IMPORTANT: Update sale status to COMPLETED
+      bool statusUpdated = false;
+      try {
+        print('🔄 Step 1: Updating sale status to COMPLETED...');
+        statusUpdated = await _updateSaleStatusToPaid();
 
-      // 2. Save sale items (try API, but don't fail completely)
+        if (statusUpdated) {
+          print('🎉 Sale status successfully updated to COMPLETED');
+        } else {
+          print('⚠️ Sale status update failed, trying force update...');
+          await forceUpdateSaleStatusToCompleted();
+          statusUpdated = true;
+        }
+      } catch (e) {
+        print('❌ Error in sale status update: $e');
+        // Try force update as backup
+        await forceUpdateSaleStatusToCompleted();
+        statusUpdated = true;
+      }
+
+      // 2. Save sale items to API
       bool itemsSaved = false;
       try {
         if (currentSale.value != null) {
+          print('📦 Step 2: Saving sale items...');
           await _saveSaleItems(currentSale.value!.id);
           itemsSaved = true;
           print('✅ Sale items saved to API');
         }
       } catch (e) {
         print('⚠️ Sale items API save failed: $e');
-        // CONTINUE - we have offline data
       }
 
-      // 3. Update sale status (optional)
+      // 3. Create payment record
       try {
-        if (currentSale.value != null && itemsSaved) {
-          final updateData = {
-            'status': 'completed',
-            'sub_total': saleSubtotal.value,
-            'discount': saleDiscount.value,
-            'grand_total': saleTotal.value,
-            'is_paid': true,
-          };
-
-          final token = _storage.read('token');
-          await _dio.patch(
-            '/sales/${currentSale.value!.id}',
-            options: Options(
-              headers: {
-                'Authorization': 'Bearer $token',
-                'Content-Type': 'application/json'
-              },
-            ),
-            data: updateData,
-          );
-          print('✅ Sale status updated in API');
-        }
-      } catch (saleError) {
-        print('⚠️ Sale status update failed: $saleError');
-      }
-
-      // 4. Create payment record (optional)
-      try {
-        if (currentSale.value != null && itemsSaved) {
+        if (currentSale.value != null && selectedPaymentMethod.value != null) {
+          print('💳 Step 3: Creating payment record...');
           final paymentData = {
             'payment_amount': paymentAmount,
             'exchange_rate': exchangeRateValue,
@@ -614,11 +609,16 @@ class SaleController extends GetxController {
         print('⚠️ Payment record creation failed: $paymentError');
       }
 
+      // 4. Prepare receipt data (LAST STEP)
+      print('📋 Step 4: Preparing receipt data...');
+      prepareReceiptData();
+      print('✅ Receipt data prepared successfully');
+
       // 5. Close loading dialog
       Get.back();
 
-      // 6. Navigate to receipt - data is preserved in receiptSaleData
-      print('🎯 Navigating to receipt screen with preserved data...');
+      // 6. Navigate to receipt
+      print('🎯 Step 5: Navigating to receipt screen...');
       Get.offAllNamed('/web_receipt_screen');
     } catch (e) {
       print('❌ Critical error in completeCurrentSale: $e');
@@ -626,198 +626,412 @@ class SaleController extends GetxController {
       // Close loading dialog
       if (Get.isDialogOpen!) Get.back();
 
-      Program.showError('Payment completed with minor issues: ${e.toString()}');
+      // Force update local status for offline mode
+      _updateLocalSaleStatus();
 
-      // Still navigate to receipt with preserved data
+      // Prepare receipt and navigate anyway
+      prepareReceiptData();
+      print('🔄 Continuing in offline mode...');
       Get.offAllNamed('/web_receipt_screen');
     }
   }
 
-// Add these methods to your SaleController
-
-  void clearDataAfterReceipt() {
-    print('🧹 Clearing sale data after receipt viewed');
-
-    // Clear cart data
-    cartItems.clear();
-    cartQuantities.clear();
-
-    // Reset sale totals
-    saleSubtotal.value = 0.0;
-    saleDiscount.value = 0.0;
-    saleTotal.value = 0.0;
-
-    // Reset payment fields
-    paymentAmountController.clear();
-    exchangeRateController.text = '1.0';
-    dollarPayment.value = 0.0;
-    rialsPayment.value = 0.0;
-    remainingAmount.value = 0.0;
-
-    // Reset table selection
-    currentTableId.value = 0;
-    currentTableName.value = 'No Table Selected';
-    selectedTableId.value = 0;
-
-    // DON'T clear currentSale here - let it be cleared by finalizeSale
-    print('✅ Sale data cleared successfully');
-  }
-
-  void finalizeCurrentSale() {
-    print('🎫 Finalizing sale - clearing current sale');
-    // Only clear the current sale, other data is already cleared
-    currentSale.value = null;
-  }
-
-// Call this when leaving receipt screen
-  void finalizeSale() {
-    print('🎫 Finalizing sale - clearing all data');
-    currentSale.value = null;
-    clearDataAfterReceipt();
-  }
-
-  void clearAllSaleDataFull() {
-    print('🧹 Clearing ALL sale data');
-
-    // Clear everything at once
-    currentSale.value = null;
-    cartItems.clear();
-    cartQuantities.clear();
-    saleSubtotal.value = 0.0;
-    saleDiscount.value = 0.0;
-    saleTotal.value = 0.0;
-    paymentAmountController.clear();
-    exchangeRateController.text = '1.0';
-    dollarPayment.value = 0.0;
-    rialsPayment.value = 0.0;
-    remainingAmount.value = 0.0;
-    currentTableId.value = 0;
-    currentTableName.value = 'No Table Selected';
-    selectedTableId.value = 0;
-
-    print('✅ All sale data cleared successfully');
-  }
-
-// In SaleController - Make sure safeClearAllData clears everything
-  void safeClearAllData() {
-    print('🧹 SAFE Clearing all sale data...');
+  Future<void> forceUpdateSaleStatusToCompleted() async {
+    if (currentSale.value == null) {
+      print('⚠️ No current sale to update');
+      return;
+    }
 
     try {
-      // Clear reactive variables first
-      saleSubtotal.value = 0.0;
-      saleDiscount.value = 0.0;
-      saleTotal.value = 0.0;
-      dollarPayment.value = 0.0;
-      rialsPayment.value = 0.0;
-      remainingAmount.value = 0.0;
-      currentTableId.value = 0;
-      currentTableName.value = 'No Table Selected';
-      selectedTableId.value = 0;
+      final saleId = currentSale.value!.id;
+      final token = _storage.read('token');
 
-      // Clear non-reactive data
-      cartItems.clear();
-      cartQuantities.clear();
-      receiptProducts.clear();
-      receiptSaleData.value = null;
+      if (token == null) {
+        print('❌ No token available for force update');
+        return;
+      }
 
-      // Clear controllers
-      paymentAmountController.clear();
-      exchangeRateController.text = '1.0';
-      searchController.clear();
+      final updateData = {
+        'status': 'completed',
+        'sub_total': saleSubtotal.value,
+        'discount': saleDiscount.value,
+        'grand_total': saleTotal.value,
+        'is_paid': true,
+      };
 
-      // Clear current sale
-      currentSale.value = null;
+      print('🔄 FORCE Updating sale $saleId to COMPLETED status');
+      print('📊 Force update data: $updateData');
 
-      print('✅ All sale data cleared safely - Ready for fresh start');
+      // Try PUT request
+      final response = await _dio.put(
+        '/sales/$saleId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json'
+          },
+        ),
+        data: updateData,
+      );
+
+      if (response.statusCode == 200) {
+        print('✅ Sale $saleId successfully force-updated to COMPLETED status');
+        _updateLocalSaleStatus();
+      } else {
+        print('❌ Force update failed with status: ${response.statusCode}');
+        print('Response: ${response.data}');
+      }
     } catch (e) {
-      print('⚠️ Error during data clearing: $e');
-      // Even if there's an error, try to clear the most important data
-      cartItems.clear();
-      cartQuantities.clear();
-      currentSale.value = null;
-      receiptSaleData.value = null;
+      print('❌ Error in forceUpdateSaleStatusToCompleted: $e');
+      if (e is DioException) {
+        print('Dio error details: ${e.response?.data}');
+      }
     }
   }
 
-  // In SaleController, update the safeClearSaleDataOnly method:
-  void safeClearSaleDataOnly() {
-    print('🧹 SAFE Clearing only sale-related data (preserving sale state)...');
+  Future<void> debugCheckSaleStatus() async {
+    if (currentSale.value == null) {
+      print('🔍 DEBUG: No current sale');
+      return;
+    }
 
     try {
-      // Clear only cart data and totals, but keep the sale active
-      saleSubtotal.value = 0.0;
-      saleDiscount.value = 0.0;
-      saleTotal.value = 0.0;
-      dollarPayment.value = 0.0;
-      rialsPayment.value = 0.0;
-      remainingAmount.value = 0.0;
+      final saleId = currentSale.value!.id;
+      final token = _storage.read('token');
 
-      // Clear cart data
-      cartItems.clear();
-      cartQuantities.clear();
+      if (token == null) return;
 
-      // Clear payment controllers
-      paymentAmountController.clear();
-      exchangeRateController.text = '1.0';
-      searchController.clear();
+      final response = await _dio.get(
+        '/sales/$saleId',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
 
-      // DO NOT clear currentSale - keep the sale active
-      // currentSale.value = null;
-
-      print('✅ Cart cleared but sale remains active');
+      if (response.statusCode == 200) {
+        final saleData = response.data['data'] ?? response.data;
+        print('🔍 DEBUG - Current sale status from API:');
+        print('   ID: ${saleData['id']}');
+        print('   Status: ${saleData['status']}');
+        print('   Is Paid: ${saleData['is_paid']}');
+        print('   Grand Total: ${saleData['grand_total']}');
+      }
     } catch (e) {
-      print('⚠️ Error during sale data clearing: $e');
-      cartItems.clear();
-      cartQuantities.clear();
-      // Still don't clear currentSale
+      print('❌ DEBUG - Error checking sale status: $e');
     }
   }
 
-  void clearAllSaleData() {
-    print('🧹 Clearing ALL sale data (but keeping table info)...');
+  Future<bool> _updateSaleStatusToPaid() async {
+    if (currentSale.value == null) {
+      print('⚠️ No current sale to update');
+      return false;
+    }
+
+    final saleId = currentSale.value!.id;
+    print('🔄 Updating sale $saleId status to COMPLETED...');
 
     try {
-      // Clear sale data but preserve table selection
-      currentSale.value = null;
-      cartItems.clear();
-      cartQuantities.clear();
-      saleSubtotal.value = 0.0;
-      saleDiscount.value = 0.0;
-      saleTotal.value = 0.0;
-      paymentAmountController.clear();
-      exchangeRateController.text = '1.0';
-      dollarPayment.value = 0.0;
-      rialsPayment.value = 0.0;
-      remainingAmount.value = 0.0;
+      final updateData = {
+        'status': 'completed',
+        'sub_total': saleSubtotal.value,
+        'discount': saleDiscount.value,
+        'grand_total': saleTotal.value,
+        'is_paid': true,
+      };
 
-      // DO NOT clear these - they should persist
-      // currentTableId.value
-      // currentTableName.value
-      // selectedTableId.value
+      final token = _storage.read('token');
+      if (token == null) {
+        print('❌ No authentication token found');
+        return false;
+      }
 
+      print('📤 Sending update data: $updateData');
+
+      final response = await _dio.put(
+        '/sales/$saleId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json'
+          },
+        ),
+        data: updateData,
+      );
+
+      print('📥 Update response status: ${response.statusCode}');
+      print('📥 Update response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        print('✅ Sale status successfully updated to COMPLETED');
+
+        // Update local sale object
+        _updateLocalSaleStatus();
+        return true;
+      } else {
+        print(
+            '❌ Sale status update failed with status: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('❌ Error updating sale status: $e');
+
+      if (e is DioException) {
+        print('Dio error type: ${e.type}');
+        print('Dio error message: ${e.message}');
+        if (e.response != null) {
+          print('Dio error response: ${e.response?.data}');
+          print('Dio error status: ${e.response?.statusCode}');
+        }
+      }
+
+      return false;
+    }
+  }
+
+  void _updateLocalSaleStatus() {
+    if (currentSale.value != null) {
+      // Create updated sale object with completed status
+      final updatedSale = currentSale.value!.copyWith(
+        status: 'completed',
+        isPaid: true,
+        subTotal: saleSubtotal.value,
+        discount: saleDiscount.value,
+        grandTotal: saleTotal.value,
+      );
+      currentSale.value = updatedSale;
+      print('✅ Local sale status updated to COMPLETED');
       print(
-          '✅ All sale data cleared - Table preserved: ${currentTableName.value}');
-    } catch (e) {
-      print('❌ Error clearing sale data: $e');
+          '📊 Local sale - Status: ${updatedSale.status}, Is Paid: ${updatedSale.isPaid}, Grand Total: ${updatedSale.grandTotal}');
     }
   }
 
-  Future<void> _closeAllDialogsSafely() async {
-    try {
-      if (Get.isDialogOpen == true) {
-        Get.back();
-        // Small delay to ensure dialog is fully closed
-        await Future.delayed(Duration(milliseconds: 100));
-      }
+  void prepareReceiptData() {
+    print('📋 Preparing receipt data...');
 
-      // Also check for any open snackbars and close them
-      if (Get.isSnackbarOpen) {
-        Get.closeAllSnackbars();
-      }
-    } catch (e) {
-      print('⚠️ Error closing dialogs: $e');
-      // Ignore errors when closing dialogs
+    receiptProducts.clear();
+
+    for (var product in cartItems) {
+      final key = _getProductKey(product);
+      final quantity = cartQuantities[key] ?? 1;
+
+      receiptProducts.add({
+        'product_id': product.id,
+        'product_name': product.name,
+        'price': product.price,
+        'quantity': quantity,
+        'amount': product.price * quantity,
+      });
     }
+
+    // ALWAYS mark as paid in receipt data
+    receiptSaleData.value = {
+      'id': currentSale.value?.id,
+      'invoice_number': currentSale.value?.invoiceNumber ??
+          'OFFLINE-${DateTime.now().millisecondsSinceEpoch}',
+      'sale_date': currentSale.value?.saleDate ?? DateTime.now(),
+      'table_id': currentTableId.value,
+      'table_name': currentTableName.value,
+      'sub_total': saleSubtotal.value,
+      'discount': saleDiscount.value,
+      'grand_total': saleTotal.value,
+      'is_paid': true, // ALWAYS TRUE
+      'status': 'completed', // ALWAYS COMPLETED
+      'payment_method':
+          selectedPaymentMethod.value?.paymentMethodName ?? 'Unknown',
+      'products': receiptProducts.toList(),
+    };
+
+    print('✅ Receipt data prepared with ${receiptProducts.length} products');
+    print('💰 Sale marked as PAID in receipt data');
+  }
+
+  void showPaymentDialog() {
+    paymentAmountController.text = saleTotal.value.toStringAsFixed(2);
+    dollarPayment.value = saleTotal.value;
+    rialsPayment.value = saleTotal.value * exchangeRate.value;
+    remainingAmount.value = 0.0;
+
+    if (selectedPaymentMethod.value == null ||
+        !paymentMethods.any((m) => m.id == selectedPaymentMethod.value?.id)) {
+      if (paymentMethods.isNotEmpty) {
+        selectedPaymentMethod.value = paymentMethods.first;
+      }
+    }
+
+    Get.dialog(
+      AlertDialog(
+        title: const Center(child: Text('Payment')),
+        content: SizedBox(
+          width: 400,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+
+                // Payment method dropdown
+                Obx(() {
+                  final selected = paymentMethods.firstWhereOrNull(
+                      (method) => method.id == selectedPaymentMethod.value?.id);
+
+                  return DropdownButtonFormField<PaymentMethod>(
+                    value: selected,
+                    items: paymentMethods.map((method) {
+                      return DropdownMenuItem<PaymentMethod>(
+                        value: method,
+                        child: Text(method.paymentMethodName),
+                      );
+                    }).toList(),
+                    onChanged: (PaymentMethod? method) {
+                      if (method != null) {
+                        selectedPaymentMethod.value = method;
+                      }
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Payment Method',
+                      border: OutlineInputBorder(),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 20),
+
+                TextField(
+                  controller: paymentAmountController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Dollar Pay:',
+                    prefixText: '\$',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    final dollars = double.tryParse(value) ?? 0;
+                    updateDollarPayment(dollars);
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                TextField(
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Riels Pay:',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    final rials = double.tryParse(value) ?? 0;
+                    updateRialsPayment(rials);
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    const Text('TOTAL:', style: TextStyle(fontSize: 16)),
+                    const SizedBox(width: 20),
+                    Obx(
+                      () => Text(
+                        '\$${saleTotal.value.toStringAsFixed(2)}      R ${formatRielAmount(saleTotal.value * exchangeRate.value)}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Obx(() => Row(
+                      children: [
+                        Text(
+                          'Remaining: \$${remainingAmount.value.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: remainingAmount.value > 0
+                                ? Colors.red
+                                : Colors.green,
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('CANCEL'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(150, 45),
+            ),
+            onPressed: () async {
+              if (selectedPaymentMethod.value == null) {
+                Program.showError('Please select a payment method');
+                return;
+              }
+
+              if (remainingAmount.value > 0) {
+                Program.showError('Please pay the full amount');
+                return;
+              }
+
+              Get.back();
+
+              Get.dialog(
+                const Center(child: CircularProgressIndicator()),
+                barrierDismissible: false,
+              );
+
+              try {
+                print('🎯 PAYMENT PROCESS STARTED =================');
+                print(
+                    '💰 Current totals - Sub: ${saleSubtotal.value}, Discount: ${saleDiscount.value}, Total: ${saleTotal.value}');
+
+                if (currentSale.value != null) {
+                  print('📋 Current sale before payment:');
+                  print('   ID: ${currentSale.value!.id}');
+                  print('   Status: ${currentSale.value!.status}');
+                  print('   Is Paid: ${currentSale.value!.isPaid}');
+                  print('   Grand Total: ${currentSale.value!.grandTotal}');
+                }
+
+                // Complete the sale
+                await completeCurrentSale();
+
+                print('✅ PAYMENT PROCESS COMPLETED ===============');
+              } catch (e) {
+                print('❌ PAYMENT PROCESS FAILED: $e');
+                Get.back();
+                // Even if there's an error, try to navigate to receipt
+                print('🔄 Error but trying to show receipt...');
+                prepareReceiptData(); // Ensure receipt data is prepared
+                Get.offAllNamed('/web_receipt_screen');
+              }
+            },
+            child: const Text('PAY & PRINT'),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  void updateDollarPayment(double dollars) {
+    dollarPayment.value = dollars;
+    rialsPayment.value = dollars * exchangeRate.value;
+    remainingAmount.value = saleTotal.value - dollars;
+    paymentAmountController.text = dollars.toStringAsFixed(2);
+    update();
+  }
+
+  void updateRialsPayment(double rials) {
+    rialsPayment.value = rials;
+    dollarPayment.value = rials / exchangeRate.value;
+    remainingAmount.value = saleTotal.value - dollarPayment.value;
+    paymentAmountController.text = dollarPayment.value.toStringAsFixed(2);
+    update();
   }
 
   Future<void> checkExistingSaleForTable(int tableId) async {
@@ -833,11 +1047,9 @@ class SaleController extends GetxController {
       if (response.statusCode == 200) {
         final data = response.data['data'] as List? ?? [];
         if (data.isNotEmpty) {
-          // Use existing pending sale
           currentSale.value = sale_model.Sale.fromJson(data.first);
           print('🔄 Using existing sale: ${currentSale.value!.id}');
 
-          // Load existing sale items
           await _loadSaleItems(currentSale.value!.id);
         }
       }
@@ -857,11 +1069,9 @@ class SaleController extends GetxController {
       if (response.statusCode == 200) {
         final items = response.data['data'] as List? ?? [];
 
-        // Clear current cart
         cartItems.clear();
         cartQuantities.clear();
 
-        // Load items into cart
         for (final item in items) {
           final productId = item['product_id'];
           final product = products.firstWhere(
@@ -872,7 +1082,6 @@ class SaleController extends GetxController {
           final quantity = item['quantity'] ?? 1;
           final price = item['price'] ?? product.price;
 
-          // Add to cart
           final updatedProduct = product.copyWith(price: price.toDouble());
           final key = _getProductKey(updatedProduct);
 
@@ -893,7 +1102,6 @@ class SaleController extends GetxController {
       final token = _storage.read('token');
       if (token == null) throw Exception('No authentication token found');
 
-      // Prepare items
       final items = cartItems.map((product) {
         final key = _getProductKey(product);
         final quantity = cartQuantities[key] ?? 1;
@@ -907,7 +1115,6 @@ class SaleController extends GetxController {
 
       print('📦 Saving ${items.length} items to sale $saleId');
 
-      // Make bulk API call with timeout
       final response = await _dio.post(
         '/sale-products/bulk',
         options: Options(
@@ -966,7 +1173,6 @@ class SaleController extends GetxController {
 
   void _resetSaleTotals() {
     saleSubtotal.value = 0.0;
-    // saleTax.value = 0.0;
     saleDiscount.value = 0.0;
     saleTotal.value = 0.0;
   }
@@ -985,287 +1191,6 @@ class SaleController extends GetxController {
     }
   }
 
-  void _configureDio() {
-    _dio.options.baseUrl = 'http://127.0.0.1:8000/api';
-    _dio.options.connectTimeout = const Duration(seconds: 15);
-    _dio.options.receiveTimeout = const Duration(seconds: 15);
-    _dio.options.sendTimeout = const Duration(seconds: 15);
-
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        print('=== API Request ===');
-        print('URL: ${options.baseUrl}${options.path}');
-        print('Method: ${options.method}');
-        print('Data: ${options.data}');
-        print('Headers: ${options.headers}');
-        handler.next(options);
-      },
-      onResponse: (response, handler) {
-        print('=== API Response ===');
-        print('Status: ${response.statusCode}');
-        print('Data: ${response.data}');
-        handler.next(response);
-      },
-      onError: (error, handler) {
-        print('=== API Error ===');
-        print('Type: ${error.type}');
-        print('Message: ${error.message}');
-        print('Response: ${error.response?.data}');
-        print('Status Code: ${error.response?.statusCode}');
-
-        // Don't automatically show errors for network issues
-        // Let individual methods handle them
-        handler.next(error);
-      },
-    ));
-  }
-
-  Future<void> fetchPaymentMethods() async {
-    try {
-      loading(true);
-      final token = _storage.read('token');
-      if (token == null) throw Exception('No authentication token found');
-
-      final response = await _dio.get(
-        '/payment-methods',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      );
-
-      if (response.statusCode == 200) {
-        final data = response.data as List? ?? [];
-        paymentMethods
-            .assignAll(data.map((json) => PaymentMethod.fromJson(json)));
-
-        // Auto-select the first payment method if none is selected
-        if (selectedPaymentMethod.value == null && paymentMethods.isNotEmpty) {
-          selectedPaymentMethod.value = paymentMethods.first;
-        }
-      }
-    } catch (e) {
-      errorMessage.value = 'Failed to fetch payment methods';
-      Program.showError('Payment method fetch error: $e');
-    } finally {
-      loading(false);
-    }
-  }
-
-// In your SaleController class
-  void showPaymentDialog() {
-    // Initialize payment values
-    paymentAmountController.text = saleTotal.value.toStringAsFixed(2);
-    dollarPayment.value = saleTotal.value;
-    rialsPayment.value = saleTotal.value * exchangeRate.value;
-    remainingAmount.value = 0.0;
-
-    // Ensure selected payment method exists in available methods
-    if (selectedPaymentMethod.value == null ||
-        !paymentMethods.any((m) => m.id == selectedPaymentMethod.value?.id)) {
-      if (paymentMethods.isNotEmpty) {
-        selectedPaymentMethod.value = paymentMethods.first;
-      }
-    }
-
-    Get.dialog(
-      AlertDialog(
-        title: const Center(child: Text('Payment')),
-        content: SizedBox(
-          width: 400,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 20),
-
-                // Payment method dropdown - Fixed version
-                Obx(() {
-                  // Find the selected method in available methods
-                  final selected = paymentMethods.firstWhereOrNull(
-                      (method) => method.id == selectedPaymentMethod.value?.id);
-
-                  return DropdownButtonFormField<PaymentMethod>(
-                    value: selected,
-                    items: paymentMethods.map((method) {
-                      return DropdownMenuItem<PaymentMethod>(
-                        value: method,
-                        child: Text(method.paymentMethodName),
-                      );
-                    }).toList(),
-                    onChanged: (PaymentMethod? method) {
-                      if (method != null) {
-                        selectedPaymentMethod.value = method;
-                      }
-                    },
-                    decoration: const InputDecoration(
-                      labelText: 'Payment Method',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) =>
-                        value == null ? 'Please select a payment method' : null,
-                  );
-                }),
-                const SizedBox(height: 20),
-
-                // Dollar payment input
-                TextField(
-                  controller: paymentAmountController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                    labelText: 'Dollar Pay:',
-                    prefixText: '\$',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    final dollars = double.tryParse(value) ?? 0;
-                    updateDollarPayment(dollars);
-                  },
-                ),
-                const SizedBox(height: 10),
-
-                // Riels payment input
-                TextField(
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                    labelText: 'Riels Pay:',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    final rials = double.tryParse(value) ?? 0;
-                    updateRialsPayment(rials);
-                  },
-                ),
-                const SizedBox(height: 10),
-
-                // Remaining amount
-
-                Row(
-                  children: [
-                    const Text('TOTAL:', style: TextStyle(fontSize: 16)),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Obx(
-                      () => Text(
-                        '\$${saleTotal.value.toStringAsFixed(2)}      R ${formatRielAmount(saleTotal.value * exchangeRate.value)}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Obx(() => Row(
-                      children: [
-                        Text(
-                          'Remaining: \$${remainingAmount.value.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: remainingAmount.value > 0
-                                ? Colors.red
-                                : Colors.green,
-                          ),
-                        ),
-                      ],
-                    )),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('CANCEL'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-              minimumSize: const Size(150, 45),
-            ),
-            onPressed: () async {
-              if (selectedPaymentMethod.value == null) {
-                Program.showError('Please select a payment method');
-                return;
-              }
-
-              if (remainingAmount.value > 0) {
-                Program.showError('Please pay the full amount');
-                return;
-              }
-
-              // Close payment dialog first safely
-              Get.back();
-
-              // Show loading indicator
-              Get.dialog(
-                const Center(child: CircularProgressIndicator()),
-                barrierDismissible: false,
-              );
-
-              try {
-                await completeCurrentSale();
-                // completeCurrentSale now handles navigation and keeps data
-              } catch (e) {
-                Get.back();
-                Program.showError(
-                    'Payment completed with minor issues: ${e.toString()}');
-                // Still navigate to receipt with available data
-                Get.offAllNamed('/web_receipt_screen');
-              }
-            },
-            child: const Text('PAY & PRINT'),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-    );
-  }
-
-// Currency conversion methods
-  void updateDollarPayment(double dollars) {
-    dollarPayment.value = dollars;
-    rialsPayment.value = dollars * exchangeRate.value;
-    remainingAmount.value = saleTotal.value - dollars;
-    paymentAmountController.text =
-        dollars.toStringAsFixed(2); // Ensure proper format
-    update();
-  }
-
-  void updateRialsPayment(double rials) {
-    rialsPayment.value = rials;
-    dollarPayment.value = rials / exchangeRate.value;
-    remainingAmount.value = saleTotal.value - dollarPayment.value;
-    paymentAmountController.text =
-        dollarPayment.value.toStringAsFixed(2); // Ensure proper format
-    update();
-  }
-
-  Future<void> loadExistingSale(int saleId) async {
-    try {
-      final response = await _dio.get('/sales/$saleId');
-      final sale = Sale.fromJson(response.data['data']);
-
-      if (sale.tableId != null) {
-        print('📊 Loaded sale ${sale.id} for table ${sale.tableId}');
-        // Set the table context
-        final tableController = Get.put(TableController());
-        tableController.selectedTableId.value = sale.tableId!;
-        tableController.selectedTableName.value = 'Table ${sale.tableId}';
-        selectedTable.value = 'Table ${sale.tableId}';
-      }
-
-      currentSale.value = sale;
-    } catch (e) {
-      // Handle error
-    }
-  }
-
   void setCurrentTable(int tableId, String tableName) async {
     print(
         '🏁 SaleController.setCurrentTable called - ID: $tableId, Name: $tableName');
@@ -1274,7 +1199,6 @@ class SaleController extends GetxController {
     currentTableName.value = tableName;
     selectedTableId.value = tableId;
 
-    // Check for existing pending sale for this table
     await checkExistingSaleForTable(tableId);
 
     print(
@@ -1300,57 +1224,11 @@ class SaleController extends GetxController {
     saleSubtotal.value = 0.0;
     saleDiscount.value = 0.0;
     saleTotal.value = 0.0;
-    // Reset any other sale-related state
-  }
-
-// Add this method to preserve sale data for receipt
-  void prepareReceiptData() {
-    print('📋 Preparing receipt data...');
-
-    // Convert cart items to receipt format
-    receiptProducts.clear();
-
-    for (var product in cartItems) {
-      final key = _getProductKey(product);
-      final quantity = cartQuantities[key] ?? 1;
-
-      receiptProducts.add({
-        'product_id': product.id,
-        'product_name': product.name,
-        'price': product.price,
-        'quantity': quantity,
-        'amount': product.price * quantity,
-      });
-    }
-
-    // Store complete sale data for receipt
-    receiptSaleData.value = {
-      'id': currentSale.value?.id,
-      'invoice_number': currentSale.value?.invoiceNumber ??
-          'OFFLINE-${DateTime.now().millisecondsSinceEpoch}',
-      'sale_date': currentSale.value?.saleDate ?? DateTime.now(),
-      'table_id': currentTableId.value,
-      'table_name': currentTableName.value,
-      'sub_total': saleSubtotal.value,
-      'discount': saleDiscount.value,
-      'grand_total': saleTotal.value,
-      'is_paid': true,
-      'status': 'completed',
-      'payment_method':
-          selectedPaymentMethod.value?.paymentMethodName ?? 'Unknown',
-      'products': receiptProducts.toList(),
-    };
-
-    print('✅ Receipt data prepared with ${receiptProducts.length} products');
   }
 
   String formatRielAmount(double amount) {
     int intAmount = amount.toInt();
-
-    // Round to nearest hundred (419960 -> 420000)
     int roundedAmount = ((intAmount / 100).round() * 100).toInt();
-
-    // Add comma formatting
     return _formatNumberWithCommas(roundedAmount);
   }
 
@@ -1366,15 +1244,154 @@ class SaleController extends GetxController {
       result = numberStr[i] + result;
       count++;
     }
-
     return result;
   }
 
-  // --- GETTERS for UI display ---
-  bool get hasPendingSale => currentSale.value != null;
+  // Data clearing methods
+  void clearDataAfterReceipt() {
+    print('🧹 Clearing sale data after receipt viewed');
+    cartItems.clear();
+    cartQuantities.clear();
+    saleSubtotal.value = 0.0;
+    saleDiscount.value = 0.0;
+    saleTotal.value = 0.0;
+    paymentAmountController.clear();
+    exchangeRateController.text = '1.0';
+    dollarPayment.value = 0.0;
+    rialsPayment.value = 0.0;
+    remainingAmount.value = 0.0;
+    currentTableId.value = 0;
+    currentTableName.value = 'No Table Selected';
+    selectedTableId.value = 0;
+    print('✅ Sale data cleared successfully');
+  }
 
+  void finalizeCurrentSale() {
+    print('🎫 Finalizing sale - clearing current sale');
+    currentSale.value = null;
+  }
+
+  void finalizeSale() {
+    print('🎫 Finalizing sale - clearing all data');
+    currentSale.value = null;
+    clearDataAfterReceipt();
+  }
+
+  void clearAllSaleDataFull() {
+    print('🧹 Clearing ALL sale data');
+    currentSale.value = null;
+    cartItems.clear();
+    cartQuantities.clear();
+    saleSubtotal.value = 0.0;
+    saleDiscount.value = 0.0;
+    saleTotal.value = 0.0;
+    paymentAmountController.clear();
+    exchangeRateController.text = '1.0';
+    dollarPayment.value = 0.0;
+    rialsPayment.value = 0.0;
+    remainingAmount.value = 0.0;
+    currentTableId.value = 0;
+    currentTableName.value = 'No Table Selected';
+    selectedTableId.value = 0;
+    print('✅ All sale data cleared successfully');
+  }
+
+  void safeClearAllData() {
+    print('🧹 SAFE Clearing all sale data...');
+    try {
+      saleSubtotal.value = 0.0;
+      saleDiscount.value = 0.0;
+      saleTotal.value = 0.0;
+      dollarPayment.value = 0.0;
+      rialsPayment.value = 0.0;
+      remainingAmount.value = 0.0;
+      currentTableId.value = 0;
+      currentTableName.value = 'No Table Selected';
+      selectedTableId.value = 0;
+      cartItems.clear();
+      cartQuantities.clear();
+      receiptProducts.clear();
+      receiptSaleData.value = null;
+      paymentAmountController.clear();
+      exchangeRateController.text = '1.0';
+      searchController.clear();
+      currentSale.value = null;
+      print('✅ All sale data cleared safely - Ready for fresh start');
+    } catch (e) {
+      print('⚠️ Error during data clearing: $e');
+      cartItems.clear();
+      cartQuantities.clear();
+      currentSale.value = null;
+      receiptSaleData.value = null;
+    }
+  }
+
+  void safeClearSaleDataOnly() {
+    print('🧹 SAFE Clearing only sale-related data (preserving sale state)...');
+    try {
+      saleSubtotal.value = 0.0;
+      saleDiscount.value = 0.0;
+      saleTotal.value = 0.0;
+      dollarPayment.value = 0.0;
+      rialsPayment.value = 0.0;
+      remainingAmount.value = 0.0;
+      cartItems.clear();
+      cartQuantities.clear();
+      paymentAmountController.clear();
+      exchangeRateController.text = '1.0';
+      searchController.clear();
+      print('✅ Cart cleared but sale remains active');
+    } catch (e) {
+      print('⚠️ Error during sale data clearing: $e');
+      cartItems.clear();
+      cartQuantities.clear();
+    }
+  }
+
+  void clearAllSaleData() {
+    print('🧹 Clearing ALL sale data (but keeping table info)...');
+    try {
+      currentSale.value = null;
+      cartItems.clear();
+      cartQuantities.clear();
+      saleSubtotal.value = 0.0;
+      saleDiscount.value = 0.0;
+      saleTotal.value = 0.0;
+      paymentAmountController.clear();
+      exchangeRateController.text = '1.0';
+      dollarPayment.value = 0.0;
+      rialsPayment.value = 0.0;
+      remainingAmount.value = 0.0;
+      print(
+          '✅ All sale data cleared - Table preserved: ${currentTableName.value}');
+    } catch (e) {
+      print('❌ Error clearing sale data: $e');
+    }
+  }
+
+// Add these methods
+  void applyDiscountWithType(double value, String type) {
+    discountType.value = type;
+    discountValue.value = value;
+
+    if (type == 'percentage') {
+      applyPercentDiscount(value);
+    } else {
+      applyAmountDiscount(value);
+    }
+  }
+
+  void updateDiscountInSale() {
+    if (currentSale.value != null && saleDiscount.value > 0) {
+      // This will be sent in the update request
+      print(
+          '💰 Discount applied: ${saleDiscount.value} (${discountType.value})');
+    }
+  }
+
+  // Getters
+  bool get hasPendingSale => currentSale.value != null;
   String get formattedSubtotal => '\$${saleSubtotal.value.toStringAsFixed(2)}';
-  // String get formattedTax => '\$${saleTax.value.toStringAsFixed(2)}';
   String get formattedDiscount => '-\$${saleDiscount.value.toStringAsFixed(2)}';
   String get formattedTotal => '\$${saleTotal.value.toStringAsFixed(2)}';
 }
