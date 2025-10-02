@@ -136,34 +136,69 @@ class _SaleScreenState extends State<SaleScreen> {
   AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: appColor,
-      title: Column(
+      title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 200,
-            height: 40,
-            child: TextField(
-              controller: _searchController,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'Search products...',
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-                prefixIcon: const Icon(Icons.search, color: Colors.white),
-                filled: true,
-                fillColor: appColor.withOpacity(0.3),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide.none,
-                ),
+          Obx(
+            () => Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                'Table: ${tableController.selectedTableName.value.isNotEmpty ? tableController.selectedTableName.value : 'No Table'}',
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ),
           ),
-          Obx(() => Text(
-                'Table: ${tableController.selectedTableName.value.isNotEmpty ? tableController.selectedTableName.value : 'No Table'}',
-                style: const TextStyle(fontSize: 12, color: Colors.white),
-              )),
+          const SizedBox(width: 444),
+          Container(
+            width: 200,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.white54),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  saleController.filterProductsByName(value);
+                  setState(() {});
+                },
+                style: const TextStyle(
+                    color: Colors.white), // Add this line for white input text
+                decoration: InputDecoration(
+                  hintText: 'Search products...',
+                  hintStyle: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 14), // Slightly transparent hint
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear,
+                              size: 20, color: Colors.white),
+                          onPressed: () {
+                            _searchController.clear();
+                            saleController.clearSearch();
+                            setState(() {}); // Trigger rebuild
+                          },
+                        )
+                      : const Icon(Icons.search, color: Colors.white),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+                cursorColor: Colors
+                    .white, // Optional: Set cursor color to white for better visibility
+              ),
+            ),
+          ),
         ],
       ),
       leading: IconButton(
@@ -194,36 +229,53 @@ class _SaleScreenState extends State<SaleScreen> {
 
   Widget _buildProductGrid() {
     return Expanded(
-      flex: 6,
+      flex: 5,
       child: Column(
         children: [
           _buildCategoryButtons(),
-          _buildProductsGrid(),
-          _buildActionButtons(),
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/bg_image.jpg"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Column(
+                children: [
+                  _buildProductsGrid(),
+                  _buildActionButtons(),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildCategoryButtons() {
-    return SizedBox(
-      height: 60,
-      child: Obx(() {
-        if (saleController.loading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: saleController.filteredCategories.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 8),
-          itemBuilder: (context, index) {
-            final category = saleController.filteredCategories[index];
-            final isSelected =
-                saleController.selectedCategoryId.value == category.id;
-            return _buildCategoryButton(category, isSelected);
-          },
-        );
-      }),
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      child: SizedBox(
+        height: 50,
+        child: Obx(() {
+          if (saleController.loading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: saleController.filteredCategories.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final category = saleController.filteredCategories[index];
+              final isSelected =
+                  saleController.selectedCategoryId.value == category.id;
+              return _buildCategoryButton(category, isSelected);
+            },
+          );
+        }),
+      ),
     );
   }
 
@@ -386,10 +438,10 @@ class _SaleScreenState extends State<SaleScreen> {
           child: GridView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.9,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+              crossAxisCount: 6,
+              childAspectRatio: 1.10,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
             ),
             itemCount: saleController.filteredProducts.length,
             itemBuilder: (context, index) {
@@ -440,14 +492,17 @@ class _SaleScreenState extends State<SaleScreen> {
                     ),
                   ),
                   Positioned(
-                    top: 6,
-                    right: 6,
+                    top: 0,
+                    right: 0,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.red,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                        ),
                       ),
                       child: Text(
                         '\$${product.price.toStringAsFixed(2)}',
@@ -463,9 +518,9 @@ class _SaleScreenState extends State<SaleScreen> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -476,9 +531,7 @@ class _SaleScreenState extends State<SaleScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                     if (product.description != null)
                       Text(
@@ -503,7 +556,7 @@ class _SaleScreenState extends State<SaleScreen> {
 
   Widget _buildCartPanel() {
     return Expanded(
-      flex: 3,
+      flex: 2,
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Obx(() {

@@ -424,7 +424,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             Expanded(
                               flex: 2,
                               child: Text(
-                                sale.tableName,
+                                ' Table ${sale.tableName}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500),
                               ),

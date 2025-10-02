@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_system/controller/table_controller.dart';
 import 'package:pos_system/controller/sale_controller.dart';
+import 'package:pos_system/program.dart';
 import 'package:pos_system/utils/constants.dart';
 import 'package:pos_system/screen/pos/table/widgets/table_action_widget.dart';
 import 'package:pos_system/screen/pos/table/widgets/table_plan_add_new.dart';
@@ -15,7 +16,6 @@ class TablePlanScreen extends StatelessWidget {
     final TableController controller = Get.put(TableController());
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Calculate table size based on screen width
     final tableSize = screenWidth > 600 ? 80.0 : 70.0;
     final fontSize = screenWidth > 600 ? 16.0 : 14.0;
 
@@ -32,28 +32,40 @@ class TablePlanScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
           backgroundColor: appColor,
+          actions: [
+            IconButton(
+              onPressed: () => controller.fetchTables(),
+              icon: const Icon(Icons.refresh, color: Colors.white),
+              tooltip: 'Refresh Tables',
+            ),
+          ],
         ),
         body: Column(
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: 10),
-                  Icon(Icons.table_restaurant),
-                  SizedBox(width: 5),
-                  Text(
-                    'Table Layout',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Icon(Icons.table_restaurant),
+                      SizedBox(width: 5),
+                      Text(
+                        'Table Layout',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
+                  Obx(() => TableAddNewWidget(
+                        onPressed: controller.isAdmin.value
+                            ? () => _showAddTableDialog(controller)
+                            : null,
+                      )),
                 ],
               ),
             ),
-            Obx(() => TableAddNewWidget(
-                  onPressed: controller.isAdmin.value
-                      ? () => _showAddTableDialog(controller)
-                      : null,
-                )),
             Expanded(
               child: Obx(
                 () {
@@ -86,28 +98,11 @@ class TablePlanScreen extends StatelessWidget {
                                 ? () => _showEditTableDialog(
                                     controller, table['id'], table['name'])
                                 : null,
-                            onDelete:
-                                controller.isAdmin.value && !isTableDeleted
-                                    ? () {
-                                        Get.defaultDialog(
-                                          title: 'Confirm Delete',
-                                          content: const Text(
-                                              'Are you sure you want to delete this table?'),
-                                          confirm: ElevatedButton(
-                                            onPressed: () async {
-                                              Get.back();
-                                              await controller
-                                                  .deleteTable(table['id']);
-                                            },
-                                            child: const Text('Delete'),
-                                          ),
-                                          cancel: TextButton(
-                                            onPressed: () => Get.back(),
-                                            child: const Text('Cancel'),
-                                          ),
-                                        );
-                                      }
-                                    : null,
+                            onDelete: controller.isAdmin.value &&
+                                    !isTableDeleted
+                                ? () =>
+                                    _handleDeleteTable(controller, table['id'])
+                                : null,
                             size: tableSize,
                             fontSize: fontSize,
                             isDisabled: isTableDeleted,
@@ -127,14 +122,10 @@ class TablePlanScreen extends StatelessWidget {
 
   void _navigateBackToHome() {
     print('🏠 Navigating back to home screen (preserving sale state)...');
-
-    // Simply navigate back to home without clearing any data
     Get.offAllNamed('/home');
-
     print('✅ Navigated to home - Sale state preserved');
   }
 
-  // In TablePlanScreen - Update _handleTableSelection
   void _handleTableSelection(
       TableController controller, Map<String, dynamic> table) async {
     try {
@@ -146,10 +137,8 @@ class TablePlanScreen extends StatelessWidget {
         return;
       }
 
-      // Show loading indicator
       controller.loading.value = true;
 
-      // Clear any existing sale data before starting new sale
       if (Get.isRegistered<SaleController>()) {
         final saleController = Get.find<SaleController>();
         print('🧹 Clearing existing sale data before new sale...');
@@ -160,19 +149,15 @@ class TablePlanScreen extends StatelessWidget {
         saleController.saleTotal.value = 0.0;
       }
 
-      // Set table in TableController
       controller.selectTable(tableId, tableName);
 
-      // Initialize SaleController if not already registered
       if (!Get.isRegistered<SaleController>()) {
         Get.put(SaleController(), permanent: true);
       }
 
-      // Get SaleController and set table
       final saleController = Get.find<SaleController>();
       saleController.setCurrentTable(tableId, tableName);
 
-      // Navigate to sales screen
       await Get.toNamed('/sales', arguments: {
         'table_id': tableId,
         'table_name': tableName,
@@ -184,9 +169,19 @@ class TablePlanScreen extends StatelessWidget {
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
-      // Always reset loading when done
       controller.loading.value = false;
     }
+  }
+
+  // FIXED: Direct delete without extra confirmation dialog
+  void _handleDeleteTable(TableController controller, int tableId) async {
+    print('🗑️ Deleting table ID: $tableId directly');
+
+    // Close the confirmation dialog first
+    Get.back();
+
+    // Then call the delete method
+    await controller.deleteTable(tableId);
   }
 
   void _showAddTableDialog(TableController controller) {
@@ -209,10 +204,12 @@ class TablePlanScreen extends StatelessWidget {
         ),
       ),
       confirm: ElevatedButton(
-        onPressed: () async {
+        onPressed: () {
           if (nameController.text.isNotEmpty) {
-            await controller.createTable(nameController.text);
             Get.back();
+            controller.createTable(nameController.text);
+          } else {
+            Program.error('Validation Error', 'Please enter table name');
           }
         },
         child: const Text('Save'),
@@ -246,10 +243,12 @@ class TablePlanScreen extends StatelessWidget {
         ),
       ),
       confirm: ElevatedButton(
-        onPressed: () async {
+        onPressed: () {
           if (nameController.text.isNotEmpty) {
-            await controller.updateTable(tableId, nameController.text);
             Get.back();
+            controller.updateTable(tableId, nameController.text);
+          } else {
+            Program.error('Validation Error', 'Please enter table name');
           }
         },
         child: const Text('Update'),

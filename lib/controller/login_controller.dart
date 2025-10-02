@@ -4,6 +4,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:pos_system/controller/user_controller.dart';
 import 'package:pos_system/services/auth_service.dart';
 
+import '../program.dart';
+
 class LoginController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   final GetStorage _storage = GetStorage();
@@ -13,7 +15,7 @@ class LoginController extends GetxController {
 
   var isPasswordHidden = true.obs;
   var loading = false.obs;
-  
+
   // Add observable for logged in user
   var loggedInUser = Rxn<Map<String, dynamic>>();
 
@@ -46,6 +48,7 @@ class LoginController extends GetxController {
       final password = passwordController.text.trim();
 
       if (username.isEmpty || password.isEmpty) {
+        Program.error('Login', 'Username or password is empty');
         throw 'Please enter both username and password';
       }
 
@@ -54,8 +57,9 @@ class LoginController extends GetxController {
         print('Login response: $response'); // Debug print
         _storage.write('token', response['token']);
         _storage.write('user', response['user']);
-        _storage.write('role_id', response['role_id']);  // Store entire user object
-        
+        _storage.write(
+            'role_id', response['role_id']); // Store entire user object
+
         // Update the observable user data
         loggedInUser.value = Map<String, dynamic>.from(response['user']);
         print('Stored user data: ${loggedInUser.value}'); // Debug print
@@ -64,7 +68,6 @@ class LoginController extends GetxController {
       }
     } catch (e) {
       print('Login error: $e');
-
     } finally {
       loading.value = false;
     }
@@ -74,17 +77,17 @@ class LoginController extends GetxController {
   String get userFullName {
     return loggedInUser.value?['full_name'] ?? 'Unknown User';
   }
-  
+
   String get username {
     return loggedInUser.value?['username'] ?? 'Unknown';
   }
-  
+
   int? get roleId => loggedInUser.value?['role_id'];
-  
+
   String? get profileImage => loggedInUser.value?['profile_image'];
-  
+
   int? get userId => loggedInUser.value?['id'];
-  
+
   // Method to clear user data on logout
   void logout() {
     _storage.erase();

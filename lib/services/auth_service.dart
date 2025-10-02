@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pos_system/program.dart';
 import 'package:pos_system/services/api_service.dart';
 
 class AuthService extends GetxService {
@@ -47,6 +48,7 @@ class AuthService extends GetxService {
         throw response.body['message'] ?? 'Login failed';
       }
     } catch (e) {
+      Program.error('Login', " ${e.toString()}");
       throw 'Login failed: ${e.toString()}';
     }
   }
