@@ -315,93 +315,125 @@ class _SaleScreenState extends State<SaleScreen> {
 
     Get.dialog(
       AlertDialog(
-        title: const Text('Discount'),
-        content: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Obx(() => SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          ChoiceChip(
-                            label: const Text('Percent (%)'),
-                            selected: discountType.value == 'percent',
-                            onSelected: (selected) {
-                              discountType.value = 'percent';
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          ChoiceChip(
-                            label: const Text('Amount (\$)'),
-                            selected: discountType.value == 'amount',
-                            onSelected: (selected) {
-                              discountType.value = 'amount';
-                            },
-                          ),
-                        ],
-                      ),
-                    )),
-                const SizedBox(height: 16),
-                Obx(() => TextField(
-                      controller: amountController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        prefixText:
-                            discountType.value == 'percent' ? '' : '\$ ',
-                        suffixText: discountType.value == 'percent' ? '%' : '',
-                        border: const OutlineInputBorder(),
-                        contentPadding: const EdgeInsets.all(12),
-                      ),
-                    )),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          // Safe dialog closing
-                          if (Get.isDialogOpen == true) {
-                            Get.back();
-                          }
-                        },
-                        child: const Text('No'),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final value =
-                              double.tryParse(amountController.text) ?? 0;
-
-                          // Apply discount first
-                          if (discountType.value == 'percent') {
-                            saleController.applyPercentDiscount(value);
-                          } else {
-                            saleController.applyAmountDiscount(value);
-                          }
-
-                          // Safe dialog closing
-                          if (Get.isDialogOpen == true) {
-                            Get.back();
-                          }
-                        },
-                        child: const Text('Yes'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              'Discount',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.red,
+              ),
             ),
           ),
         ),
+        content: SizedBox(
+          width: 250,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Chips side by side
+              Obx(() => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ChoiceChip(
+                        label: const Text('Percent (%)'),
+                        selected: discountType.value == 'percent',
+                        onSelected: (selected) {
+                          discountType.value = 'percent';
+                        },
+                        labelStyle: TextStyle(
+                          color: discountType.value == 'percent'
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                        selectedColor: Colors.red,
+                        checkmarkColor: Colors.white,
+                      ),
+                      const SizedBox(width: 12),
+                      ChoiceChip(
+                        label: const Text('Amount (\$)'),
+                        selected: discountType.value == 'amount',
+                        onSelected: (selected) {
+                          discountType.value = 'amount';
+                        },
+                        labelStyle: TextStyle(
+                          color: discountType.value == 'amount'
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                        selectedColor: Colors.red,
+                        checkmarkColor: Colors.white,
+                      ),
+                    ],
+                  )),
+              const SizedBox(height: 16),
+              // Amount / Percent input
+              Obx(() => TextField(
+                    controller: amountController,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      prefixText: discountType.value == 'percent' ? '' : '\$ ',
+                      suffixText: discountType.value == 'percent' ? '%' : '',
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.all(12),
+                    ),
+                  )),
+              const SizedBox(height: 25),
+              // Action buttons
+              Row(
+                children: [
+                  // No button
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red, // text red
+                        side: const BorderSide(color: Colors.red), // border red
+                      ),
+                      onPressed: () {
+                        if (Get.isDialogOpen == true) {
+                          Get.back();
+                        }
+                      },
+                      child: const Text('No'),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Yes button
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red, // button red
+                        foregroundColor: Colors.white, // text white
+                        shadowColor: Colors.transparent,
+                        elevation: 0,
+                      ),
+                      onPressed: () {
+                        final value =
+                            double.tryParse(amountController.text) ?? 0;
+
+                        if (discountType.value == 'percent') {
+                          saleController.applyPercentDiscount(value);
+                        } else {
+                          saleController.applyAmountDiscount(value);
+                        }
+
+                        if (Get.isDialogOpen == true) {
+                          Get.back();
+                        }
+                      },
+                      child: const Text('Yes'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
-      barrierDismissible: true, // Allow dismissing by tapping outside
+      barrierDismissible: true,
     );
   }
 
@@ -440,8 +472,8 @@ class _SaleScreenState extends State<SaleScreen> {
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 6,
               childAspectRatio: 1.10,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 0,
             ),
             itemCount: saleController.filteredProducts.length,
             itemBuilder: (context, index) {
@@ -509,7 +541,7 @@ class _SaleScreenState extends State<SaleScreen> {
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: 13,
                         ),
                       ),
                     ),
@@ -600,41 +632,98 @@ class _SaleScreenState extends State<SaleScreen> {
     final totalDisplay = isFree ? 'FREE' : '\$${total.toStringAsFixed(2)}';
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: ListTile(
-        leading: product.image != null
-            ? Image.network(
-                'http://127.0.0.1:8000/storage/${product.image}',
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-              )
-            : const Icon(Icons.fastfood),
-        title: Row(
+      margin:
+          const EdgeInsets.symmetric(vertical: 2), // Reduced vertical margin
+      child: Container(
+        height: 70, // Reduced height from default
+        padding: const EdgeInsets.symmetric(
+            horizontal: 8, vertical: 4), // Reduced padding
+        child: Row(
           children: [
-            Text(product.name),
-            if (isFree) ...[
-              const SizedBox(width: 8),
-              const Text('FREE',
-                  style: TextStyle(
-                      color: Colors.red, fontWeight: FontWeight.bold)),
-            ],
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('$quantity x $priceDisplay'),
-            Text(
-              totalDisplay,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: isFree ? Colors.red : Colors.black,
+            // Product Image
+            product.image != null
+                ? Container(
+                    width: 45, // Slightly smaller image
+                    height: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            'http://127.0.0.1:8000/storage/${product.image}'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : Container(
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.fastfood, size: 20),
+                  ),
+
+            const SizedBox(width: 8),
+
+            // Product Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          product.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      if (isFree) ...[
+                        const SizedBox(width: 4),
+                        const Text(
+                          'FREE',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '$quantity x $priceDisplay',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Text(
+                    totalDisplay,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: isFree ? Colors.red : Colors.black,
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            const SizedBox(width: 8),
+
+            // Actions - moved to far right
+            _buildCartItemActions(product, quantity),
           ],
         ),
-        trailing: _buildCartItemActions(product, quantity),
       ),
     );
   }
@@ -642,7 +731,7 @@ class _SaleScreenState extends State<SaleScreen> {
   Widget _buildCartItemActions(product_model.Product product, int quantity) {
     if (product.price == 0) {
       return IconButton(
-        icon: const Icon(Icons.delete),
+        icon: const Icon(Icons.delete, size: 20),
         onPressed: () => saleController.removeProductFromCartById(product.id,
             price: product.price),
       );
@@ -650,31 +739,69 @@ class _SaleScreenState extends State<SaleScreen> {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            icon: const Icon(Icons.remove),
-            onPressed: () => saleController.removeProductFromCart(product),
+          // Quantity controls
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.remove, size: 18),
+                  padding: const EdgeInsets.all(2),
+                  constraints: const BoxConstraints(
+                    minWidth: 30,
+                    minHeight: 30,
+                  ),
+                  onPressed: () =>
+                      saleController.removeProductFromCart(product),
+                ),
+                Text(
+                  quantity.toString(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add, size: 18),
+                  padding: const EdgeInsets.all(2),
+                  constraints: const BoxConstraints(
+                    minWidth: 30,
+                    minHeight: 30,
+                  ),
+                  onPressed: () => saleController.addProductToCart(product),
+                ),
+              ],
+            ),
           ),
-          Text(quantity.toString()),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => saleController.addProductToCart(product),
-          ),
+
+          const SizedBox(width: 4),
+
+          // More options menu
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert, size: 20),
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: 'edit',
-                child: ListTile(
-                  leading: Icon(Icons.attach_money),
-                  title: Text('Change Qty & Price'),
+                child: Row(
+                  children: [
+                    Icon(Icons.edit, size: 18),
+                    SizedBox(width: 8),
+                    Text('Edit'),
+                  ],
                 ),
               ),
-              const PopupMenuDivider(),
               const PopupMenuItem(
                 value: 'delete',
-                child: ListTile(
-                  leading: Icon(Icons.delete, color: Colors.red),
-                  title: Text('Delete', style: TextStyle(color: Colors.red)),
+                child: Row(
+                  children: [
+                    Icon(Icons.delete, color: Colors.red, size: 18),
+                    SizedBox(width: 8),
+                    Text('Delete', style: TextStyle(color: Colors.red)),
+                  ],
                 ),
               ),
             ],
@@ -868,15 +995,15 @@ class _SaleScreenState extends State<SaleScreen> {
           Text(
             label,
             style: TextStyle(
-              fontSize: isTotal ? 18 : 16,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+              fontSize: isTotal ? 16 : 14,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.bold,
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              fontSize: isTotal ? 18 : 16,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+              fontSize: isTotal ? 16 : 14,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.bold,
               color: isTotal
                   ? Colors.green
                   : isDiscount

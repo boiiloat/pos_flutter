@@ -121,9 +121,7 @@ class TablePlanScreen extends StatelessWidget {
   }
 
   void _navigateBackToHome() {
-    print('🏠 Navigating back to home screen (preserving sale state)...');
     Get.offAllNamed('/home');
-    print('✅ Navigated to home - Sale state preserved');
   }
 
   void _handleTableSelection(
@@ -141,7 +139,6 @@ class TablePlanScreen extends StatelessWidget {
 
       if (Get.isRegistered<SaleController>()) {
         final saleController = Get.find<SaleController>();
-        print('🧹 Clearing existing sale data before new sale...');
         saleController.cartItems.clear();
         saleController.cartQuantities.clear();
         saleController.saleSubtotal.value = 0.0;
@@ -175,8 +172,6 @@ class TablePlanScreen extends StatelessWidget {
 
   // FIXED: Direct delete without extra confirmation dialog
   void _handleDeleteTable(TableController controller, int tableId) async {
-    print('🗑️ Deleting table ID: $tableId directly');
-
     // Close the confirmation dialog first
     Get.back();
 

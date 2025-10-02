@@ -944,9 +944,9 @@ class SaleController extends GetxController {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: remainingAmount.value > 0
-                                ? Colors.red
-                                : Colors.green,
+                            color: _isPaymentSufficient()
+                                ? Colors.green
+                                : Colors.red,
                           ),
                         ),
                       ],
@@ -972,8 +972,9 @@ class SaleController extends GetxController {
                 return;
               }
 
-              if (remainingAmount.value > 0) {
-                Program.showError('Please pay the full amount');
+              // FIXED: Use the new validation method with tolerance
+              if (!_isPaymentSufficient()) {
+                Program.showError('Please pay the full amount or more');
                 return;
               }
 
@@ -1018,18 +1019,35 @@ class SaleController extends GetxController {
     );
   }
 
+  // ADD THIS NEW VALIDATION METHOD
+  bool _isPaymentSufficient() {
+    // Allow small tolerance for floating point precision (0.01)
+    const tolerance = 0.01;
+    return remainingAmount.value <= tolerance;
+  }
+
   void updateDollarPayment(double dollars) {
     dollarPayment.value = dollars;
     rialsPayment.value = dollars * exchangeRate.value;
-    remainingAmount.value = saleTotal.value - dollars;
+
+    // Use precise calculation with rounding
+    remainingAmount.value = (saleTotal.value - dollars);
+
+    // Update controller with formatted value
     paymentAmountController.text = dollars.toStringAsFixed(2);
     update();
   }
 
   void updateRialsPayment(double rials) {
     rialsPayment.value = rials;
-    dollarPayment.value = rials / exchangeRate.value;
-    remainingAmount.value = saleTotal.value - dollarPayment.value;
+
+    // Calculate dollars with precise rounding
+    dollarPayment.value =
+        double.parse((rials / exchangeRate.value).toStringAsFixed(2));
+
+    // Use precise calculation
+    remainingAmount.value = (saleTotal.value - dollarPayment.value);
+
     paymentAmountController.text = dollarPayment.value.toStringAsFixed(2);
     update();
   }
