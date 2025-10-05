@@ -20,7 +20,7 @@ class ReceiptController extends GetxController {
   var totalProfit = 0.0.obs;
 
   // Date filtering
-  var currentFilter = 'all'.obs;
+  var currentFilter = 'today'.obs;
 
   @override
   void onInit() {
@@ -76,13 +76,15 @@ class ReceiptController extends GetxController {
         paidSales.sort((a, b) => b.saleDate.compareTo(a.saleDate));
 
         sales.value = paidSales;
-        applyDateFilter(currentFilter.value);
+
+        // Apply today filter by default
+        applyDateFilter('today');
 
         calculateKPIs(filteredSales);
 
         print('🎉 FINAL RESULTS =================');
         print('📈 Total paid sales: ${paidSales.length}');
-        print('📊 Filtered sales: ${filteredSales.length}');
+        print('📊 Today\'s sales: ${filteredSales.length}');
         print('🔍 Current filter: $currentFilter');
 
         // Debug: Print dates to verify

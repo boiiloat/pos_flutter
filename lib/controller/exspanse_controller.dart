@@ -8,6 +8,7 @@ class ExpenseController extends GetxController {
   final GetStorage _storage = GetStorage();
 
   var expenses = <Expense>[].obs;
+  var filteredExpenses = <Expense>[].obs;
   var loading = false.obs;
   var errorMessage = ''.obs;
 
@@ -16,6 +17,12 @@ class ExpenseController extends GetxController {
   var amount = 0.0.obs;
   var paymentMethodId = 0.obs;
   var note = ''.obs;
+
+  // Date filtering
+  var hasActiveFilter = false.obs;
+  var currentFilter = 'all'.obs;
+  DateTime? fromDateFilter;
+  DateTime? toDateFilter;
 
   @override
   void onInit() {
@@ -58,14 +65,123 @@ class ExpenseController extends GetxController {
         } else {
           throw 'Unexpected response format';
         }
+
+        // Apply current filter if any
+        if (hasActiveFilter.value) {
+          applyCurrentFilter();
+        } else {
+          filteredExpenses.assignAll(expenses);
+        }
+
+        print('✅ Expenses loaded: ${expenses.length}');
       } else {
         throw 'Failed to load expenses: ${response.statusCode}';
       }
     } catch (e) {
       errorMessage.value = e.toString();
+      Get.snackbar('Error', 'Failed to load expenses: ${e.toString()}');
     } finally {
       loading.value = false;
     }
+  }
+
+  void applyDateFilter(String filterType) {
+    currentFilter.value = filterType;
+    hasActiveFilter.value = true;
+
+    final now = DateTime.now();
+
+    switch (filterType) {
+      case 'today':
+        fromDateFilter = DateTime(now.year, now.month, now.day);
+        toDateFilter = DateTime(now.year, now.month, now.day, 23, 59, 59);
+        break;
+      case 'yesterday':
+        final yesterday = now.subtract(const Duration(days: 1));
+        fromDateFilter =
+            DateTime(yesterday.year, yesterday.month, yesterday.day);
+        toDateFilter = DateTime(
+            yesterday.year, yesterday.month, yesterday.day, 23, 59, 59);
+        break;
+      case 'this_week':
+        final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+        fromDateFilter =
+            DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+        toDateFilter = DateTime(now.year, now.month, now.day, 23, 59, 59);
+        break;
+      case 'this_month':
+        fromDateFilter = DateTime(now.year, now.month, 1);
+        toDateFilter = DateTime(now.year, now.month, now.day, 23, 59, 59);
+        break;
+      case 'last_month':
+        final firstDayLastMonth = DateTime(now.year, now.month - 1, 1);
+        final lastDayLastMonth = DateTime(now.year, now.month, 0, 23, 59, 59);
+        fromDateFilter = firstDayLastMonth;
+        toDateFilter = lastDayLastMonth;
+        break;
+    }
+
+    applyCurrentFilter();
+  }
+
+  void applyCustomDateFilter(DateTime fromDate, DateTime toDate) {
+    currentFilter.value = 'custom';
+    hasActiveFilter.value = true;
+    fromDateFilter = fromDate;
+    toDateFilter = DateTime(toDate.year, toDate.month, toDate.day, 23, 59, 59);
+    applyCurrentFilter();
+  }
+
+  void applyCurrentFilter() {
+    if (!hasActiveFilter.value ||
+        fromDateFilter == null ||
+        toDateFilter == null) {
+      filteredExpenses.assignAll(expenses);
+      return;
+    }
+
+    filteredExpenses.assignAll(expenses.where((expense) {
+      return expense.createdAt
+              .isAfter(fromDateFilter!.subtract(const Duration(seconds: 1))) &&
+          expense.createdAt.isBefore(toDateFilter!);
+    }).toList());
+  }
+
+  void clearDateFilter() {
+    hasActiveFilter.value = false;
+    currentFilter.value = 'all';
+    fromDateFilter = null;
+    toDateFilter = null;
+    filteredExpenses.assignAll(expenses);
+  }
+
+  String getFilterDescription() {
+    if (!hasActiveFilter.value) return 'All expenses';
+
+    switch (currentFilter.value) {
+      case 'today':
+        return 'Today\'s expenses';
+      case 'yesterday':
+        return 'Yesterday\'s expenses';
+      case 'this_week':
+        return 'This week\'s expenses';
+      case 'this_month':
+        return 'This month\'s expenses';
+      case 'last_month':
+        return 'Last month\'s expenses';
+      case 'custom':
+        return 'Custom range: ${_formatDate(fromDateFilter!)} to ${_formatDate(toDateFilter!)}';
+      default:
+        return 'Filtered expenses';
+    }
+  }
+
+  double getFilteredTotal() {
+    return filteredExpenses.fold(0.0, (sum, expense) => sum + expense.amount);
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 
   Future<bool> createExpense({
@@ -86,8 +202,10 @@ class ExpenseController extends GetxController {
         'description': description,
         'amount': amount,
         'payment_method_id': paymentMethodId,
-        'note': note,
+        if (note != null && note.isNotEmpty) 'note': note,
       };
+
+      print('📤 Creating expense: $data');
 
       final response = await _dio.post(
         '/expenses',
@@ -102,12 +220,14 @@ class ExpenseController extends GetxController {
       );
 
       if (response.statusCode == 201) {
+        Get.snackbar('Success', 'Expense created successfully');
         await fetchExpenses();
         return true;
       } else {
-        throw 'Failed to create expense: ${response.statusCode}';
+        throw 'Failed to create expense: ${response.statusCode} - ${response.data}';
       }
     } catch (e) {
+      Get.snackbar('Error', 'Failed to create expense: ${e.toString()}');
       return false;
     } finally {
       loading.value = false;
@@ -127,8 +247,11 @@ class ExpenseController extends GetxController {
         'description': expense.description,
         'amount': expense.amount,
         'payment_method_id': expense.paymentMethodId,
-        'note': expense.note,
+        if (expense.note != null && expense.note!.isNotEmpty)
+          'note': expense.note,
       };
+
+      print('📤 Updating expense ${expense.id}: $data');
 
       final response = await _dio.put(
         '/expenses/${expense.id}',
@@ -143,12 +266,14 @@ class ExpenseController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        Get.snackbar('Success', 'Expense updated successfully');
         await fetchExpenses();
         return true;
       } else {
-        throw 'Failed to update expense: ${response.statusCode}';
+        throw 'Failed to update expense: ${response.statusCode} - ${response.data}';
       }
     } catch (e) {
+      Get.snackbar('Error', 'Failed to update expense: ${e.toString()}');
       return false;
     } finally {
       loading.value = false;
@@ -173,12 +298,15 @@ class ExpenseController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        Get.snackbar('Success', 'Expense deleted successfully');
         expenses.removeWhere((e) => e.id == expense.id);
+        filteredExpenses.removeWhere((e) => e.id == expense.id);
         return true;
       } else {
         throw 'Failed to delete expense: ${response.statusCode}';
       }
     } catch (e) {
+      Get.snackbar('Error', 'Failed to delete expense: ${e.toString()}');
       return false;
     }
   }

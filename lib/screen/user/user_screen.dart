@@ -5,20 +5,35 @@ import '../../controller/user_controller.dart';
 import '../../models/api/user_model.dart';
 import '../../utils/constants.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
+  const UserScreen({super.key});
+
+  @override
+  State<UserScreen> createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
   final UserController controller = Get.put(UserController());
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  UserScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    // Reload data when screen opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchUsers();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(
-        title: const Text('USERS', style: TextStyle(color: Colors.white)),
+        title:
+            const Text('Users Screen', style: TextStyle(color: Colors.white)),
         backgroundColor: appColor,
         leading: IconButton(
           onPressed: Get.back,

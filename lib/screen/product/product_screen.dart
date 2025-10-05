@@ -20,7 +20,8 @@ class ProductScreen extends StatelessWidget {
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(
-        title: const Text('PRODUCTS', style: TextStyle(color: Colors.white)),
+        title: const Text('Products Screen',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: appColor,
         leading: IconButton(
           onPressed: Get.back,

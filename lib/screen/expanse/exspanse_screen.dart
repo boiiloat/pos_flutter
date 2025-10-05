@@ -32,30 +32,76 @@ class ExpenseScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Header with title
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                width: 150,
-                height: 40,
-                decoration: _boxDecoration(),
-                child: InkWell(
-                  onTap: () => _showAddExpenseDialog(),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_circle),
-                      SizedBox(width: 8),
-                      Text('Expense'),
-                    ],
-                  ),
+          // Header with title and filters
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Date Filter
+                _buildDateFilter(),
+
+                // Total Expense and Add Expense Button
+                Row(
+                  children: [
+                    // Total Expense
+                    Obx(() => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: _boxDecoration(),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Total Expense',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                '\$${expenseController.getFilteredTotal().toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                    const SizedBox(width: 12),
+
+                    // Add Expense Button
+                    Container(
+                      width: 150,
+                      height: 40,
+                      decoration: _boxDecoration(),
+                      child: InkWell(
+                        onTap: () => _showAddExpenseDialog(),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add_circle),
+                            SizedBox(width: 8),
+                            Text('Expense'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 16),
+
+          // Filter Info
+          Obx(() => expenseController.hasActiveFilter.value
+              ? _buildFilterInfo()
+              : const SizedBox()),
 
           // Expenses table
           Expanded(
@@ -66,17 +112,312 @@ class ExpenseScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildDateFilter() {
+    return Container(
+      decoration: _boxDecoration(),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.calendar_today, size: 18, color: Colors.grey.shade600),
+          const SizedBox(width: 8),
+          Obx(() => Text(
+                _getDateFilterText(),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: expenseController.hasActiveFilter.value
+                      ? Colors.blue
+                      : Colors.grey.shade600,
+                ),
+              )),
+          const SizedBox(width: 8),
+          PopupMenuButton<String>(
+            icon: Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+            onSelected: (value) => _handleDateFilterSelection(value),
+            itemBuilder: (context) => [
+              const PopupMenuItem<String>(
+                value: 'today',
+                child: ListTile(
+                  leading: Icon(Icons.today),
+                  title: Text('Today'),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'yesterday',
+                child: ListTile(
+                  leading: Icon(Icons.calendar_view_day),
+                  title: Text('Yesterday'),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'this_week',
+                child: ListTile(
+                  leading: Icon(Icons.view_week),
+                  title: Text('This Week'),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'this_month',
+                child: ListTile(
+                  leading: Icon(Icons.calendar_today),
+                  title: Text('This Month'),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'last_month',
+                child: ListTile(
+                  leading: Icon(Icons.calendar_view_month),
+                  title: Text('Last Month'),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'custom',
+                child: ListTile(
+                  leading: Icon(Icons.date_range),
+                  title: Text('Custom Range'),
+                ),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem<String>(
+                value: 'clear',
+                child: ListTile(
+                  leading: Icon(Icons.clear),
+                  title: Text('Clear Filter'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterInfo() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.blue.shade100),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.filter_alt, size: 16, color: Colors.blue.shade700),
+          const SizedBox(width: 8),
+          Obx(() => Text(
+                expenseController.getFilterDescription(),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.blue.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+              )),
+          const SizedBox(width: 16),
+          InkWell(
+            onTap: () => expenseController.clearDateFilter(),
+            child: Row(
+              children: [
+                Icon(Icons.clear, size: 14, color: Colors.blue.shade700),
+                const SizedBox(width: 4),
+                Text(
+                  'Clear',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue.shade700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getDateFilterText() {
+    if (expenseController.hasActiveFilter.value) {
+      return expenseController.currentFilter.value;
+    }
+    return 'Date Filter';
+  }
+
+  void _handleDateFilterSelection(String value) {
+    switch (value) {
+      case 'today':
+        expenseController.applyDateFilter('today');
+        break;
+      case 'yesterday':
+        expenseController.applyDateFilter('yesterday');
+        break;
+      case 'this_week':
+        expenseController.applyDateFilter('this_week');
+        break;
+      case 'this_month':
+        expenseController.applyDateFilter('this_month');
+        break;
+      case 'last_month':
+        expenseController.applyDateFilter('last_month');
+        break;
+      case 'custom':
+        _showCustomDateRangeDialog();
+        break;
+      case 'clear':
+        expenseController.clearDateFilter();
+        break;
+    }
+  }
+
+  void _showCustomDateRangeDialog() {
+    DateTime? fromDate = DateTime.now().subtract(const Duration(days: 7));
+    DateTime? toDate = DateTime.now();
+
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          width: 300,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Select Date Range',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+
+              // From Date
+              _buildDatePickerField(
+                label: 'From Date',
+                initialDate: fromDate,
+                onDateSelected: (date) => fromDate = date,
+              ),
+              const SizedBox(height: 16),
+
+              // To Date
+              _buildDatePickerField(
+                label: 'To Date',
+                initialDate: toDate,
+                onDateSelected: (date) => toDate = date,
+              ),
+              const SizedBox(height: 24),
+
+              // Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: const Text('Cancel'),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (fromDate != null && toDate != null) {
+                        expenseController.applyCustomDateFilter(
+                            fromDate!, toDate!);
+                        Get.back();
+                      }
+                    },
+                    child: const Text('Apply'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDatePickerField({
+    required String label,
+    required DateTime? initialDate,
+    required Function(DateTime) onDateSelected,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 6),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+            title: Text(
+              initialDate != null
+                  ? _formatDateForDisplay(initialDate!)
+                  : 'Select date',
+              style: TextStyle(
+                color: initialDate != null ? Colors.black : Colors.grey,
+              ),
+            ),
+            trailing: const Icon(Icons.calendar_today, size: 20),
+            onTap: () async {
+              final selectedDate = await showDatePicker(
+                context: Get.context!,
+                initialDate: initialDate ?? DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime.now().add(const Duration(days: 365)),
+              );
+              if (selectedDate != null) {
+                onDateSelected(selectedDate);
+                // Update the UI
+                Get.find<ExpenseController>().update();
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatDateForDisplay(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+
   Widget _buildExpensesTable() {
     return Obx(() {
       if (expenseController.loading.value) {
         return const Center(child: CircularProgressIndicator());
       }
 
-      if (expenseController.expenses.isEmpty) {
-        return const Center(
-          child: Text(
-            'No expenses found',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+      final displayExpenses = expenseController.hasActiveFilter.value
+          ? expenseController.filteredExpenses
+          : expenseController.expenses;
+
+      if (displayExpenses.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.receipt_long,
+                size: 64,
+                color: Colors.grey.shade300,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                expenseController.hasActiveFilter.value
+                    ? 'No expenses found for selected period'
+                    : 'No expenses found',
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              if (expenseController.hasActiveFilter.value)
+                TextButton(
+                  onPressed: () => expenseController.clearDateFilter(),
+                  child: const Text('Clear Filter'),
+                ),
+            ],
           ),
         );
       }
@@ -97,15 +438,15 @@ class ExpenseScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              // Table header
+              // Table header with column labels
               _buildTableHeader(),
 
               // Table content
               Expanded(
                 child: ListView.builder(
-                  itemCount: expenseController.expenses.length,
+                  itemCount: displayExpenses.length,
                   itemBuilder: (context, index) {
-                    final expense = expenseController.expenses[index];
+                    final expense = displayExpenses[index];
                     return _buildExpenseRow(expense, index);
                   },
                 ),
@@ -278,20 +619,33 @@ class ExpenseScreen extends StatelessWidget {
 
   void _showExpenseDialog(Expense? expense) {
     // Create text controllers
-    final descriptionController =
-        TextEditingController(text: expenseController.description.value);
-    final amountController = TextEditingController(
-        text: expenseController.amount.value == 0
-            ? ''
-            : expenseController.amount.value.toString());
-    final noteController =
-        TextEditingController(text: expenseController.note.value);
+    final descriptionController = TextEditingController();
+    final amountController = TextEditingController();
+    final noteController = TextEditingController();
+    int? selectedPaymentMethodId;
+
+    // Initialize form data
+    if (expense != null) {
+      descriptionController.text = expense.description;
+      amountController.text = expense.amount.toString();
+      noteController.text = expense.note ?? '';
+      selectedPaymentMethodId = expense.paymentMethodId;
+    } else {
+      descriptionController.text = expenseController.description.value;
+      amountController.text = expenseController.amount.value == 0
+          ? ''
+          : expenseController.amount.value.toString();
+      noteController.text = expenseController.note.value;
+      selectedPaymentMethodId = expenseController.paymentMethodId.value == 0
+          ? null
+          : expenseController.paymentMethodId.value;
+    }
 
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Container(
-          width: 350, // Shorter width
+          width: 350,
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -320,8 +674,6 @@ class ExpenseScreen extends StatelessWidget {
                 ),
                 child: TextField(
                   controller: descriptionController,
-                  onChanged: (value) =>
-                      expenseController.description.value = value,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding:
@@ -343,8 +695,6 @@ class ExpenseScreen extends StatelessWidget {
                 child: TextField(
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   controller: amountController,
-                  onChanged: (value) => expenseController.amount.value =
-                      double.tryParse(value) ?? 0.0,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding:
@@ -367,9 +717,7 @@ class ExpenseScreen extends StatelessWidget {
                   child: DropdownButton<int>(
                     isExpanded: true,
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    value: expenseController.paymentMethodId.value == 0
-                        ? null
-                        : expenseController.paymentMethodId.value,
+                    value: selectedPaymentMethodId,
                     items: saleController.paymentMethods.map((method) {
                       return DropdownMenuItem<int>(
                         value: int.parse(method.id),
@@ -379,8 +727,9 @@ class ExpenseScreen extends StatelessWidget {
                         ),
                       );
                     }).toList(),
-                    onChanged: (value) =>
-                        expenseController.paymentMethodId.value = value ?? 0,
+                    onChanged: (value) {
+                      selectedPaymentMethodId = value;
+                    },
                     hint: const Text(
                       'Select payment method',
                       style: TextStyle(color: Colors.grey),
@@ -400,7 +749,6 @@ class ExpenseScreen extends StatelessWidget {
                 ),
                 child: TextField(
                   controller: noteController,
-                  onChanged: (value) => expenseController.note.value = value,
                   maxLines: 2,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
@@ -443,19 +791,27 @@ class ExpenseScreen extends StatelessWidget {
                       onPressed: expenseController.loading.value
                           ? null
                           : () async {
+                              // Get values directly from controllers
+                              final description =
+                                  descriptionController.text.trim();
+                              final amountText = amountController.text.trim();
+                              final note = noteController.text.trim();
+
                               // Validate form
-                              if (expenseController.description.value.isEmpty) {
+                              if (description.isEmpty) {
                                 Get.snackbar(
                                     'Error', 'Please enter description');
                                 return;
                               }
-                              if (expenseController.amount.value <= 0) {
+
+                              final amount = double.tryParse(amountText);
+                              if (amount == null || amount <= 0) {
                                 Get.snackbar(
                                     'Error', 'Please enter valid amount');
                                 return;
                               }
-                              if (expenseController.paymentMethodId.value ==
-                                  0) {
+
+                              if (selectedPaymentMethodId == null) {
                                 Get.snackbar(
                                     'Error', 'Please select payment method');
                                 return;
@@ -464,18 +820,29 @@ class ExpenseScreen extends StatelessWidget {
                               bool success;
                               if (expense == null) {
                                 success = await expenseController.createExpense(
-                                  description:
-                                      expenseController.description.value,
-                                  amount: expenseController.amount.value,
-                                  paymentMethodId:
-                                      expenseController.paymentMethodId.value,
-                                  note: expenseController.note.value.isEmpty
-                                      ? null
-                                      : expenseController.note.value,
+                                  description: description,
+                                  amount: amount,
+                                  paymentMethodId: selectedPaymentMethodId!,
+                                  note: note.isEmpty ? null : note,
                                 );
                               } else {
+                                // For update, we need to create an updated expense object
+                                final updatedExpense = Expense(
+                                  id: expense.id,
+                                  description: description,
+                                  amount: amount,
+                                  paymentMethodId: selectedPaymentMethodId!,
+                                  note: note.isEmpty ? null : note,
+                                  referenceNumber: expense.referenceNumber,
+                                  createdAt: expense.createdAt,
+                                  createdByName: expense.createdByName,
+                                  paymentMethodName: expense.paymentMethodName,
+                                  createdBy: expense.createdBy,
+                                  updatedAt:
+                                      expense.updatedAt ?? DateTime.now(),
+                                );
                                 success = await expenseController
-                                    .updateExpense(expense);
+                                    .updateExpense(updatedExpense);
                               }
 
                               if (success) {
@@ -508,7 +875,7 @@ class ExpenseScreen extends StatelessWidget {
     );
   }
 
-// Helper method for section headers
+  // Helper method for section headers
   Widget _buildSectionHeader(String title) {
     return Text(
       title,

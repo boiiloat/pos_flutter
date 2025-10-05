@@ -15,6 +15,15 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   final ReceiptController receiptController = Get.put(ReceiptController());
 
   @override
+  void initState() {
+    super.initState();
+    // Set default filter to today when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      receiptController.applyDateFilter('today');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
@@ -34,12 +43,20 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
               _handleMenuSelection(value);
             },
             itemBuilder: (context) => [
-              // Date Filters
-              const PopupMenuItem<String>(
+              // Date Filters - Today is first and highlighted
+              PopupMenuItem<String>(
                 value: 'today',
                 child: ListTile(
-                  leading: Icon(Icons.today),
-                  title: Text('Today'),
+                  leading: Icon(Icons.today,
+                      color: receiptController.currentFilter.value == 'today'
+                          ? Colors.black  
+                          : null),
+                  title: Text('Today',
+                      style: TextStyle(
+                          fontWeight:
+                              receiptController.currentFilter.value == 'today'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal)),
                 ),
               ),
               const PopupMenuItem<String>(
@@ -140,26 +157,26 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ReceiptKpiWidget(
-            label: 'Total Items',
+            label: 'Today\'s Items',
             value: receiptController.totalSale.value.toString(),
             icon: const Icon(Icons.sell, color: Colors.orange),
             color: Colors.orange,
           ),
           ReceiptKpiWidget(
-            label: 'Total Orders',
+            label: 'Today\'s Orders',
             value: receiptController.totalOrder.value.toString(),
             icon: const Icon(Icons.shopping_cart, color: Colors.red),
             color: Colors.red,
           ),
           ReceiptKpiWidget(
-            label: 'Total Revenue',
+            label: 'Today\'s Revenue',
             value:
                 '\$${receiptController.totalRevenue.value.toStringAsFixed(2)}',
             icon: const Icon(Icons.monetization_on, color: Colors.purple),
             color: Colors.purple,
           ),
           ReceiptKpiWidget(
-            label: 'Total Profit',
+            label: 'Today\'s Profit',
             value:
                 '\$${receiptController.totalProfit.value.toStringAsFixed(2)}',
             icon: const Icon(Icons.payment, color: Colors.blue),
@@ -194,7 +211,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading sales data...'),
+            Text('Loading today\'s sales data...'),
           ],
         ),
       ),
@@ -234,35 +251,41 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   }
 
   Widget _buildEmptyState() {
-    String message = 'No sales found';
-    String subtitle = 'There are no completed sales for the selected period';
-
-    if (receiptController.currentFilter.value == 'today') {
-      message = 'No sales today';
-      subtitle = 'There are no completed sales for today';
-    } else if (receiptController.currentFilter.value == 'month') {
-      message = 'No sales this month';
-      subtitle = 'There are no completed sales for this month';
-    } else if (receiptController.currentFilter.value == 'year') {
-      message = 'No sales this year';
-      subtitle = 'There are no completed sales for this year';
-    }
+    String message = 'No sales today';
+    String subtitle = 'There are no completed sales for today';
 
     return Expanded(
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.receipt_long, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
+            Icon(Icons.receipt_long, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
             Text(
               message,
-              style: const TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               subtitle,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+            SizedBox(height: 20),
+            // Show current date in empty state
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.orange.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.orange.shade200),
+              ),
+              child: Text(
+                'Date: ${_getFormattedToday()}',
+                style: TextStyle(
+                  color: Colors.orange.shade800,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
         ),
@@ -288,30 +311,30 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
           ),
           child: Column(
             children: [
-              // Filter Info Header
+              // Today's Filter Info Header
               Container(
-                color: Colors.blue.shade50,
+                color: Colors.orange.shade50,
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Row(
                   children: [
-                    Icon(Icons.filter_alt, size: 16, color: appColor),
-                    const SizedBox(width: 8),
+                    Icon(Icons.today, size: 16, color: Colors.orange),
+                    SizedBox(width: 8),
                     Text(
                       _getFilterDescription(
                           receiptController.currentFilter.value),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: appColor,
+                        color: Colors.orange.shade800,
                         fontSize: 12,
                       ),
                     ),
-                    const Spacer(),
+                    Spacer(),
                     Text(
-                      '${receiptController.filteredSales.length} sales',
+                      '${receiptController.filteredSales.length} sales today',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: appColor,
+                        color: Colors.orange.shade800,
                         fontSize: 12,
                       ),
                     ),
@@ -505,7 +528,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   String _getFilterDescription(String filterType) {
     switch (filterType) {
       case 'today':
-        return 'Showing sales for today';
+        return 'Showing sales for today (${_getFormattedToday()})';
       case 'month':
         return 'Showing sales for this month';
       case 'year':
@@ -514,6 +537,11 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
       default:
         return 'Showing all sales';
     }
+  }
+
+  String _getFormattedToday() {
+    final now = DateTime.now();
+    return '${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year}';
   }
 
   void _showDebugInfo() {

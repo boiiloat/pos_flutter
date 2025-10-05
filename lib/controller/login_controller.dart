@@ -64,6 +64,8 @@ class LoginController extends GetxController {
         loggedInUser.value = Map<String, dynamic>.from(response['user']);
         print('Stored user data: ${loggedInUser.value}'); // Debug print
         Get.find<UserController>().updateAdminStatus();
+        usernameController.clear();
+        passwordController.clear();
         Get.offAllNamed('/home');
       }
     } catch (e) {
