@@ -166,7 +166,7 @@ class HomeScreenDrawerWidget extends StatelessWidget {
                           HomeDrawerMenuItemWidget(
                             icon: Icons.post_add,
                             text: 'Expense',
-                            onPressed: () {},
+                            onPressed: maincontroller.onExpensePressed,
                           ),
                         ],
                       ),

@@ -66,7 +66,9 @@ class _UserScreenState extends State<UserScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildSearchBox(),
-                if (controller.isAdmin.value) _buildAddButton(),
+                Obx(() => controller.isAdmin.value
+                    ? _buildAddButton()
+                    : const SizedBox()),
               ],
             ),
             const SizedBox(height: 20),
@@ -174,25 +176,54 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Widget _buildHeaderRow() {
-    return Row(
-      children: const [
-        Expanded(
-            flex: 2, child: Center(child: Text('Image', style: _headerStyle))),
-        Expanded(
-            flex: 3,
-            child: Center(child: Text('Full Name', style: _headerStyle))),
-        Expanded(
-            flex: 3,
-            child: Center(child: Text('Username', style: _headerStyle))),
-        Expanded(
-            flex: 2, child: Center(child: Text('Role', style: _headerStyle))),
-        Expanded(
-            flex: 2,
-            child: Center(child: Text('Created By', style: _headerStyle))),
-        Expanded(
-            flex: 2, child: Center(child: Text('Action', style: _headerStyle))),
-      ],
-    );
+    return Obx(() {
+      // If user is cashier, remove Action column
+      if (!controller.isAdmin.value) {
+        return Row(
+          children: const [
+            Expanded(
+                flex: 2,
+                child: Center(child: Text('Image', style: _headerStyle))),
+            Expanded(
+                flex: 3,
+                child: Center(child: Text('Full Name', style: _headerStyle))),
+            Expanded(
+                flex: 3,
+                child: Center(child: Text('Username', style: _headerStyle))),
+            Expanded(
+                flex: 2,
+                child: Center(child: Text('Role', style: _headerStyle))),
+            Expanded(
+                flex: 2,
+                child: Center(child: Text('Created By', style: _headerStyle))),
+            // Action column removed for cashier
+          ],
+        );
+      }
+
+      // Admin sees all columns including Action
+      return Row(
+        children: const [
+          Expanded(
+              flex: 2,
+              child: Center(child: Text('Image', style: _headerStyle))),
+          Expanded(
+              flex: 3,
+              child: Center(child: Text('Full Name', style: _headerStyle))),
+          Expanded(
+              flex: 3,
+              child: Center(child: Text('Username', style: _headerStyle))),
+          Expanded(
+              flex: 2, child: Center(child: Text('Role', style: _headerStyle))),
+          Expanded(
+              flex: 2,
+              child: Center(child: Text('Created By', style: _headerStyle))),
+          Expanded(
+              flex: 2,
+              child: Center(child: Text('Action', style: _headerStyle))),
+        ],
+      );
+    });
   }
 
   Widget _buildDataRow(User user) {
@@ -201,51 +232,86 @@ class _UserScreenState extends State<UserScreen> {
             ? 'http://localhost:8000/storage/${user.profileImage}'
             : null;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      color: Colors.white,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: CircleAvatar(
-                radius: 24,
-                backgroundImage: imageUrl != null
-                    ? NetworkImage(imageUrl)
-                    : const AssetImage('assets/images/logo_image.jpg')
-                        as ImageProvider,
+    return Obx(() {
+      // If user is cashier, remove Action column
+      if (!controller.isAdmin.value) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          color: Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 24,
+                    backgroundImage: imageUrl != null
+                        ? NetworkImage(imageUrl)
+                        : const AssetImage('assets/images/logo_image.jpg')
+                            as ImageProvider,
+                  ),
+                ),
+              ),
+              Expanded(flex: 3, child: Center(child: Text(user.fullname))),
+              Expanded(flex: 3, child: Center(child: Text(user.username))),
+              Expanded(
+                  flex: 2,
+                  child: Center(child: Text(user.roleName ?? 'Unknown'))),
+              Expanded(
+                  flex: 2, child: Center(child: Text(user.createBy ?? 'N/A'))),
+              // Action column removed for cashier
+            ],
+          ),
+        );
+      }
+
+      // Admin sees all columns including Action
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        color: Colors.white,
+        child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundImage: imageUrl != null
+                      ? NetworkImage(imageUrl)
+                      : const AssetImage('assets/images/logo_image.jpg')
+                          as ImageProvider,
+                ),
               ),
             ),
-          ),
-          Expanded(flex: 3, child: Center(child: Text(user.fullname))),
-          Expanded(flex: 3, child: Center(child: Text(user.username))),
-          Expanded(
-              flex: 2, child: Center(child: Text(user.roleName ?? 'Unknown'))),
-          Expanded(flex: 2, child: Center(child: Text(user.createBy ?? 'N/A'))),
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (controller.isAdmin.value)
+            Expanded(flex: 3, child: Center(child: Text(user.fullname))),
+            Expanded(flex: 3, child: Center(child: Text(user.username))),
+            Expanded(
+                flex: 2,
+                child: Center(child: Text(user.roleName ?? 'Unknown'))),
+            Expanded(
+                flex: 2, child: Center(child: Text(user.createBy ?? 'N/A'))),
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     IconButton(
                       icon: const Icon(Icons.edit, color: Colors.blue),
                       onPressed: () => _showEditUserDialog(user),
                     ),
-                  if (controller.isAdmin.value)
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () => _showDeleteConfirmation(user.id),
                     ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   void _showAddUserDialog() {

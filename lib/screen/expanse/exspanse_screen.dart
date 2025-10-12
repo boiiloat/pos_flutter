@@ -512,12 +512,6 @@ class ExpenseScreen extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Colors.black)),
           ),
-          Expanded(
-            flex: 1,
-            child: Text('Actions',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.black)),
-          ),
         ],
       ),
     );
@@ -581,21 +575,6 @@ class ExpenseScreen extends StatelessWidget {
               expense.note ?? '-',
               style: const TextStyle(fontSize: 12),
               overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit, size: 18, color: Colors.blue),
-                  onPressed: () => _showEditExpenseDialog(expense),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, size: 18, color: Colors.red),
-                  onPressed: () => _showDeleteDialog(expense),
-                ),
-              ],
             ),
           ),
         ],

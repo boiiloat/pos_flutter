@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../controller/category_controller.dart';
 import '../../models/api/category_model.dart';
 import '../../utils/constants.dart';
@@ -140,7 +141,14 @@ class CategoryScreen extends StatelessWidget {
           Expanded(flex: 1, child: Center(child: Text('${index + 1}'))),
           Expanded(flex: 3, child: Center(child: Text(category.name))),
           Expanded(flex: 2, child: Center(child: Text(category.createdBy))),
-          Expanded(flex: 2, child: Center(child: Text(category.createdDate))),
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Text(
+                _formatDate(category.createdDate),
+              ),
+            ),
+          ),
           Expanded(
             flex: 2,
             child: Center(
@@ -164,6 +172,18 @@ class CategoryScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatDate(String dateString) {
+    try {
+      // Parse the date string to DateTime
+      DateTime dateTime = DateTime.parse(dateString);
+      // Format to dd-MM-yyyy
+      return DateFormat('dd-MM-yyyy').format(dateTime);
+    } catch (e) {
+      // Return original string if parsing fails
+      return dateString;
+    }
   }
 
   Widget _buildSearchBox() {
